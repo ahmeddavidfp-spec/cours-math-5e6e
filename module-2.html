@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 5e - Module 2 : Suites</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Une <strong>suite</strong> est une liste ordonnee de nombres, indexee par un rang n (u0, u1, u2, ...). Ce module etudie deux familles fondamentales de suites et leur application la plus concrete : les placements financiers.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>definir une suite par son rang ou par recurrence ;</li>
+        <li>calculer le terme general et la somme des n premiers termes d'une suite arithmetique ou geometrique ;</li>
+        <li>distinguer un taux d'accroissement constant (arithmetique) d'un taux de croissance constant (geometrique) ;</li>
+        <li>appliquer ces notions aux interets simples et aux interets composes.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Definir une suite",
+  html: `
+    <p>Une suite peut se definir de deux manieres.</p>
+    <table class="data">
+      <tr><th>Definition en fonction du rang</th><th>Definition par recurrence</th></tr>
+      <tr><td>Une formule directe donne u_n en fonction de n. Exemple : u_n = 3n + 2.</td><td>Chaque terme se calcule a partir du precedent. Exemple : u0 = 2, et u_(n+1) = u_n + 3.</td></tr>
+    </table>
+    <p>Ces deux definitions peuvent decrire la meme suite : ici, u0=2, u1=5, u2=8... correspond bien a u_n = 3n+2.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> selon les manuels, une suite peut commencer au rang 0 (u0) ou au rang 1 (u1). Verifie toujours a quel rang correspond le premier terme donne dans un enonce.
+    </div>
+  `
+},
+{
+  title: "3. Suites arithmetiques",
+  html: `
+    <p>Une <strong>suite arithmetique</strong> a un <strong>taux d'accroissement constant</strong> : on ajoute toujours le meme nombre r (la raison) pour passer d'un terme au suivant.</p>
+    <div class="callout formule">
+      Terme general : u_n = u_0 + n &times; r<br>
+      Somme des n premiers termes (u_0 a u_(n-1)) : S = n &times; (u_0 + u_(n-1)) / 2
+    </div>
+    <p><strong>Exemple :</strong> u_0 = 3, r = 4. Alors u_n = 3 + 4n. Donc u_5 = 3 + 4&times;5 = 23. La somme des 6 premiers termes (u_0 a u_5) vaut S = 6 &times; (3 + 23) / 2 = 6 &times; 13 = 78.</p>
+    <div class="callout">
+      Une suite arithmetique de raison positive est croissante et diverge vers +infini ; de raison negative, elle est decroissante et diverge vers -infini ; de raison nulle, elle est constante.
+    </div>
+  `
+},
+{
+  title: "4. Suites geometriques",
+  html: `
+    <p>Une <strong>suite geometrique</strong> a un <strong>taux de croissance constant</strong> : on multiplie toujours par le meme nombre q (la raison) pour passer d'un terme au suivant.</p>
+    <div class="callout formule">
+      Terme general : u_n = u_0 &times; q^n<br>
+      Somme des n premiers termes (u_0 a u_(n-1), si q &ne; 1) : S = u_0 &times; (q^n - 1) / (q - 1)
+    </div>
+    <p><strong>Exemple :</strong> u_0 = 2, q = 3. Alors u_n = 2 &times; 3^n. Donc u_4 = 2 &times; 81 = 162. La somme des 5 premiers termes (u_0 a u_4) vaut S = 2 &times; (3^5 - 1)/(3-1) = 2 &times; 242/2 = 242.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> ne confonds pas taux d'accroissement constant (arithmetique, on ajoute) et taux de croissance constant (geometrique, on multiplie). Ce sont deux types de croissance tres differents, meme si les mots se ressemblent.
+    </div>
+    <p><strong>Convergence :</strong> si 0 &lt; q &lt; 1, la suite geometrique tend vers 0 (elle converge). Si q &gt; 1, elle diverge vers +infini. Si q = 1, elle est constante.</p>
+  `
+},
+{
+  title: "5. Interets simples et interets composes",
+  html: `
+    <p>Les interets simples suivent une croissance <strong>arithmetique</strong> ; les interets composes suivent une croissance <strong>geometrique</strong>.</p>
+    <div class="callout formule">
+      Interets simples : C_n = C_0 &times; (1 + r &times; n)<br>
+      Interets composes : C_n = C_0 &times; (1 + r)^n
+    </div>
+    <p><strong>Exemple :</strong> un capital de 1000&euro; place a un taux de 5% par an pendant 10 ans.</p>
+    <table class="data">
+      <tr><th>Type</th><th>Calcul</th><th>Capital final</th></tr>
+      <tr><td>Interets simples</td><td>1000 &times; (1 + 0,05 &times; 10)</td><td>1500&euro;</td></tr>
+      <tr><td>Interets composes</td><td>1000 &times; (1,05)^10</td><td>&asymp; 1628,89&euro;</td></tr>
+    </table>
+    <div class="callout">
+      La difference entre les deux modes de croissance devient de plus en plus importante quand la duree du placement augmente : c'est tout l'interet (au sens propre) des interets composes sur le long terme. Un <strong>tableau d'amortissement</strong> d'un pret detaille, pour chaque mensualite, la part de capital et la part d'interets remboursees.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Suite arithmetique, terme general", back:"u_n = u_0 + n fois r (r = raison, taux d'accroissement constant)."},
+  {front:"Suite geometrique, terme general", back:"u_n = u_0 fois q puissance n (q = raison, taux de croissance constant)."},
+  {front:"Somme des n premiers termes d'une suite arithmetique", back:"S = n fois (u_0 + u_(n-1)) divise par 2."},
+  {front:"Somme des n premiers termes d'une suite geometrique (q different de 1)", back:"S = u_0 fois (q^n - 1) divise par (q - 1)."},
+  {front:"Convergence d'une suite geometrique", back:"Si 0 < q < 1, elle tend vers 0. Si q > 1, elle diverge. Si q = 1, elle est constante."},
+  {front:"Interets simples, formule", back:"C_n = C_0 fois (1 + r fois n) : croissance arithmetique."},
+  {front:"Interets composes, formule", back:"C_n = C_0 fois (1 + r) puissance n : croissance geometrique."},
+  {front:"Definition par recurrence", back:"Chaque terme se calcule a partir du precedent (ex : u0 donne, u_(n+1) = u_n + r)."},
+  {front:"Tableau d'amortissement", back:"Decompte precis d'un pret indiquant, pour chaque mensualite, la part de capital et la part d'interets."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Suite arithmetique : u0 = 5, r = 3. Calcule u4.", accepted:[17] },
+    { prompt:"Suite arithmetique : u0 = 10, r = -2. Calcule u3.", accepted:[4] },
+    { prompt:"Suite geometrique : u0 = 2, q = 2. Calcule u3.", accepted:[16] },
+    { prompt:"Suite geometrique : u0 = 100, q = 0,5. Calcule u2.", accepted:[25] },
+    { prompt:"Capital de 1000, interets simples 10%/an, 2 ans. Calcule le capital final.", accepted:[1200] },
+    { prompt:"Capital de 1000, interets composes 10%/an, 2 ans. Calcule le capital final.", accepted:[1210] },
+    { prompt:"Suite arithmetique : u0 = 0, r = 5. Calcule u10.", accepted:[50] },
+    { prompt:"Suite geometrique : u0 = 3, q = 1. Calcule u100.", accepted:[3] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"Une suite arithmetique se caracterise par :",
+    options:["un taux de croissance constant (on multiplie)","un taux d'accroissement constant (on ajoute)","une raison toujours negative","l'absence de terme general"],
+    correct:1,
+    explain:"Arithmetique = on ajoute toujours la meme raison r."
+  },
+  { type:'tf', points:1,
+    prompt:"Une suite geometrique de raison q = 0,5 diverge vers l'infini.",
+    correct:false,
+    explain:"Faux : si 0 < q < 1, la suite geometrique converge vers 0."
+  },
+  { type:'numeric', points:1,
+    prompt:"Suite arithmetique : u0 = 7, r = 2. Calcule u5.",
+    accepted:[17], tolerance:0.01,
+    explain:"u5 = 7 + 2*5 = 17."
+  },
+  { type:'numeric', points:1,
+    prompt:"Suite geometrique : u0 = 5, q = 2. Calcule u3.",
+    accepted:[40], tolerance:0.01,
+    explain:"u3 = 5 * 2^3 = 5*8 = 40."
+  },
+  { type:'match', points:4,
+    prompt:"Associe chaque situation a son type de croissance.",
+    items:[
+      {left:"Interets simples", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance arithmetique"},
+      {left:"Interets composes", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance geometrique"},
+      {left:"Suite ou l'on ajoute toujours 4", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance arithmetique"},
+      {left:"Suite ou l'on multiplie toujours par 1,5", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance geometrique"}
+    ],
+    explain:"Ajouter = arithmetique ; multiplier = geometrique."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, pourquoi les interets composes rapportent davantage que les interets simples sur une longue duree.",
+    keywordGroups:[["compose"],["simple"],["exponentiel","geometrique","multiplie"],["duree","temps","long terme"]],
+    modelAnswer:"Les interets simples suivent une croissance arithmetique : chaque annee, on ajoute toujours le meme montant d'interets, calcule sur le capital initial. Les interets composes suivent une croissance geometrique : chaque annee, les interets se calculent sur le capital deja augmente des interets precedents, ce qui cree un effet d'acceleration. Sur une courte duree, la difference est faible, mais elle devient tres importante sur le long terme, car la croissance geometrique finit toujours par depasser largement la croissance arithmetique."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Le terme general d'une suite geometrique de premier terme u0 et de raison q est :",
+    options:["u_n = u_0 + n fois q","u_n = u_0 fois q puissance n","u_n = u_0 fois n fois q","u_n = q puissance u_0"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Une suite arithmetique de raison r = 0 est :",
+    options:["croissante","decroissante","constante","non definie"],
+    correct:2
+  },
+  { type:'mcq', points:1,
+    prompt:"Les interets composes suivent une croissance de type :",
+    options:["arithmetique","geometrique","aucune des deux","aleatoire"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Une suite geometrique de raison q = 1,5 :",
+    options:["converge vers 0","diverge vers l'infini","reste constante","n'existe pas"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Une definition par recurrence d'une suite exprime :",
+    options:["u_n directement en fonction de n seul","chaque terme a partir du terme precedent","uniquement le premier terme","la somme de tous les termes"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Un taux d'accroissement constant correspond a une suite arithmetique.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Une suite geometrique de raison q = 1 est croissante.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Suite arithmetique : u0 = 3, r = 4. Calcule u5 (rappel de la theorie).",
+    accepted:[23], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Suite geometrique : u0 = 2, q = 3. Calcule u4 (rappel de la theorie).",
+    accepted:[162], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Un capital de 1000 euros est place a 5% par an pendant 10 ans (exemple du cours).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule le capital final avec des interets simples.", accepted:[1500], tolerance:1},
+      {prompt:"Calcule le capital final avec des interets composes (arrondi a l'euro).", accepted:[1628.89, 1629], tolerance:1}
+    ]
+  },
+  { type:'match', points:4,
+    prompt:"Associe chaque situation a son type de croissance.",
+    items:[
+      {left:"Interets simples", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance arithmetique"},
+      {left:"Interets composes", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance geometrique"},
+      {left:"Suite ou l'on ajoute toujours 4", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance arithmetique"},
+      {left:"Suite ou l'on multiplie toujours par 1,5", options:["Croissance arithmetique","Croissance geometrique"], correct:"Croissance geometrique"}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque suite decrite, indique si elle est arithmetique ou geometrique.",
+    classifyOptions:["Arithmetique","Geometrique"],
+    items:[
+      {text:"u0 = 2, chaque terme suivant est obtenu en ajoutant 7", correct:"Arithmetique"},
+      {text:"u0 = 5, chaque terme suivant est obtenu en multipliant par 2", correct:"Geometrique"},
+      {text:"Le capital d'un livret a interets composes, annee apres annee", correct:"Geometrique"},
+      {text:"Le nombre total verse chaque mois pour un abonnement a prix fixe", correct:"Arithmetique"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 4 a 5 phrases, la difference entre le terme general et la definition par recurrence d'une suite, en donnant un exemple pour chacune.",
+    keywordGroups:[["rang","terme general"],["recurrence"],["exemple"],["precedent"]],
+    modelAnswer:"La definition en fonction du rang donne une formule directe pour calculer n'importe quel terme a partir de son rang n, sans avoir besoin de connaitre les termes precedents : par exemple, u_n = 2n + 1 permet de calculer directement u_100. La definition par recurrence, elle, exprime chaque terme a partir du terme qui le precede : par exemple, u0 = 1 et u_(n+1) = u_n + 3 oblige a calculer u1, puis u2, puis u3, etc., dans l'ordre, pour atteindre un terme donne. Les deux definitions peuvent decrire exactement la meme suite, mais elles ne sont pas toujours aussi pratiques l'une que l'autre selon ce qu'on cherche a calculer."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm2-suites',
+  eyebrow: "Mathematiques generales (4p) &middot; 5e annee &middot; Module 2/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Suites",
+  subtitle: "Deuxieme module du programme de 5e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module etudie les suites arithmetiques et geometriques : terme general, somme des premiers termes, type de croissance, convergence, et leur application la plus concrete, les interets simples et composes.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les suites",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-3.html',
+  nextTitle: 'Asymptotes et limites',
+  footerHtml: 'Module 2/10 (5e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
