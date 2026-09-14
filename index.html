@@ -15,15 +15,21 @@
     <a class="hub-link" href="https://portail-ines.pages.dev/" target="_blank" rel="noopener">Tableau de bord &#8599;</a>
   </div>
   <header class="top">
-    <div class="eyebrow">Mathematiques generales (4 periodes) &middot; 3e degre (5e-6e) &middot; Reseau libre confessionnel (FESeC)</div>
+    <div class="eyebrow">Mathematiques generales (4 periodes) &middot; 2e et 3e degres (3e-6e) &middot; Reseau libre confessionnel (FESeC)</div>
     <h1>Le parcours de mathematiques d'Ines Cabossart</h1>
-    <p class="subtitle">Dix modules, un chapitre du programme officiel par module. Chaque module se debloque quand le precedent est reussi a 60% ou plus. Ta progression est enregistree automatiquement dans ce navigateur.</p>
+    <p class="subtitle">Vingt-trois modules, un chapitre du programme officiel par module : 13 modules de remise a niveau (2e degre, 3e-4e annee) puis 10 modules de 5e-6e annee. Chaque module se debloque quand le precedent est reussi a 60% ou plus. Ta progression est enregistree automatiquement dans ce navigateur.</p>
   </header>
 
   <div class="panel">
     <span class="badge">Comment ca marche</span>
     <p>Chaque module suit le meme format : <strong>theorie</strong> (formules et exemples resolus pas a pas), <strong>entrainement</strong> (flashcards, un jeu adapte au chapitre, quiz sans note), puis <strong>examen</strong> note (60% pour debloquer la suite, essais illimites). Tout est detaille dans l'accueil de chaque module.</p>
   </div>
+
+  <h2 class="year-title">Remise a niveau : 2e degre (3e annee)</h2>
+  <div id="modules-p3e"></div>
+
+  <h2 class="year-title">Remise a niveau : 2e degre (4e annee)</h2>
+  <div id="modules-p4e"></div>
 
   <h2 class="year-title">5e annee : mathematiques generales (4p)</h2>
   <div id="modules-5e"></div>
@@ -42,6 +48,23 @@
 <script src="shared/engine.js"></script>
 <script>
 const MODULES = {
+  'p3e': [
+    { id:'p1-fonctions-premier-degre', href:'module-p1.html', title:'Fonctions du premier degre', desc:'Droites, coefficient angulaire, parallelisme et perpendicularite.' },
+    { id:'p2-equations-inequations-systemes', href:'module-p2.html', title:'Equations, inequations et systemes du premier degre', desc:'Resolution algebrique, cas impossibles et indetermines.' },
+    { id:'p3-polynomes', href:'module-p3.html', title:'Calcul numerique et polynomes', desc:'Puissances, degre, factorisation, loi du reste.' },
+    { id:'p4-pythagore-thales', href:'module-p4.html', title:'Theoreme de Pythagore et configurations de Thales', desc:'Distances, racines carrees, proportions.' },
+    { id:'p5-isometrie-similitude', href:'module-p5.html', title:'Angles, isometrie et similitude des triangles', desc:'Angles particuliers, cas CCC/CAC/ACA, similitude AA.' },
+    { id:'p6-trigo-triangle-rectangle', href:'module-p6.html', title:'Trigonometrie du triangle rectangle', desc:'Sinus, cosinus, tangente, valeurs remarquables, distances inaccessibles.' }
+  ],
+  'p4e': [
+    { id:'p7-fonctions-reference', href:'module-p7.html', title:'Fonctions de reference et transformations', desc:'Fonctions usuelles, domaine, parite, translations et dilatations.' },
+    { id:'p8-radicaux-puissances', href:'module-p8.html', title:'Radicaux, puissances rationnelles et coefficients indetermines', desc:'Racines n-iemes, exposants rationnels, methode des coefficients indetermines.' },
+    { id:'p9-fonction-deuxieme-degre', href:'module-p9.html', title:'Fonction du deuxieme degre', desc:'Parabole, discriminant, factorisation, inequations.' },
+    { id:'p10-vecteurs-produit-scalaire', href:'module-p10.html', title:'Calcul vectoriel et produit scalaire', desc:'Vecteurs, alignement, parallelisme, produit scalaire.' },
+    { id:'p11-trigo-cercle', href:'module-p11.html', title:'Trigonometrie du cercle', desc:'Radian, cercle trigonometrique, angles associes, triangle quelconque.' },
+    { id:'p12-lieux-geometriques', href:'module-p12.html', title:'Lieux geometriques', desc:'Mediatrice, cercle, parabole.' },
+    { id:'p13-statistique-une-variable', href:'module-p13.html', title:'Statistique a une variable', desc:'Mode, moyenne, mediane, dispersion.' }
+  ],
   '5e': [
     { id:'m1-statistique', href:'module-1.html', title:'Statistique a deux variables', desc:'Correlation, causalite, ajustement lineaire (Mayer, moindres carres).' },
     { id:'m2-suites', href:'module-2.html', title:'Suites', desc:'Suites arithmetiques et geometriques, interets, tableaux amortissement.' },
@@ -59,8 +82,8 @@ const MODULES = {
 };
 
 function render(){
-  const order = [...MODULES['5e'], ...MODULES['6e']];
-  ['5e','6e'].forEach(year=>{
+  const order = [...MODULES['p3e'], ...MODULES['p4e'], ...MODULES['5e'], ...MODULES['6e']];
+  ['p3e','p4e','5e','6e'].forEach(year=>{
     const container = document.getElementById('modules-'+year);
     container.innerHTML = MODULES[year].map(m=>{
       const idx = order.findIndex(o=>o.id===m.id);
@@ -86,7 +109,7 @@ function render(){
   });
 }
 document.getElementById('reset-all').addEventListener('click', ()=>{
-  if(!confirm('Effacer toute ta progression sur les 10 modules ? Cette action est irreversible.')) return;
+  if(!confirm('Effacer toute ta progression sur les 23 modules ? Cette action est irreversible.')) return;
   Object.keys(localStorage).filter(k=>k.startsWith('math_5e6e_')).forEach(k=>localStorage.removeItem(k));
   render();
 });

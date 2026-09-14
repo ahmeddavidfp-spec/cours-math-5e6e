@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 2 : Equations, inequations et systemes</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module reprend la resolution des equations, inequations et systemes du premier degre (programme de 3e annee), des outils utilises dans tout le reste du parcours.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>resoudre une <strong class="term" data-def="Une equation du premier degre a une inconnue peut s'ecrire sous la forme ax + b = 0 : elle a une seule solution si a est different de zero.">equation du premier degre</strong> et reconnaitre les cas impossibles ou indetermines ;</li>
+        <li>resoudre un <strong class="term" data-def="Un systeme de deux equations a deux inconnues cherche un couple de nombres qui verifie les deux equations en meme temps ; graphiquement, c'est l'intersection de deux droites.">systeme de deux equations</strong> a deux inconnues par substitution ou combinaison ;</li>
+        <li>resoudre une <strong class="term" data-def="Une inequation compare une expression a une valeur avec un signe d'inegalite (plus petit, plus grand...) ; sa solution est en general un intervalle de nombres.">inequation</strong> du premier degre, en faisant attention au sens de l'inegalite.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Equations du premier degre",
+  html: `
+    <p>Une <strong class="term" data-def="Une equation du premier degre a une inconnue peut s'ecrire sous la forme ax + b = 0 : elle a une seule solution si a est different de zero.">equation du premier degre</strong> a une inconnue se resout en isolant x, en utilisant les proprietes des egalites : on peut ajouter, soustraire, multiplier ou diviser (par un nombre non nul) les deux membres d'une egalite sans changer sa solution.</p>
+    <p><strong>Exemple :</strong> 3x - 5 = 2x + 7. On regroupe les x d'un cote : 3x - 2x = 7 + 5, donc x = 12. Verification : 3&times;12-5 = 31 et 2&times;12+7 = 31.</p>
+    <table class="data">
+      <tr><th>Cas</th><th>Exemple</th><th>Interpretation</th></tr>
+      <tr><td>Une seule solution</td><td>2x + 3 = 9 &rarr; x = 3</td><td>La droite y = ax+b coupe l'axe Ox en un seul point (son zero).</td></tr>
+      <tr><td>Impossible</td><td>2x + 3 = 2x + 7 &rarr; 0 = 4</td><td>Aucune solution : contradiction apres simplification.</td></tr>
+      <tr><td>Indeterminee</td><td>2x + 3 = 2x + 3 &rarr; 0 = 0</td><td>Vraie pour tout x : une infinite de solutions.</td></tr>
+    </table>
+  `
+},
+{
+  title: "3. Resoudre un probleme par une equation",
+  html: `
+    <p>Methode : choisir l'inconnue, traduire l'enonce en equation, resoudre, puis verifier et interpreter la solution dans le contexte.</p>
+    <p><strong>Exemple :</strong> Lea a 5 ans de plus que son frere. Dans 3 ans, la somme de leurs ages sera 35. Quel est l'age actuel du frere ?</p>
+    <div class="callout formule">
+      Soit x l'age actuel du frere (donc Lea a x + 5 ans).<br>
+      Dans 3 ans : (x + 3) + (x + 5 + 3) = 35<br>
+      2x + 11 = 35 &rarr; 2x = 24 &rarr; x = 12
+    </div>
+    <p>Le frere a donc <strong>12 ans</strong> aujourd'hui (et Lea, 17 ans). Verification : dans 3 ans, 15 + 20 = 35, correct.</p>
+  `
+},
+{
+  title: "4. Systemes de deux equations a deux inconnues",
+  html: `
+    <p>Un <strong class="term" data-def="Un systeme de deux equations a deux inconnues cherche un couple de nombres qui verifie les deux equations en meme temps ; graphiquement, c'est l'intersection de deux droites.">systeme de deux equations</strong> a deux inconnues cherche un couple (x, y) qui verifie les deux equations a la fois. On le resout par <strong>substitution</strong> (isoler une inconnue dans une equation, la remplacer dans l'autre) ou par <strong>combinaison</strong> (additionner ou soustraire les equations, eventuellement multipliees, pour eliminer une inconnue).</p>
+    <p><strong>Exemple (combinaison) :</strong> 2x + y = 10 et x - y = 2. En additionnant les deux equations, le y disparait : 3x = 12, donc x = 4, puis y = 10 - 2&times;4 = 2. Verification dans la 2e equation : 4 - 2 = 2, correct.</p>
+    <table class="data">
+      <tr><th>Cas</th><th>Interpretation graphique</th></tr>
+      <tr><td>Solution unique</td><td>Les deux droites se coupent en un seul point.</td></tr>
+      <tr><td>Impossible</td><td>Les deux droites sont paralleles distinctes (ex : x+y=3 et x+y=5).</td></tr>
+      <tr><td>Indetermine</td><td>Les deux equations decrivent la meme droite (ex : x+y=3 et 2x+2y=6).</td></tr>
+    </table>
+  `
+},
+{
+  title: "5. Inequations du premier degre",
+  html: `
+    <p>Une <strong class="term" data-def="Une inequation compare une expression a une valeur avec un signe d'inegalite (plus petit, plus grand...) ; sa solution est en general un intervalle de nombres.">inequation</strong> se resout comme une equation, avec une regle essentielle en plus.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> quand on multiplie ou divise les deux membres d'une inegalite par un nombre <strong>negatif</strong>, il faut inverser le sens de l'inegalite.
+    </div>
+    <p><strong>Exemple :</strong> -2x + 4 &le; 10. On isole x : -2x &le; 6. En divisant par -2 (negatif), le sens s'inverse : x &ge; -3.</p>
+    <p>Verification : pour x = -3, -2&times;(-3)+4 = 10 &le; 10, correct (limite). Pour x = 0 (qui verifie x&ge;-3), -2&times;0+4 = 4 &le; 10, correct. Pour x = -4 (qui NE verifie PAS x&ge;-3), -2&times;(-4)+4 = 12, qui n'est pas &le; 10 : coherent.</p>
+    <p>Graphiquement, resoudre ax + b &gt; 0 revient a chercher les x pour lesquels la droite y = ax + b est <strong>au-dessus</strong> de l'axe Ox ; ax + b &lt; 0 correspond aux x ou elle est en-dessous.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Proprietes des egalites", back:"On peut ajouter, soustraire, multiplier ou diviser (par un nombre non nul) les deux membres d'une egalite sans changer sa solution."},
+  {front:"Equation impossible", back:"Aucune solution : on aboutit a une contradiction du type 0 = 4 apres simplification."},
+  {front:"Equation indeterminee", back:"Une infinite de solutions : on aboutit a une identite toujours vraie, du type 0 = 0."},
+  {front:"Methode de substitution", back:"Isoler une inconnue dans une equation du systeme, puis la remplacer dans l'autre equation."},
+  {front:"Methode de combinaison", back:"Additionner ou soustraire les equations (eventuellement multipliees) pour faire disparaitre une inconnue."},
+  {front:"Systeme impossible, interpretation graphique", back:"Les deux droites sont paralleles distinctes : elles ne se coupent jamais."},
+  {front:"Systeme indetermine, interpretation graphique", back:"Les deux equations decrivent la meme droite : une infinite de points communs."},
+  {front:"Piege des inequations", back:"Multiplier ou diviser par un nombre negatif inverse le sens de l'inegalite."}
+];
+
+const game = {
+  type: 'order',
+  challenges: [
+    { prompt:"Remets dans l'ordre la resolution de : 4x - 3 = 2x + 9.",
+      steps: [
+        "On regroupe les x d'un cote : 4x - 2x = 9 + 3",
+        "On simplifie : 2x = 12",
+        "On divise par 2 : x = 6",
+        "Verification : 4*6-3 = 21 et 2*6+9 = 21, correct"
+      ] },
+    { prompt:"Remets dans l'ordre la resolution du systeme x + y = 7 et x - y = 1 (par combinaison).",
+      steps: [
+        "On additionne les deux equations : 2x = 8",
+        "On trouve x = 4",
+        "On remplace dans x + y = 7 : 4 + y = 7",
+        "On trouve y = 3"
+      ] },
+    { prompt:"Remets dans l'ordre la resolution de l'inequation -3x + 6 > 0.",
+      steps: [
+        "On isole le terme en x : -3x > -6",
+        "On divise par -3 (nombre negatif)",
+        "On inverse le sens de l'inegalite : x < 2",
+        "On verifie avec x = 0 : -3*0+6 = 6 > 0, correct"
+      ] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Resous : 5x - 4 = 2x + 11.",
+    accepted:[5], tolerance:0.01,
+    explain:"5x-2x=11+4 -> 3x=15 -> x=5."
+  },
+  { type:'mcq', points:1,
+    prompt:"L'equation 3x + 2 = 3x + 8 est :",
+    options:["une seule solution x=2","impossible","indeterminee","x=8"],
+    correct:1,
+    explain:"Apres simplification : 2 = 8, contradiction, donc impossible."
+  },
+  { type:'mcq', points:1,
+    prompt:"L'equation 4x - 1 = 4x - 1 est :",
+    options:["impossible","indeterminee (vraie pour tout x)","x=0 uniquement","x=1 uniquement"],
+    correct:1,
+    explain:"Les deux membres sont identiques : c'est vrai pour n'importe quelle valeur de x."
+  },
+  { type:'data', points:2,
+    prompt:"Systeme : 3x + y = 11 et x - y = 1.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule x.", accepted:[3], tolerance:0.01},
+      {prompt:"Calcule y.", accepted:[2], tolerance:0.01}
+    ]
+  },
+  { type:'tf', points:1,
+    prompt:"Pour resoudre -5x > 20, il faut diviser par -5 et inverser le sens : x < -4.",
+    correct:true,
+    explain:"Diviser par un nombre negatif inverse le sens de l'inegalite : x < -4."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, la difference entre un systeme impossible et un systeme indetermine, avec leur interpretation graphique.",
+    keywordGroups:[["impossible"],["indetermine","infinite"],["parallele"],["meme droite","confondue"]],
+    modelAnswer:"Un systeme est impossible quand la resolution aboutit a une contradiction (comme 0=4) : il n'a aucune solution, ce qui correspond graphiquement a deux droites paralleles distinctes qui ne se coupent jamais. Un systeme est indetermine quand les deux equations decrivent en realite la meme droite : il y a alors une infinite de solutions, tous les points de cette droite commune. La difference se voit souvent directement en comparant les coefficients des deux equations."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Resous : 2x + 7 = 5x - 8.",
+    accepted:[5], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"L'equation 6x + 5 = 6x + 5 est :",
+    options:["impossible","indeterminee","x=5","x=6"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"L'equation 2x - 3 = 2x + 4 est :",
+    options:["impossible","indeterminee","x=3,5","x=-3,5"],
+    correct:0
+  },
+  { type:'tf', points:1,
+    prompt:"La methode de combinaison consiste a additionner ou soustraire les equations pour eliminer une inconnue.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Multiplier une inegalite par un nombre positif inverse son sens.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous l'inequation : 4x - 1 < 11. Donne la borne (x < ...).",
+    accepted:[3], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous l'inequation : -6x + 3 >= -15. Donne la borne (x <= ...).",
+    accepted:[3], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Systeme : 2x + 3y = 16 et x - y = 2.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule x.", accepted:[4.4], tolerance:0.05},
+      {prompt:"Calcule y.", accepted:[2.4], tolerance:0.05}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque systeme, indique s'il a une solution unique, s'il est impossible ou indetermine.",
+    classifyOptions:["Solution unique","Impossible","Indetermine"],
+    items:[
+      {text:"x+y=5 et x-y=1", correct:"Solution unique"},
+      {text:"x+y=4 et x+y=9", correct:"Impossible"},
+      {text:"2x+2y=10 et x+y=5", correct:"Indetermine"},
+      {text:"3x-y=2 et x+y=6", correct:"Solution unique"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Un club de sport facture une inscription de 40 euros plus 8 euros par seance. Un autre club facture 20 euros d'inscription plus 12 euros par seance. Pose l'equation qui permet de trouver le nombre de seances pour lequel les deux clubs coutent le meme prix, resous-la, et interprete le resultat.",
+    keywordGroups:[["40","8x"],["20","12x"],["egal","meme prix"],["5","seances"]],
+    modelAnswer:"Le prix du premier club est 40 + 8x et celui du second est 20 + 12x, ou x est le nombre de seances. On cherche x tel que 40 + 8x = 20 + 12x, soit 40 - 20 = 12x - 8x, donc 20 = 4x, d'ou x = 5. A partir de 5 seances, les deux clubs coutent exactement le meme prix (80 euros) ; en dessous de 5 seances le premier club est plus cher, au-dela le second devient plus cher."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p2-equations-inequations-systemes',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 3e annee) &middot; Prerequis 2/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Equations, inequations et systemes du premier degre",
+  subtitle: "Module de remise a niveau : resolution d'equations, de systemes de deux equations et d'inequations. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les equations, inequations et systemes",
+  passThreshold: 60,
+  gameLabel: "Jeu : remettre les etapes en ordre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p3.html',
+  nextTitle: 'Calcul numerique et polynomes',
+  footerHtml: 'Prerequis 2/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

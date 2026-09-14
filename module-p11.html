@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 11 : Trigonometrie du cercle</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module (4e annee) etend la trigonometrie au <strong class="term" data-def="Le cercle trigonometrique est un cercle de rayon 1 centre a l'origine d'un repere, utilise pour definir sinus, cosinus et tangente pour n'importe quel angle, pas seulement les angles aigus.">cercle trigonometrique</strong> : angles en radians, angles orientes, et resolution de n'importe quel triangle (pas seulement rectangle).</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>convertir des degres en <strong class="term" data-def="Le radian est une unite de mesure d'angle : un angle plat (180 degres) vaut pi radians.">radians</strong> et reciproquement ;</li>
+        <li>situer un angle oriente sur le cercle trigonometrique et utiliser les angles associes ;</li>
+        <li>appliquer la loi des sinus, la loi des cosinus et la formule de l'aire dans un triangle quelconque.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Le radian",
+  html: `
+    <p>Le <strong class="term" data-def="Le radian est une unite de mesure d'angle : un angle plat (180 degres) vaut pi radians.">radian</strong> est une autre unite pour mesurer les angles : un tour complet (360&deg;) vaut 2&pi; radians, donc un angle plat (180&deg;) vaut &pi; radians.</p>
+    <div class="callout formule">
+      angle en radians = angle en degres &times; &pi; / 180
+    </div>
+    <p><strong>Exemple :</strong> 120&deg; en radians vaut 120 &times; &pi;/180 = 2&pi;/3 &asymp; 2,094 rad.</p>
+    <table class="data">
+      <tr><th>Degres</th><th>0&deg;</th><th>30&deg;</th><th>45&deg;</th><th>60&deg;</th><th>90&deg;</th><th>180&deg;</th><th>360&deg;</th></tr>
+      <tr><td>Radians</td><td>0</td><td>&pi;/6</td><td>&pi;/4</td><td>&pi;/3</td><td>&pi;/2</td><td>&pi;</td><td>2&pi;</td></tr>
+    </table>
+  `
+},
+{
+  title: "3. Cercle trigonometrique et angles associes",
+  html: `
+    <p>Sur le <strong class="term" data-def="Le cercle trigonometrique est un cercle de rayon 1 centre a l'origine d'un repere, utilise pour definir sinus, cosinus et tangente pour n'importe quel angle, pas seulement les angles aigus.">cercle trigonometrique</strong> (rayon 1), sinus et cosinus d'un angle oriente &alpha; sont respectivement l'ordonnee et l'abscisse du point correspondant.</p>
+    <div class="callout formule">
+      cos(-&alpha;) = cos(&alpha;) &nbsp;&middot;&nbsp; sin(-&alpha;) = -sin(&alpha;)<br>
+      cos(&pi;-&alpha;) = -cos(&alpha;) &nbsp;&middot;&nbsp; sin(&pi;-&alpha;) = sin(&alpha;)<br>
+      cos(&pi;+&alpha;) = -cos(&alpha;) &nbsp;&middot;&nbsp; sin(&pi;+&alpha;) = -sin(&alpha;)
+    </div>
+    <p><strong>Exemple :</strong> pour &alpha; = 2&pi;/3 (soit 120&deg;, qui vaut &pi; - &pi;/3), cos(2&pi;/3) = -cos(&pi;/3) = -0,5 et sin(2&pi;/3) = sin(&pi;/3) = &radic;3/2 &asymp; 0,866.</p>
+  `
+},
+{
+  title: "4. Formules fondamentales",
+  html: `
+    <div class="callout formule">
+      sin&sup2;(&alpha;) + cos&sup2;(&alpha;) = 1 (pour tout angle &alpha;)<br>
+      tg(&alpha;) = sin(&alpha;) / cos(&alpha;)
+    </div>
+    <p>Ces formules, deja vues pour les angles aigus, restent vraies pour n'importe quel angle oriente : c'est tout l'interet du cercle trigonometrique.</p>
+  `
+},
+{
+  title: "5. Triangle quelconque : lois des sinus et des cosinus",
+  html: `
+    <p>Dans un triangle quelconque de cotes a, b, c opposes aux angles A, B, C :</p>
+    <div class="callout formule">
+      Loi des sinus : a/sin(A) = b/sin(B) = c/sin(C)<br>
+      Loi des cosinus : c&sup2; = a&sup2; + b&sup2; - 2ab&times;cos(C)<br>
+      Aire = (1/2) &times; a &times; b &times; sin(C)
+    </div>
+    <p><strong>Exemple :</strong> triangle avec a=7, b=8 et l'angle C entre eux = 60&deg;. Par la loi des cosinus : c&sup2; = 49+64-2&times;7&times;8&times;cos(60&deg;) = 113-56 = 57, donc c &asymp; 7,55. L'aire vaut (1/2)&times;7&times;8&times;sin(60&deg;) &asymp; 24,25.</p>
+    <div class="callout">
+      La loi des cosinus generalise le theoreme de Pythagore : si C = 90&deg;, cos(C) = 0 et on retrouve c&sup2; = a&sup2;+b&sup2;.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Conversion degres -> radians", back:"angle_rad = angle_deg * pi / 180."},
+  {front:"180deg en radians", back:"pi radians."},
+  {front:"cos(-alpha)", back:"cos(alpha) (le cosinus est une fonction paire)."},
+  {front:"sin(-alpha)", back:"-sin(alpha) (le sinus est une fonction impaire)."},
+  {front:"Loi des sinus", back:"a/sin(A) = b/sin(B) = c/sin(C)."},
+  {front:"Loi des cosinus", back:"c^2 = a^2 + b^2 - 2ab*cos(C)."},
+  {front:"Aire d'un triangle avec deux cotes et l'angle compris", back:"Aire = (1/2) * a * b * sin(C)."},
+  {front:"Loi des cosinus quand C=90deg", back:"cos(90deg)=0, on retrouve le theoreme de Pythagore c^2=a^2+b^2."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Convertis 90deg en radians (donne le coefficient de pi, ex: pour pi/2 reponds 0.5).", accepted:[0.5] },
+    { prompt:"Convertis 60deg en radians (coefficient de pi, ex: pi/3 -> 0.333).", accepted:[0.333], tolerance:0.01 },
+    { prompt:"cos(0) = ?", accepted:[1] },
+    { prompt:"sin(pi/2) = ?", accepted:[1] },
+    { prompt:"Triangle : a=6, b=8, angle C=90deg. Calcule c (loi des cosinus, cos90=0).", accepted:[10] },
+    { prompt:"sin^2(alpha)+cos^2(alpha) = ?", accepted:[1] },
+    { prompt:"cos(pi) = ?", accepted:[-1] },
+    { prompt:"sin(-alpha) si sin(alpha)=0.3 : calcule sin(-alpha).", accepted:[-0.3] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Convertis 45deg en radians, exprime comme coefficient de pi (ex : pi/4 -> 0,25).",
+    accepted:[0.25], tolerance:0.01,
+    explain:"45 = 180/4, donc 45deg = pi/4 rad, coefficient 0,25."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule cos(pi/3) (= cos(60deg)).",
+    accepted:[0.5], tolerance:0.01,
+    explain:"cos(60deg) = 0,5."
+  },
+  { type:'tf', points:1,
+    prompt:"cos(-alpha) = -cos(alpha) pour tout angle.",
+    correct:false,
+    explain:"Faux : le cosinus est une fonction paire, cos(-alpha) = cos(alpha)."
+  },
+  { type:'numeric', points:1,
+    prompt:"Triangle : a=9, b=12, angle C=90deg entre eux. Calcule c (loi des cosinus).",
+    accepted:[15], tolerance:0.01,
+    explain:"c^2 = 81+144-2*9*12*cos(90) = 225-0 = 225, c=15 (c'est le triplet 9-12-15)."
+  },
+  { type:'numeric', points:1,
+    prompt:"Triangle : a=5, b=6, angle C entre eux = 90deg. Calcule l'aire.",
+    accepted:[15], tolerance:0.01,
+    explain:"Aire = 0,5*5*6*sin(90) = 0,5*30*1 = 15."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, pourquoi la loi des cosinus est une generalisation du theoreme de Pythagore.",
+    keywordGroups:[["pythagore"],["cos(90)","0"],["c^2=a^2+b^2"],["angle droit"]],
+    modelAnswer:"La loi des cosinus s'ecrit c^2 = a^2 + b^2 - 2ab*cos(C), ou C est l'angle compris entre les cotes a et b. Si le triangle est rectangle en C, l'angle C vaut 90 degres, et cos(90deg) = 0. Le terme -2ab*cos(C) disparait alors completement, et la formule se reduit exactement a c^2 = a^2 + b^2, qui est le theoreme de Pythagore. La loi des cosinus fonctionne donc pour n'importe quel triangle, le theoreme de Pythagore n'etant qu'un cas particulier ou l'angle vaut 90 degres."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Convertis 30deg en radians, coefficient de pi (ex : pi/6 -> 0,1667).",
+    accepted:[0.1667], tolerance:0.005
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule sin(pi/6) (= sin(30deg)).",
+    accepted:[0.5], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"cos(pi - alpha) est egal a :",
+    options:["cos(alpha)","-cos(alpha)","sin(alpha)","-sin(alpha)"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Un tour complet vaut 2*pi radians.",
+    correct:true
+  },
+  { type:'numeric', points:1,
+    prompt:"Triangle : a=8, b=15, angle C=90deg entre eux. Calcule c (loi des cosinus).",
+    accepted:[17], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Triangle : a=10, b=12, angle C entre eux = 90deg. Calcule l'aire.",
+    accepted:[60], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Triangle a=7, b=24, angle C=90deg entre eux (verification loi des cosinus).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule c.", accepted:[25], tolerance:0.01},
+      {prompt:"Calcule l'aire du triangle.", accepted:[84], tolerance:0.01}
+    ]
+  },
+  { type:'tf', points:1,
+    prompt:"sin(alpha) est une fonction impaire : sin(-alpha) = -sin(alpha).",
+    correct:true
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque angle en degres, indique sa mesure en radians (coefficient de pi).",
+    classifyOptions:["pi/6","pi/4","pi/3","pi/2"],
+    items:[
+      {text:"30deg", correct:"pi/6"},
+      {text:"45deg", correct:"pi/4"},
+      {text:"60deg", correct:"pi/3"},
+      {text:"90deg", correct:"pi/2"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Un triangle a des cotes a=10 et b=14 avec un angle C=90deg entre eux. Calcule le troisieme cote c et l'aire du triangle, en expliquant chaque formule utilisee.",
+    keywordGroups:[["loi des cosinus","c^2"],["17,2","c ="],["70","aire"],["0,5*a*b"]],
+    modelAnswer:"Pour trouver c, on utilise la loi des cosinus : c^2 = a^2+b^2-2ab*cos(C) = 100+196-2*10*14*cos(90deg) = 296-0 = 296, donc c = racine(296) qui vaut environ 17,2. Pour l'aire, on utilise la formule aire = (1/2)*a*b*sin(C) = 0,5*10*14*sin(90deg) = 0,5*140*1 = 70. Comme l'angle C vaut 90 degres, ce triangle est en fait rectangle, et on aurait pu retrouver le meme resultat directement avec le theoreme de Pythagore et l'aire du triangle rectangle."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p11-trigo-cercle',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 11/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Trigonometrie du cercle",
+  subtitle: "Module de remise a niveau : radian, cercle trigonometrique, angles associes et triangle quelconque. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la trigonometrie du cercle",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p12.html',
+  nextTitle: 'Lieux geometriques',
+  footerHtml: 'Prerequis 11/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

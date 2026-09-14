@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 1 : Fonctions du premier degre</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module de remise a niveau reprend le programme de <strong>3e et 4e annee</strong> (deuxieme degre) sur les fonctions du premier degre : la base indispensable avant d'aborder les asymptotes, les limites et la derivee en 5e annee.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>reconnaitre une <strong class="term" data-def="Une fonction associe a chaque nombre x au plus un nombre image, note f de x.">fonction</strong> et distinguer f(x) = ax de f(x) = ax + b ;</li>
+        <li>calculer le <strong class="term" data-def="Le coefficient angulaire d'une droite mesure son inclinaison : c'est le rapport entre l'accroissement de y et l'accroissement de x entre deux points de la droite.">coefficient angulaire</strong> d'une droite a partir de deux points ;</li>
+        <li>reconnaitre si deux droites sont <strong class="term" data-def="Deux droites sont parallèles si elles ont le meme coefficient angulaire : elles ne se coupent jamais.">paralleles</strong> ou <strong class="term" data-def="Deux droites sont perpendiculaires, dans un repere orthonorme, si le produit de leurs coefficients angulaires vaut moins un.">perpendiculaires</strong> ;</li>
+        <li>ecrire l'equation d'une droite passant par un point donne, de coefficient angulaire donne, ou passant par deux points donnes.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Fonction et proportionnalite : f(x) = ax",
+  html: `
+    <p>Une <strong class="term" data-def="Une fonction associe a chaque nombre x au plus un nombre image, note f de x.">fonction</strong> f associe a chaque nombre x au plus un nombre image f(x). Le graphique de f(x) = ax est une droite qui passe par l'origine (0,0) : tous ses points sont alignes avec l'origine, et reciproquement, tout point de cette droite verifie y = ax.</p>
+    <table class="data">
+      <tr><th>x</th><th>-2</th><th>0</th><th>1</th><th>3</th></tr>
+      <tr><td>f(x) = 2x</td><td>-4</td><td>0</td><td>2</td><td>6</td></tr>
+    </table>
+    <p>Cette relation exprime une <strong class="term" data-def="Deux grandeurs sont proportionnelles quand leur rapport reste constant : y divise par x est toujours le meme nombre a.">proportionnalite</strong> entre x et y : le rapport y/x reste constant et egal a a (ici 2).</p>
+  `
+},
+{
+  title: "3. Fonction f(x) = ax + b : la droite y = ax + b",
+  html: `
+    <p>Le graphique de f(x) = ax + b est la droite y = ax + b. C'est la translation de la droite y = ax : le nombre b donne l'<strong>ordonnee a l'origine</strong>, c'est-a-dire la valeur de y quand x = 0.</p>
+    <div class="callout formule">
+      f(x) = ax + b<br>
+      a : coefficient angulaire (inclinaison, accroissement de y pour 1 unite d'accroissement de x)<br>
+      b : ordonnee a l'origine (valeur de f(0))
+    </div>
+    <p><strong>Exemple :</strong> f(x) = 2x - 3. Alors f(0) = -3 (le graphique coupe l'axe Oy en -3) et f(4) = 2&times;4-3 = 5.</p>
+    <div class="callout">
+      Il existe aussi la droite d'equation x = k (verticale) : ce n'est <strong>pas</strong> le graphique d'une fonction, car a un seul x correspondrait alors une infinite de valeurs de y.
+    </div>
+  `
+},
+{
+  title: "4. Equation generale d'une droite : ax + by + c = 0",
+  html: `
+    <p>Toute droite non verticale peut s'ecrire sous la forme generale ax + by + c = 0, que l'on peut toujours reduire a la forme y = mx + p (ou a x = k si la droite est verticale).</p>
+    <p><strong>Exemple :</strong> 2x - 3y + 6 = 0. On isole y :</p>
+    <div class="callout formule">
+      2x - 3y + 6 = 0<br>
+      -3y = -2x - 6<br>
+      y = (2/3)x + 2
+    </div>
+    <p>Verification : pour x = 3, y = (2/3)&times;3 + 2 = 4. On verifie bien dans l'equation de depart : 2&times;3 - 3&times;4 + 6 = 6 - 12 + 6 = 0.</p>
+  `
+},
+{
+  title: "5. Coefficient angulaire, parallelisme, perpendicularite",
+  html: `
+    <p>Le <strong class="term" data-def="Le coefficient angulaire d'une droite mesure son inclinaison : c'est le rapport entre l'accroissement de y et l'accroissement de x entre deux points de la droite.">coefficient angulaire</strong> d'une droite passant par A(x1, y1) et B(x2, y2), avec x1 different de x2, vaut :</p>
+    <div class="callout formule">
+      a = (y2 - y1) / (x2 - x1)
+    </div>
+    <p><strong>Exemple :</strong> A(1, 4) et B(3, 10). a = (10-4)/(3-1) = 6/2 = 3. L'equation de la droite, obtenue via y - y1 = a(x - x1), donne y - 4 = 3(x - 1), soit y = 3x + 1. Verification avec B : 3&times;3+1 = 10, correct.</p>
+    <div class="callout">
+      <strong>Deux droites <span class="term" data-def="Deux droites sont parallèles si elles ont le meme coefficient angulaire : elles ne se coupent jamais.">paralleles</span> ont le meme coefficient angulaire.</strong> Exemple : y = 3x + 1 et y = 3x - 5 sont paralleles.<br><br>
+      <strong>Dans un repere orthonorme, deux droites sont <span class="term" data-def="Deux droites sont perpendiculaires, dans un repere orthonorme, si le produit de leurs coefficients angulaires vaut moins un.">perpendiculaires</span> si le produit de leurs coefficients angulaires vaut -1</strong> (a1 &times; a2 = -1). Exemple : une droite de coefficient angulaire 2/3 est perpendiculaire a une droite de coefficient angulaire -3/2, car (2/3)&times;(-3/2) = -1.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Graphique de f(x) = ax", back:"Une droite passant par l'origine (0,0), traduisant une proportionnalite entre x et y."},
+  {front:"Role de b dans f(x) = ax + b", back:"b est l'ordonnee a l'origine : la valeur de f(0), la ou la droite coupe l'axe Oy."},
+  {front:"Role de a dans f(x) = ax + b", back:"a est le coefficient angulaire : l'accroissement de y pour 1 unite d'accroissement de x."},
+  {front:"Droite d'equation x = k", back:"Une droite verticale ; ce n'est pas le graphique d'une fonction."},
+  {front:"Formule du coefficient angulaire entre A(x1,y1) et B(x2,y2)", back:"a = (y2 - y1) / (x2 - x1)."},
+  {front:"Condition de parallelisme de deux droites", back:"Meme coefficient angulaire (a1 = a2)."},
+  {front:"Condition de perpendicularite (repere orthonorme)", back:"Le produit des coefficients angulaires vaut -1 (a1 fois a2 = -1)."},
+  {front:"Forme generale d'une droite", back:"ax + by + c = 0, reductible a y = mx + p (ou x = k si verticale)."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"f(x) = 3x - 2. Calcule f(4).", accepted:[10] },
+    { prompt:"f(x) = -2x + 5. Calcule f(3).", accepted:[-1] },
+    { prompt:"Coefficient angulaire entre A(0,1) et B(2,7).", accepted:[3] },
+    { prompt:"Coefficient angulaire entre A(1,5) et B(4,5).", accepted:[0] },
+    { prompt:"Une droite de coefficient angulaire 4 : quel est le coefficient angulaire d'une droite parallele ?", accepted:[4] },
+    { prompt:"Une droite de coefficient angulaire 2 : quel est le coefficient angulaire d'une droite perpendiculaire (repere orthonorme) ?", accepted:[-0.5,-1/2] },
+    { prompt:"f(x) = ax + b avec f(0) = -4. Quelle est la valeur de b ?", accepted:[-4] },
+    { prompt:"Droite 2x - y + 4 = 0. Quel est le coefficient angulaire ?", accepted:[2] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"Le graphique de f(x) = ax (b = 0) est :",
+    options:["une droite qui ne passe jamais par l'origine","une droite passant par l'origine (0,0)","une parabole","une droite verticale"],
+    correct:1,
+    explain:"f(0) = a*0 = 0, donc la droite passe toujours par l'origine."
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = 2x - 3. Calcule f(4).",
+    accepted:[5], tolerance:0.01,
+    explain:"f(4) = 2*4 - 3 = 8 - 3 = 5."
+  },
+  { type:'numeric', points:1,
+    prompt:"Coefficient angulaire de la droite passant par A(1,4) et B(3,10).",
+    accepted:[3], tolerance:0.01,
+    explain:"a = (10-4)/(3-1) = 6/2 = 3."
+  },
+  { type:'tf', points:1,
+    prompt:"La droite d'equation x = 5 est le graphique d'une fonction.",
+    correct:false,
+    explain:"Faux : a x = 5 correspondrait une infinite de valeurs de y, ce qui contredit la definition d'une fonction."
+  },
+  { type:'tf', points:1,
+    prompt:"Deux droites de coefficients angulaires 2 et -1/2 sont perpendiculaires dans un repere orthonorme.",
+    correct:true,
+    explain:"2 * (-1/2) = -1, la condition de perpendicularite est verifiee."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, la difference entre le role de a et le role de b dans f(x) = ax + b.",
+    keywordGroups:[["a","coefficient angulaire","inclinaison"],["b","ordonnee","origine"],["translation"],["droite"]],
+    modelAnswer:"Dans f(x) = ax + b, le nombre a est le coefficient angulaire : il donne l'inclinaison de la droite, c'est-a-dire de combien y augmente quand x augmente d'une unite. Le nombre b est l'ordonnee a l'origine : c'est la valeur de f(0), l'endroit ou la droite coupe l'axe Oy. Passer de y = ax a y = ax + b revient a translater la droite verticalement de b unites, sans changer son inclinaison."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Dans f(x) = ax + b, le nombre b represente :",
+    options:["le coefficient angulaire","l'ordonnee a l'origine, f(0)","l'abscisse a l'origine","la pente exprimee en pourcent"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Deux droites paralleles ont :",
+    options:["le meme coefficient angulaire","des coefficients angulaires opposes","un produit de coefficients angulaires egal a -1","toujours la meme ordonnee a l'origine"],
+    correct:0
+  },
+  { type:'mcq', points:1,
+    prompt:"La droite d'equation x = k :",
+    options:["est le graphique de f(x) = k","est verticale et n'est pas le graphique d'une fonction","a un coefficient angulaire nul","passe toujours par l'origine"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Le coefficient angulaire d'une droite se calcule par (y2-y1)/(x2-x1).",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Deux droites de coefficients angulaires 3 et 3 sont perpendiculaires.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = -3x + 7. Calcule f(2).",
+    accepted:[1], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Coefficient angulaire de la droite passant par A(0,2) et B(5,17).",
+    accepted:[3], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Droite 4x - 2y + 8 = 0. Donne son coefficient angulaire (reduis-la en y = mx + p).",
+    accepted:[2], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Droite passant par A(2,5) et B(6,13).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule le coefficient angulaire.", accepted:[2], tolerance:0.01},
+      {prompt:"Donne l'ordonnee a l'origine b de cette droite (y = ax + b).", accepted:[1], tolerance:0.01}
+    ]
+  },
+  { type:'match', points:4,
+    prompt:"Associe chaque paire de droites a la bonne relation.",
+    items:[
+      {left:"a1 = 4 et a2 = 4", options:["Paralleles","Perpendiculaires","Ni l'un ni l'autre"], correct:"Paralleles"},
+      {left:"a1 = 2 et a2 = -1/2", options:["Paralleles","Perpendiculaires","Ni l'un ni l'autre"], correct:"Perpendiculaires"},
+      {left:"a1 = 1 et a2 = 5", options:["Paralleles","Perpendiculaires","Ni l'un ni l'autre"], correct:"Ni l'un ni l'autre"},
+      {left:"a1 = -3 et a2 = 1/3", options:["Paralleles","Perpendiculaires","Ni l'un ni l'autre"], correct:"Perpendiculaires"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Un vendeur touche un fixe de 800 euros par mois plus 15 euros par objet vendu. Explique comment ecrire cette situation comme une fonction f(x) = ax + b, en precisant ce que representent a, b et x, puis calcule le salaire pour 20 objets vendus.",
+    keywordGroups:[["800","fixe","b"],["15","a"],["x","objets","vendus"],["1100","salaire"]],
+    modelAnswer:"On pose f(x) = 15x + 800, ou x est le nombre d'objets vendus, a = 15 est le montant gagne par objet (le coefficient angulaire), et b = 800 est le fixe mensuel (l'ordonnee a l'origine, le salaire quand x = 0). Pour 20 objets vendus, f(20) = 15*20 + 800 = 300 + 800 = 1100 euros."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p1-fonctions-premier-degre',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 3e-4e annee) &middot; Prerequis 1/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Fonctions du premier degre",
+  subtitle: "Module de remise a niveau : droites, coefficient angulaire, parallelisme et perpendicularite. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240). Il prepare aux modules de 5e-6e annee qui utilisent intensivement les fonctions et les droites.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les fonctions du premier degre",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p2.html',
+  nextTitle: 'Equations, inequations et systemes du premier degre',
+  footerHtml: 'Prerequis 1/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

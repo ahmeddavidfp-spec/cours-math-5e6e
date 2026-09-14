@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 4 : Pythagore et Thales</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module reprend deux grands theoremes du programme de 3e annee : le <strong class="term" data-def="Le theoreme de Pythagore dit que dans un triangle rectangle, le carre de l'hypotenuse est egal a la somme des carres des deux autres cotes.">theoreme de Pythagore</strong> et les <strong class="term" data-def="Une configuration de Thales est une figure (triangle, ou faisceau de droites paralleles coupe par deux secantes) ou des segments correspondants sont proportionnels.">configurations de Thales</strong>.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>appliquer le theoreme de Pythagore et sa reciproque dans des calculs de distances ;</li>
+        <li>estimer et encadrer une racine carree ;</li>
+        <li>reconnaitre une configuration de Thales et en deduire des egalites de rapports ;</li>
+        <li>utiliser les proprietes des <strong class="term" data-def="Une proportion est une egalite entre deux rapports, du type a/b = c/d.">proportions</strong> (produits en croix, permutation des moyens et des extremes).</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Theoreme de Pythagore",
+  html: `
+    <p>Dans un triangle rectangle, si c est la longueur de l'<strong>hypotenuse</strong> (le cote oppose a l'angle droit) et a, b les longueurs des deux autres cotes :</p>
+    <div class="callout formule">
+      c&sup2; = a&sup2; + b&sup2;
+    </div>
+    <p><strong>Exemple :</strong> triangle rectangle de cotes 3 et 4. L'hypotenuse vaut c = &radic;(3&sup2;+4&sup2;) = &radic;25 = 5 (le celebre triplet 3-4-5).</p>
+    <p>La <strong>reciproque</strong> permet de verifier si un triangle est rectangle : si le carre du plus grand cote est egal a la somme des carres des deux autres, le triangle est rectangle.</p>
+    <table class="data">
+      <tr><th>Application</th><th>Formule</th><th>Exemple</th></tr>
+      <tr><td>Diagonale d'un carre de cote a</td><td>d = a&radic;2</td><td>cote 6 &rarr; d = 6&radic;2 &asymp; 8,49</td></tr>
+      <tr><td>Hauteur d'un triangle equilateral de cote a</td><td>h = a&radic;3 / 2</td><td>cote 10 &rarr; h = 5&radic;3 &asymp; 8,66</td></tr>
+      <tr><td>Distance entre A(x1,y1) et B(x2,y2)</td><td>d = &radic;((x2-x1)&sup2;+(y2-y1)&sup2;)</td><td>A(1,2), B(4,6) &rarr; d = &radic;(3&sup2;+4&sup2;) = 5</td></tr>
+      <tr><td>Diagonale d'un cube d'arete a</td><td>d = a&radic;3</td><td>arete 5 &rarr; d = 5&radic;3 &asymp; 8,66</td></tr>
+    </table>
+  `
+},
+{
+  title: "3. Racines carrees : encadrement et proprietes",
+  html: `
+    <p>Un nombre irrationnel comme &radic;50 n'a pas d'ecriture decimale exacte : on peut l'<strong>encadrer</strong>. Comme 7&sup2;=49 et 8&sup2;=64, on sait que 7 &lt; &radic;50 &lt; 8 (plus precisement &radic;50 &asymp; 7,07).</p>
+    <div class="callout formule">
+      &radic;(a &times; b) = &radic;a &times; &radic;b (pour a, b &ge; 0)<br>
+      &radic;(a / b) = &radic;a / &radic;b (pour a &ge; 0, b &gt; 0)
+    </div>
+    <p><strong>Verification :</strong> &radic;16 &times; &radic;9 = 4 &times; 3 = 12, et &radic;(16&times;9) = &radic;144 = 12. Les deux methodes donnent le meme resultat.</p>
+  `
+},
+{
+  title: "4. Configurations de Thales",
+  html: `
+    <p>Une <strong class="term" data-def="Une configuration de Thales est une figure (triangle, ou faisceau de droites paralleles coupe par deux secantes) ou des segments correspondants sont proportionnels.">configuration de Thales</strong> se rencontre dans deux cas : un triangle avec une droite parallele a l'un des cotes, ou un faisceau de droites paralleles coupe par deux secantes.</p>
+    <p><strong>Exemple (triangle) :</strong> dans un triangle ABC, D est sur [AB] et E sur [AC], avec DE parallele a BC. Si AD = 3, AB = 8 et AC = 12, alors AD/AB = AE/AC, donc AE = (3/8)&times;12 = 4,5. Si de plus BC = 10, alors DE/BC = AD/AB, donc DE = (3/8)&times;10 = 3,75.</p>
+    <p><strong>Exemple (faisceau) :</strong> trois droites paralleles coupent deux secantes. Sur la premiere secante, les segments interceptes mesurent 2 et 3 ; sur la seconde, le premier segment mesure 4. Le second segment x verifie 4/2 = x/3, donc x = 6.</p>
+  `
+},
+{
+  title: "5. Proprietes des proportions",
+  html: `
+    <p>Une <strong class="term" data-def="Une proportion est une egalite entre deux rapports, du type a/b = c/d.">proportion</strong> a/b = c/d verifie deux proprietes utiles :</p>
+    <div class="callout formule">
+      Produits en croix : a/b = c/d &hArr; a &times; d = b &times; c<br>
+      Permutation des moyens : a/b = c/d &hArr; a/c = b/d
+    </div>
+    <p><strong>Exemple (quatrieme proportionnelle) :</strong> trouver x tel que 3/4 = 9/x. Par produits en croix : 3x = 4&times;9 = 36, donc x = 12.</p>
+    <p><strong>Autre application frequente :</strong> les coordonnees du milieu M d'un segment [AB], avec A(x1,y1) et B(x2,y2), sont M = ((x1+x2)/2, (y1+y2)/2). Pour A(2,3) et B(8,11) : M = (5, 7).</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Theoreme de Pythagore", back:"Dans un triangle rectangle, c^2 = a^2 + b^2, ou c est l'hypotenuse."},
+  {front:"Diagonale d'un carre de cote a", back:"d = a * racine(2)."},
+  {front:"Distance entre A(x1,y1) et B(x2,y2)", back:"d = racine((x2-x1)^2 + (y2-y1)^2)."},
+  {front:"racine(a*b)", back:"racine(a) * racine(b), pour a,b positifs ou nuls."},
+  {front:"Configuration de Thales dans un triangle", back:"Si DE est parallele a BC (D sur AB, E sur AC), alors AD/AB = AE/AC = DE/BC."},
+  {front:"Produits en croix", back:"a/b = c/d equivaut a a*d = b*c."},
+  {front:"Coordonnees du milieu d'un segment", back:"M = ((x1+x2)/2, (y1+y2)/2)."},
+  {front:"Reciproque de Pythagore", back:"Si le carre du plus grand cote egale la somme des carres des deux autres, le triangle est rectangle."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Triangle rectangle, cotes 6 et 8. Calcule l'hypotenuse.", accepted:[10] },
+    { prompt:"Carre de cote 4. Calcule sa diagonale (2 decimales).", accepted:[5.66], tolerance:0.02 },
+    { prompt:"A(0,0) et B(6,8). Calcule la distance AB.", accepted:[10] },
+    { prompt:"Thales : AD/AB = AE/AC. AD=2, AB=5, AC=15. Calcule AE.", accepted:[6] },
+    { prompt:"Proportion : 5/x = 15/9. Calcule x.", accepted:[3] },
+    { prompt:"Milieu de A(2,4) et B(10,4). Donne l'abscisse.", accepted:[6] },
+    { prompt:"Hypotenuse d'un triangle rectangle de cotes 9 et 12.", accepted:[15] },
+    { prompt:"racine(25) fois racine(4).", accepted:[10] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Triangle rectangle de cotes 5 et 12. Calcule l'hypotenuse.",
+    accepted:[13], tolerance:0.01,
+    explain:"c = racine(5^2+12^2) = racine(25+144) = racine(169) = 13."
+  },
+  { type:'numeric', points:1,
+    prompt:"A(1,1) et B(5,4). Calcule la distance AB.",
+    accepted:[5], tolerance:0.01,
+    explain:"d = racine((5-1)^2+(4-1)^2) = racine(16+9) = racine(25) = 5."
+  },
+  { type:'tf', points:1,
+    prompt:"Un triangle de cotes 7, 24, 25 est rectangle.",
+    correct:true,
+    explain:"25^2 = 625 et 7^2+24^2 = 49+576 = 625 : la reciproque de Pythagore est verifiee."
+  },
+  { type:'numeric', points:1,
+    prompt:"Configuration de Thales : AD=4, AB=10, AC=20. Calcule AE (AE/AC = AD/AB).",
+    accepted:[8], tolerance:0.01,
+    explain:"AE = (4/10)*20 = 8."
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous la proportion (quatrieme proportionnelle) : 6/8 = x/20.",
+    accepted:[15], tolerance:0.01,
+    explain:"Produits en croix : 8x = 6*20 = 120, donc x = 15."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, comment on utilise le theoreme de Pythagore pour verifier qu'un triangle est rectangle, avec un exemple chiffre.",
+    keywordGroups:[["reciproque"],["plus grand cote","hypotenuse"],["carre"],["exemple"]],
+    modelAnswer:"Pour verifier qu'un triangle est rectangle avec le theoreme de Pythagore, on utilise sa reciproque : on calcule le carre du plus grand cote et on le compare a la somme des carres des deux autres cotes. Si les deux valeurs sont egales, le triangle est rectangle, l'angle droit etant oppose au plus grand cote. Par exemple, pour un triangle de cotes 6, 8 et 10 : 10^2 = 100 et 6^2+8^2 = 36+64 = 100, les deux valeurs sont egales, donc ce triangle est bien rectangle."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Triangle rectangle de cotes 9 et 12. Calcule l'hypotenuse.",
+    accepted:[15], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Carre de cote 5. Calcule sa diagonale (2 decimales).",
+    accepted:[7.07], tolerance:0.02
+  },
+  { type:'numeric', points:1,
+    prompt:"A(2,3) et B(6,6). Calcule la distance AB.",
+    accepted:[5], tolerance:0.01
+  },
+  { type:'tf', points:1,
+    prompt:"Un triangle de cotes 5, 6, 8 est rectangle.",
+    correct:false
+  },
+  { type:'mcq', points:1,
+    prompt:"racine(a fois b), pour a et b positifs, est egal a :",
+    options:["racine(a) + racine(b)","racine(a) fois racine(b)","a fois racine(b)","racine(a+b)"],
+    correct:1
+  },
+  { type:'numeric', points:1,
+    prompt:"Configuration de Thales : AD=5, AB=15, BC=18. Calcule DE (DE/BC = AD/AB).",
+    accepted:[6], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous la proportion : 4/x = 10/15.",
+    accepted:[6], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"A(3,1) et B(9,9) (exemple pour distance et milieu).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule la distance AB.", accepted:[10], tolerance:0.01},
+      {prompt:"Calcule l'ordonnee (y) du milieu de [AB].", accepted:[5], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque triplet de cotes, indique si le triangle correspondant est rectangle ou non.",
+    classifyOptions:["Rectangle","Pas rectangle"],
+    items:[
+      {text:"3, 4, 5", correct:"Rectangle"},
+      {text:"5, 5, 8", correct:"Pas rectangle"},
+      {text:"8, 15, 17", correct:"Rectangle"},
+      {text:"6, 7, 9", correct:"Pas rectangle"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Une echelle de 5 m est posee contre un mur, son pied etant a 3 m du mur. Calcule a quelle hauteur elle touche le mur, en expliquant ta demarche avec le theoreme de Pythagore.",
+    keywordGroups:[["pythagore"],["5","hypotenuse"],["3"],["4","hauteur"]],
+    modelAnswer:"L'echelle, le mur et le sol forment un triangle rectangle : l'echelle (5 m) est l'hypotenuse, la distance au mur (3 m) est un cote, et la hauteur cherchee h est l'autre cote. Par le theoreme de Pythagore, 5^2 = 3^2 + h^2, donc h^2 = 25 - 9 = 16, d'ou h = 4. L'echelle touche donc le mur a une hauteur de 4 metres."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p4-pythagore-thales',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 3e annee) &middot; Prerequis 4/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Theoreme de Pythagore et configurations de Thales",
+  subtitle: "Module de remise a niveau : distances, racines carrees et proportions. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "Pythagore et Thales",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p5.html',
+  nextTitle: 'Angles, isometrie et similitude des triangles',
+  footerHtml: 'Prerequis 4/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

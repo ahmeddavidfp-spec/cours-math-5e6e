@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 8 : Radicaux et puissances rationnelles</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module (4e annee) etend les puissances aux exposants rationnels et introduit la methode des <strong class="term" data-def="La methode des coefficients indetermines consiste a poser une expression algebrique avec des lettres inconnues, puis a utiliser des conditions donnees pour calculer ces lettres.">coefficients indetermines</strong>.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>resoudre l'equation x&sup2; = a et connaitre les proprietes des radicaux d'indice 2 ;</li>
+        <li>calculer avec des <strong class="term" data-def="Un radical d'indice n, note racine n-ieme de a, est le nombre qui, eleve a la puissance n, redonne a.">radicaux d'indice n</strong> et des puissances a exposants rationnels ;</li>
+        <li>utiliser la methode des coefficients indetermines pour trouver une expression algebrique verifiant des conditions donnees.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Racines de x^2 = a",
+  html: `
+    <p>Pour a &ge; 0, l'equation x&sup2; = a a deux solutions (si a &gt; 0) : x = &radic;a et x = -&radic;a. Pour a &lt; 0, elle n'a aucune solution reelle (un carre est toujours &ge; 0).</p>
+    <p><strong>Exemple :</strong> x&sup2; = 49 a pour solutions x = 7 et x = -7. x&sup2; = -4 n'a pas de solution reelle.</p>
+  `
+},
+{
+  title: "3. Radicaux d'indice n et puissances a exposants rationnels",
+  html: `
+    <p>Le <strong class="term" data-def="Un radical d'indice n, note racine n-ieme de a, est le nombre qui, eleve a la puissance n, redonne a.">radical d'indice n</strong> de a, note racine n-ieme de a, est le nombre qui, eleve a la puissance n, redonne a.</p>
+    <div class="callout formule">
+      a^(1/n) = racine n-ieme de a<br>
+      a^(p/q) = racine q-ieme de (a^p) = (racine q-ieme de a)^p
+    </div>
+    <p><strong>Exemples :</strong> 27^(1/3) = racine cubique de 27 = 3 (car 3&sup3;=27). 8^(2/3) = (racine cubique de 8)&sup2; = 2&sup2; = 4. 16^(3/4) = (racine 4e de 16)&sup3; = 2&sup3; = 8.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> a^(p/q) n'est defini pour a negatif que dans certains cas particuliers (q impair). En pratique, au 2e degre, on se limite le plus souvent a des bases positives.
+    </div>
+  `
+},
+{
+  title: "4. Methode des coefficients indetermines",
+  html: `
+    <p>La <strong class="term" data-def="La methode des coefficients indetermines consiste a poser une expression algebrique avec des lettres inconnues, puis a utiliser des conditions donnees pour calculer ces lettres.">methode des coefficients indetermines</strong> consiste a poser une expression avec des lettres inconnues (les coefficients), puis a utiliser les conditions donnees par l'enonce pour former un systeme d'equations et calculer ces lettres.</p>
+    <p><strong>Exemple :</strong> trouver &alpha;, &beta;, &gamma; tels que la courbe d'equation y = &alpha;x&sup2; + &beta;x + &gamma; passe par les points (0,1), (1,4) et (2,9).</p>
+    <div class="callout formule">
+      x=0 : &gamma; = 1<br>
+      x=1 : &alpha; + &beta; + &gamma; = 4 &rArr; &alpha; + &beta; = 3<br>
+      x=2 : 4&alpha; + 2&beta; + &gamma; = 9 &rArr; 2&alpha; + &beta; = 4<br>
+      En soustrayant : &alpha; = 1, donc &beta; = 2
+    </div>
+    <p>La courbe cherchee est y = x&sup2; + 2x + 1, soit (x+1)&sup2;. Verification : en x=0, y=1 ; en x=1, y=4 ; en x=2, y=9. Correct.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Solutions de x^2 = 36", back:"x = 6 et x = -6."},
+  {front:"a^(1/n)", back:"La racine n-ieme de a : le nombre qui, eleve a la puissance n, redonne a."},
+  {front:"a^(p/q)", back:"La racine q-ieme de a, elevee a la puissance p (ou l'inverse)."},
+  {front:"27^(1/3)", back:"3, car 3 au cube vaut 27."},
+  {front:"8^(2/3)", back:"4, car (racine cubique de 8)^2 = 2^2 = 4."},
+  {front:"x^2 = -9 : combien de solutions reelles ?", back:"Aucune : un carre ne peut pas etre negatif."},
+  {front:"Methode des coefficients indetermines", back:"Poser l'expression avec des lettres inconnues, puis utiliser les conditions donnees pour former un systeme et les calculer."},
+  {front:"Trouver y=ax^2+bx+c passant par (0,1),(1,4),(2,9)", back:"y = x^2 + 2x + 1, soit (x+1)^2."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Resous x^2 = 64 : donne la solution positive.", accepted:[8] },
+    { prompt:"Calcule 64^(1/3).", accepted:[4] },
+    { prompt:"Calcule 9^(3/2) (= (racine de 9)^3).", accepted:[27] },
+    { prompt:"Calcule 4^(1/2).", accepted:[2] },
+    { prompt:"Calcule 32^(1/5).", accepted:[2] },
+    { prompt:"Combien de solutions reelles a x^2 = -16 ?", accepted:[0] },
+    { prompt:"Calcule 25^(3/2) (= (racine de 25)^3).", accepted:[125] },
+    { prompt:"Calcule 81^(1/4).", accepted:[3] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Resous x^2 = 121 : donne la solution positive.",
+    accepted:[11], tolerance:0.01,
+    explain:"racine(121) = 11, donc x=11 ou x=-11."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule 125^(1/3).",
+    accepted:[5], tolerance:0.01,
+    explain:"5^3 = 125, donc 125^(1/3) = 5."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule 16^(3/4).",
+    accepted:[8], tolerance:0.01,
+    explain:"16^(3/4) = (racine 4e de 16)^3 = 2^3 = 8."
+  },
+  { type:'tf', points:1,
+    prompt:"L'equation x^2 = -25 a deux solutions reelles.",
+    correct:false,
+    explain:"Un carre est toujours positif ou nul, donc x^2=-25 n'a aucune solution reelle."
+  },
+  { type:'data', points:2,
+    prompt:"Trouve alpha et beta tels que y = alpha*x + beta passe par (1,5) et (3,13).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule alpha.", accepted:[4], tolerance:0.01},
+      {prompt:"Calcule beta.", accepted:[1], tolerance:0.01}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, la methode des coefficients indetermines, avec un exemple simple.",
+    keywordGroups:[["lettres","inconnues","coefficients"],["conditions","points"],["systeme"],["exemple"]],
+    modelAnswer:"La methode des coefficients indetermines consiste a ecrire une expression algebrique (par exemple une droite ou une parabole) avec des lettres representant des coefficients inconnus. On utilise ensuite les conditions donnees par l'enonce, comme le fait que la courbe doit passer par certains points, pour obtenir des equations. En resolvant le systeme forme par ces equations, on determine la valeur de chaque coefficient. Par exemple, pour trouver a et b tels que y=ax+b passe par (0,2) et (1,5), on obtient directement b=2, puis a+2=5 donc a=3."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Resous x^2 = 144 : donne la solution positive.",
+    accepted:[12], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule 8^(2/3).",
+    accepted:[4], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule 1000^(1/3).",
+    accepted:[10], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"a^(1/n) represente :",
+    options:["a multiplie par n","la racine n-ieme de a","a a la puissance n","a divise par n"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"x^2 = 0 a exactement une solution reelle (x=0).",
+    correct:true
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule 49^(3/2).",
+    accepted:[343], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Trouve alpha, beta, gamma tels que y = alpha*x^2 + beta*x + gamma passe par (0,0), (1,3) et (2,10).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule gamma.", accepted:[0], tolerance:0.01},
+      {prompt:"Calcule alpha.", accepted:[2], tolerance:0.01}
+    ]
+  },
+  { type:'tf', points:1,
+    prompt:"64^(1/3) vaut 4.",
+    correct:true
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque equation x^2 = a, indique si elle a deux solutions, une solution, ou aucune solution reelle.",
+    classifyOptions:["Deux solutions","Une solution","Aucune solution"],
+    items:[
+      {text:"x^2 = 100", correct:"Deux solutions"},
+      {text:"x^2 = 0", correct:"Une solution"},
+      {text:"x^2 = -5", correct:"Aucune solution"},
+      {text:"x^2 = 81", correct:"Deux solutions"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Trouve a et b tels que la parabole y = a(x-2)^2 + b passe par le sommet (2,-3) et par le point (4,5). Explique ta demarche.",
+    keywordGroups:[["sommet","2,-3","b=-3"],["4,5"],["a=2"],["forme canonique"]],
+    modelAnswer:"La forme y = a(x-2)^2 + b est deja la forme canonique d'une parabole de sommet (2, b). Comme le sommet donne est (2,-3), on a directement b = -3. En utilisant le second point (4,5) : 5 = a(4-2)^2 - 3, soit 5 = 4a - 3, donc 4a = 8 et a = 2. La parabole cherchee est donc y = 2(x-2)^2 - 3."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p8-radicaux-puissances',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 8/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Radicaux, puissances rationnelles et coefficients indetermines",
+  subtitle: "Module de remise a niveau : racines, exposants rationnels et methode des coefficients indetermines. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les radicaux et les coefficients indetermines",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p9.html',
+  nextTitle: 'Fonction du deuxieme degre',
+  footerHtml: 'Prerequis 8/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

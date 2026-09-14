@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 10 : Calcul vectoriel et produit scalaire</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module (4e annee) introduit le calcul vectoriel dans le plan : un outil indispensable pour la geometrie analytique de l'espace, etudiee en 6e annee.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>calculer la somme, la difference et le produit d'un <strong class="term" data-def="Un vecteur est represente par un couple de nombres (ses composantes) et associe a une translation.">vecteur</strong> par un nombre ;</li>
+        <li>utiliser les vecteurs pour demontrer l'alignement de points ou le parallelisme de droites ;</li>
+        <li>calculer un <strong class="term" data-def="Le produit scalaire de deux vecteurs u(x1,y1) et v(x2,y2) est le nombre x1*x2 + y1*y2 ; il vaut zero si et seulement si les vecteurs sont perpendiculaires.">produit scalaire</strong> et l'interpreter geometriquement.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Composantes, somme et produit par un nombre",
+  html: `
+    <p>Un <strong class="term" data-def="Un vecteur est represente par un couple de nombres (ses composantes) et associe a une translation.">vecteur</strong> AB, associe a une translation, se represente par un couple de composantes (x, y).</p>
+    <div class="callout formule">
+      Somme : (x1,y1) + (x2,y2) = (x1+x2, y1+y2)<br>
+      Produit par un nombre k : k &times; (x,y) = (kx, ky)<br>
+      Relation de Chasles : vecteur AB + vecteur BC = vecteur AC
+    </div>
+    <p><strong>Exemple :</strong> u = (3,4) et v = (1,2). u + v = (4,6). 2u = (6,8).</p>
+  `
+},
+{
+  title: "3. Alignement et parallelisme",
+  html: `
+    <p>Deux vecteurs non nuls sont <strong>paralleles</strong> (ou colineaires) si l'un est un multiple de l'autre : leurs composantes sont proportionnelles.</p>
+    <p><strong>Exemple :</strong> A(1,1), B(3,5), C(5,9). Vecteur AB = (2,4), vecteur AC = (4,8) = 2 &times; AB. Les deux vecteurs sont paralleles et partagent le point A : les points A, B, C sont donc <strong>alignes</strong>.</p>
+    <div class="callout">
+      Pour demontrer que deux droites sont paralleles, il suffit de montrer que leurs vecteurs directeurs sont colineaires (composantes proportionnelles).
+    </div>
+  `
+},
+{
+  title: "4. Produit scalaire",
+  html: `
+    <p>Le <strong class="term" data-def="Le produit scalaire de deux vecteurs u(x1,y1) et v(x2,y2) est le nombre x1*x2 + y1*y2 ; il vaut zero si et seulement si les vecteurs sont perpendiculaires.">produit scalaire</strong> de deux vecteurs u(x1,y1) et v(x2,y2) se calcule de deux facons equivalentes :</p>
+    <div class="callout formule">
+      u &middot; v = x1 &times; x2 + y1 &times; y2 (composantes)<br>
+      u &middot; v = |u| &times; |v| &times; cos(&alpha;) (norme et angle entre les vecteurs)
+    </div>
+    <p><strong>Exemple :</strong> u = (3,4), v = (1,2). u&middot;v = 3&times;1 + 4&times;2 = 3+8 = 11. Comme |u| = 5 et |v| = &radic;5, on peut retrouver l'angle : cos(&alpha;) = 11 / (5&times;&radic;5) &asymp; 0,984, donc &alpha; &asymp; 10,3&deg;.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> le produit scalaire est un <strong>nombre</strong> (un scalaire), pas un vecteur. Deux vecteurs sont perpendiculaires si et seulement si leur produit scalaire vaut 0.
+    </div>
+  `
+},
+{
+  title: "5. Theoreme de Pythagore generalise",
+  html: `
+    <p>Le produit scalaire permet d'exprimer le <strong>theoreme de Pythagore generalise</strong> (aussi appele loi des cosinus, revu au module suivant sur la trigonometrie du cercle) : dans un triangle, si les cotes sont vus comme des vecteurs, le carre de la longueur d'un cote se relie aux deux autres via le produit scalaire de leurs vecteurs.</p>
+    <p>Cette approche vectorielle du produit scalaire prepare directement les vecteurs de l'espace (6e annee), ou les memes formules se generalisent avec trois composantes au lieu de deux.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Somme de deux vecteurs (x1,y1) et (x2,y2)", back:"(x1+x2, y1+y2)."},
+  {front:"Produit d'un vecteur (x,y) par un nombre k", back:"(kx, ky)."},
+  {front:"Relation de Chasles", back:"vecteur AB + vecteur BC = vecteur AC."},
+  {front:"Condition de parallelisme de deux vecteurs", back:"Leurs composantes sont proportionnelles (l'un est un multiple de l'autre)."},
+  {front:"Produit scalaire de u(x1,y1) et v(x2,y2)", back:"u.v = x1*x2 + y1*y2."},
+  {front:"Produit scalaire nul", back:"Les deux vecteurs sont perpendiculaires."},
+  {front:"Norme d'un vecteur (x,y)", back:"racine(x^2 + y^2)."},
+  {front:"Produit scalaire, formule avec l'angle", back:"u.v = |u| * |v| * cos(angle entre u et v)."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"u=(2,3), v=(4,1). Calcule la premiere composante de u+v.", accepted:[6] },
+    { prompt:"u=(2,3), v=(4,1). Calcule u.v (produit scalaire).", accepted:[11] },
+    { prompt:"u=(5,0), v=(0,3). Calcule u.v.", accepted:[0] },
+    { prompt:"Vecteur (3,4) : calcule sa norme.", accepted:[5] },
+    { prompt:"3 fois le vecteur (2,-1) : donne la premiere composante.", accepted:[6] },
+    { prompt:"u=(1,2), v=(2,4). Sont-ils paralleles ? Reponds 'oui'.", accepted:['oui'] },
+    { prompt:"u=(1,1), v=(1,-1). Calcule u.v.", accepted:[0] },
+    { prompt:"u=(0,5), v=(0,-2). Calcule u.v.", accepted:[-10] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"u = (2,5), v = (3,-1). Calcule la deuxieme composante de u+v.",
+    accepted:[4], tolerance:0.01,
+    explain:"5 + (-1) = 4."
+  },
+  { type:'numeric', points:1,
+    prompt:"u = (4,3), v = (2,1). Calcule le produit scalaire u.v.",
+    accepted:[11], tolerance:0.01,
+    explain:"u.v = 4*2 + 3*1 = 8+3 = 11."
+  },
+  { type:'tf', points:1,
+    prompt:"Deux vecteurs dont le produit scalaire vaut 0 sont perpendiculaires.",
+    correct:true,
+    explain:"C'est la caracterisation la plus utile du produit scalaire nul."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule la norme du vecteur (6,8).",
+    accepted:[10], tolerance:0.01,
+    explain:"racine(6^2+8^2) = racine(100) = 10."
+  },
+  { type:'data', points:2,
+    prompt:"A(2,1), B(5,7), C(8,13) (verifier l'alignement).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule la deuxieme composante du vecteur AB.", accepted:[6], tolerance:0.01},
+      {prompt:"Calcule la deuxieme composante du vecteur AC.", accepted:[12], tolerance:0.01}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, comment utiliser les vecteurs pour demontrer que trois points sont alignes, avec un exemple.",
+    keywordGroups:[["vecteurs","AB","AC"],["proportionnel","colineaire","multiple"],["exemple"],["aligne"]],
+    modelAnswer:"Pour demontrer que trois points A, B, C sont alignes avec les vecteurs, on calcule les composantes des vecteurs AB et AC. Si l'un de ces vecteurs est un multiple de l'autre, c'est-a-dire si leurs composantes sont proportionnelles, alors les vecteurs sont paralleles ; comme ils partagent le point A, cela signifie que A, B et C sont sur la meme droite. Par exemple, pour A(0,0), B(2,3), C(4,6), on a AB=(2,3) et AC=(4,6)=2*AB : les vecteurs sont colineaires, donc A, B et C sont alignes."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"u = (1,6), v = (5,-2). Calcule la premiere composante de u+v.",
+    accepted:[6], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"u = (5,2), v = (1,4). Calcule le produit scalaire u.v.",
+    accepted:[13], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"Deux vecteurs sont paralleles si :",
+    options:["leur produit scalaire vaut 0","leurs composantes sont proportionnelles","leurs normes sont egales","ils ont la meme premiere composante"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Le produit scalaire de deux vecteurs est un vecteur.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule la norme du vecteur (8,15).",
+    accepted:[17], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"u = (3,0), v = (0,7). Calcule u.v.",
+    accepted:[0], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"A(1,2), B(4,6), C(10,14) (verifier l'alignement).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule la premiere composante du vecteur AB.", accepted:[3], tolerance:0.01},
+      {prompt:"Calcule la premiere composante du vecteur AC.", accepted:[9], tolerance:0.01}
+    ]
+  },
+  { type:'tf', points:1,
+    prompt:"Les points A(1,2), B(4,6), C(10,14) sont alignes.",
+    correct:true
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque paire de vecteurs, indique si le produit scalaire est nul (perpendiculaires) ou non.",
+    classifyOptions:["Produit scalaire nul","Produit scalaire non nul"],
+    items:[
+      {text:"u=(2,0) et v=(0,5)", correct:"Produit scalaire nul"},
+      {text:"u=(1,1) et v=(1,1)", correct:"Produit scalaire non nul"},
+      {text:"u=(3,4) et v=(4,-3)", correct:"Produit scalaire nul"},
+      {text:"u=(2,3) et v=(1,1)", correct:"Produit scalaire non nul"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"On donne u = (4,-3). Trouve un vecteur v non nul perpendiculaire a u, en expliquant ta demarche a partir du produit scalaire.",
+    keywordGroups:[["produit scalaire","0"],["4x+","-3y"],["exemple","3,4"],["perpendiculaire"]],
+    modelAnswer:"Pour que v=(x,y) soit perpendiculaire a u=(4,-3), il faut que leur produit scalaire soit nul : 4x - 3y = 0, soit 4x = 3y. Une solution simple est x=3 et y=4, ce qui donne v=(3,4). On verifie : u.v = 4*3 + (-3)*4 = 12-12 = 0, donc u et v sont bien perpendiculaires. Une astuce generale : pour un vecteur (a,b), le vecteur (-b,a) lui est toujours perpendiculaire ; ici, cela donnerait (3,4), le meme resultat."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p10-vecteurs-produit-scalaire',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 10/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Calcul vectoriel et produit scalaire",
+  subtitle: "Module de remise a niveau : vecteurs, alignement, parallelisme et produit scalaire dans le plan. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240). Prerequis direct pour la geometrie analytique de l'espace, etudiee en 6e annee.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "le calcul vectoriel et le produit scalaire",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p11.html',
+  nextTitle: 'Trigonometrie du cercle',
+  footerHtml: 'Prerequis 10/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

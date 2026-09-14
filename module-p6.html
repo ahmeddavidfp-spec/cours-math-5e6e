@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 6 : Trigonometrie du triangle rectangle</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module reprend la trigonometrie du triangle rectangle (programme de 3e annee), derniere brique avant d'aborder la trigonometrie du cercle en 4e annee et les fonctions trigonometriques en 5e.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>definir le <strong class="term" data-def="Dans un triangle rectangle, le cosinus d'un angle aigu est le rapport entre le cote adjacent a cet angle et l'hypotenuse.">cosinus</strong>, le <strong class="term" data-def="Dans un triangle rectangle, le sinus d'un angle aigu est le rapport entre le cote oppose a cet angle et l'hypotenuse.">sinus</strong> et la <strong class="term" data-def="Dans un triangle rectangle, la tangente d'un angle aigu est le rapport entre le cote oppose et le cote adjacent a cet angle.">tangente</strong> d'un angle aigu ;</li>
+        <li>utiliser la calculatrice pour passer d'un angle a un nombre trigonometrique et reciproquement ;</li>
+        <li>connaitre les valeurs remarquables a 30&deg;, 45&deg; et 60&deg; ;</li>
+        <li>resoudre des problemes de distances inaccessibles.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Definitions dans le triangle rectangle",
+  html: `
+    <p>Dans un triangle rectangle, pour un angle aigu &alpha; :</p>
+    <div class="callout formule">
+      cos &alpha; = cote adjacent / hypotenuse<br>
+      sin &alpha; = cote oppose / hypotenuse<br>
+      tg &alpha; = cote oppose / cote adjacent
+    </div>
+    <p><strong>Exemple :</strong> triangle rectangle d'hypotenuse 10 et d'angle aigu 30&deg;. Le cote oppose a cet angle vaut 10 &times; sin(30&deg;) = 10 &times; 0,5 = 5. Le cote adjacent vaut 10 &times; cos(30&deg;) = 10 &times; 0,866 &asymp; 8,66.</p>
+  `
+},
+{
+  title: "3. Formules fondamentales",
+  html: `
+    <div class="callout formule">
+      sin&sup2; &alpha; + cos&sup2; &alpha; = 1<br>
+      tg &alpha; = sin &alpha; / cos &alpha;
+    </div>
+    <p><strong>Verification :</strong> pour &alpha; = 30&deg;, sin&sup2;(30&deg;) + cos&sup2;(30&deg;) = 0,25 + 0,75 = 1. Ces relations, deduites de Pythagore, permettent de retrouver un nombre trigonometrique a partir d'un autre, sans repasser par les longueurs du triangle.</p>
+  `
+},
+{
+  title: "4. Valeurs remarquables : 30deg, 45deg, 60deg",
+  html: `
+    <p>Les nombres trigonometriques de 45&deg; se deduisent d'un demi-carre ; ceux de 30&deg; et 60&deg;, d'un demi-triangle equilateral.</p>
+    <table class="data">
+      <tr><th>Angle</th><th>sin</th><th>cos</th><th>tg</th></tr>
+      <tr><td>30&deg;</td><td>1/2 = 0,5</td><td>&radic;3/2 &asymp; 0,866</td><td>&radic;3/3 &asymp; 0,577</td></tr>
+      <tr><td>45&deg;</td><td>&radic;2/2 &asymp; 0,707</td><td>&radic;2/2 &asymp; 0,707</td><td>1</td></tr>
+      <tr><td>60&deg;</td><td>&radic;3/2 &asymp; 0,866</td><td>1/2 = 0,5</td><td>&radic;3 &asymp; 1,732</td></tr>
+    </table>
+    <p>On remarque que sin(30&deg;) = cos(60&deg;) et sin(60&deg;) = cos(30&deg;) : ces deux angles sont complementaires (leur somme vaut 90&deg;).</p>
+  `
+},
+{
+  title: "5. Applications : pentes et distances inaccessibles",
+  html: `
+    <p>La pente d'une route, exprimee en %, est le rapport entre la difference d'altitude et la progression horizontale correspondante ; c'est exactement la tangente de l'angle d'inclinaison, exprimee en pourcentage.</p>
+    <p><strong>Exemple :</strong> une route monte de 15 m sur 100 m de progression horizontale. Sa pente est 15/100 = 15 %, ce qui correspond a un angle d'environ 8,5&deg; (arctangente de 0,15).</p>
+    <p><strong>Distance inaccessible :</strong> depuis un point situe a 20 m du pied d'un arbre, le sommet est vu sous un angle de 35&deg; par rapport a l'horizontale. La hauteur de l'arbre vaut h = 20 &times; tg(35&deg;) &asymp; 20 &times; 0,700 &asymp; 14,0 m.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"cos(alpha) dans un triangle rectangle", back:"cote adjacent / hypotenuse."},
+  {front:"sin(alpha) dans un triangle rectangle", back:"cote oppose / hypotenuse."},
+  {front:"tg(alpha) dans un triangle rectangle", back:"cote oppose / cote adjacent = sin(alpha)/cos(alpha)."},
+  {front:"Formule fondamentale", back:"sin^2(alpha) + cos^2(alpha) = 1."},
+  {front:"sin(45deg) et cos(45deg)", back:"Les deux valent racine(2)/2, environ 0,707."},
+  {front:"tg(45deg)", back:"1."},
+  {front:"sin(30deg)", back:"1/2 = 0,5, et c'est egal a cos(60deg) car 30 et 60 sont complementaires."},
+  {front:"Pente d'une route en %", back:"Le rapport entre la difference d'altitude et la progression horizontale, soit la tangente de l'angle en pourcentage."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Triangle rectangle, hypotenuse 20, angle 30deg. Calcule le cote oppose.", accepted:[10] },
+    { prompt:"Quelle est la valeur de tg(45deg) ?", accepted:[1] },
+    { prompt:"sin(30deg) = ?", accepted:[0.5] },
+    { prompt:"cos(60deg) = ?", accepted:[0.5] },
+    { prompt:"sin^2(alpha)+cos^2(alpha) = ?", accepted:[1] },
+    { prompt:"Triangle rectangle, cote adjacent 10, angle 60deg. Calcule l'hypotenuse (h = adjacent/cos(60)).", accepted:[20] },
+    { prompt:"Pente : difference d'altitude 8 m sur 100 m horizontal. Quelle pente en % ?", accepted:[8] },
+    { prompt:"tg(60deg), arrondi a 2 decimales.", accepted:[1.73], tolerance:0.02 }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Triangle rectangle, hypotenuse 10, angle aigu 30deg. Calcule le cote oppose (2 decimales).",
+    accepted:[5], tolerance:0.02,
+    explain:"cote oppose = 10*sin(30deg) = 10*0,5 = 5."
+  },
+  { type:'numeric', points:1,
+    prompt:"Triangle rectangle, hypotenuse 10, angle aigu 30deg. Calcule le cote adjacent (2 decimales).",
+    accepted:[8.66], tolerance:0.02,
+    explain:"cote adjacent = 10*cos(30deg) = 10*0,866 = 8,66."
+  },
+  { type:'tf', points:1,
+    prompt:"tg(alpha) = sin(alpha) / cos(alpha).",
+    correct:true,
+    explain:"C'est la formule fondamentale reliant les trois nombres trigonometriques."
+  },
+  { type:'mcq', points:1,
+    prompt:"sin(45deg) vaut :",
+    options:["1/2","racine(2)/2","racine(3)/2","1"],
+    correct:1,
+    explain:"sin(45deg) = racine(2)/2, environ 0,707."
+  },
+  { type:'numeric', points:1,
+    prompt:"Un observateur a 30 m du pied d'une tour voit le sommet sous un angle de 40deg. Calcule la hauteur de la tour (h = 30*tg(40deg), arrondi a 1 decimale).",
+    accepted:[25.2], tolerance:0.3,
+    explain:"h = 30*tg(40deg) = 30*0,839 = 25,2 m environ."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, comment calculer la hauteur d'un objet inaccessible en connaissant la distance a son pied et l'angle sous lequel on voit son sommet.",
+    keywordGroups:[["tangente","tg"],["oppose"],["distance","adjacent"],["angle"]],
+    modelAnswer:"Si on connait la distance horizontale d jusqu'au pied de l'objet et l'angle alpha sous lequel on voit son sommet, on peut utiliser la tangente : dans le triangle rectangle forme par l'objet, le sol et la ligne de visee, le cote adjacent a l'angle est la distance d et le cote oppose est la hauteur cherchee h. Comme tg(alpha) = oppose/adjacent = h/d, on trouve h = d * tg(alpha). Cette methode permet de calculer des hauteurs sans avoir a monter jusqu'au sommet, en mesurant simplement une distance au sol et un angle."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Triangle rectangle, hypotenuse 12, angle aigu 60deg. Calcule le cote oppose (2 decimales).",
+    accepted:[10.39], tolerance:0.05
+  },
+  { type:'mcq', points:1,
+    prompt:"cos(alpha) dans un triangle rectangle est le rapport :",
+    options:["oppose/hypotenuse","adjacent/hypotenuse","oppose/adjacent","hypotenuse/adjacent"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"tg(60deg) vaut environ :",
+    options:["0,577","1","1,732","0,866"],
+    correct:2
+  },
+  { type:'tf', points:1,
+    prompt:"sin(30deg) est egal a cos(60deg).",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"sin^2(alpha) - cos^2(alpha) = 1 pour tout angle aigu.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Une route a une pente de 12% sur une progression horizontale de 250 m. Calcule la difference d'altitude, en metres.",
+    accepted:[30], tolerance:0.5
+  },
+  { type:'numeric', points:1,
+    prompt:"Triangle rectangle, cote adjacent 15, angle aigu 45deg. Calcule l'hypotenuse (h = adjacent/cos(45deg), 2 decimales).",
+    accepted:[21.21], tolerance:0.1
+  },
+  { type:'data', points:2,
+    prompt:"Un phare est vu depuis un bateau a 80 m de sa base, sous un angle de 25deg.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule la hauteur du phare (h = 80*tg(25deg), 1 decimale).", accepted:[37.3], tolerance:0.5},
+      {prompt:"Si l'angle etait plus grand (le bateau se rapproche), la hauteur calculee changerait-elle ? Reponds 'non' (la hauteur reelle du phare ne change pas).", accepted:['non'], tolerance:undefined}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque rapport, indique s'il correspond au sinus, au cosinus ou a la tangente de l'angle aigu concerne.",
+    classifyOptions:["sinus","cosinus","tangente"],
+    items:[
+      {text:"cote oppose / hypotenuse", correct:"sinus"},
+      {text:"cote adjacent / hypotenuse", correct:"cosinus"},
+      {text:"cote oppose / cote adjacent", correct:"tangente"},
+      {text:"sin(alpha) / cos(alpha)", correct:"tangente"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Un skieur descend une pente de 18% sur une longueur horizontale de 400 m. Calcule la difference d'altitude descendue et explique le lien entre pente en % et tangente de l'angle.",
+    keywordGroups:[["72","difference"],["tangente","tg"],["pente","%"],["angle"]],
+    modelAnswer:"La pente de 18% signifie que pour 100 m de progression horizontale, on descend de 18 m : c'est le rapport (difference d'altitude)/(progression horizontale), exactement la tangente de l'angle d'inclinaison exprimee en pourcentage. Sur 400 m de progression horizontale, la difference d'altitude est donc 400 * 0,18 = 72 m. Ce rapport de 18% correspond a un angle dont la tangente vaut 0,18, soit un angle d'environ 10,2 degres."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p6-trigo-triangle-rectangle',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 3e annee) &middot; Prerequis 6/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Trigonometrie du triangle rectangle",
+  subtitle: "Module de remise a niveau : sinus, cosinus, tangente, valeurs remarquables et distances inaccessibles. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240). C'est le dernier module de remise a niveau de 3e annee.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la trigonometrie du triangle rectangle",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p7.html',
+  nextTitle: 'Fonctions de reference et transformations',
+  footerHtml: 'Prerequis 6/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

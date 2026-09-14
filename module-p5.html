@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 5 : Angles, isometrie et similitude</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module reprend les angles particuliers, l'<strong class="term" data-def="Deux figures sont isometriques si elles sont superposables : on passe de l'une a l'autre par une ou plusieurs translations, rotations ou symetries, sans changer les longueurs ni les angles.">isometrie</strong> et la <strong class="term" data-def="Deux figures sont semblables si elles ont la meme forme : leurs angles correspondants sont egaux et leurs cotes correspondants sont proportionnels.">similitude</strong> des triangles (programme de 3e annee).</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>utiliser les relations entre angle au centre, angle inscrit et angles a cotes paralleles ou perpendiculaires ;</li>
+        <li>reconnaitre un triangle rectangle par son inscriptibilite dans un demi-cercle ;</li>
+        <li>identifier des triangles isometriques ou semblables et justifier avec le bon cas ;</li>
+        <li>utiliser le rapport des perimetres et des aires de deux figures semblables.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Angles particuliers",
+  html: `
+    <div class="callout formule">
+      Angle au centre = 2 &times; angle inscrit interceptant le meme arc.<br>
+      Angles a cotes paralleles : egaux si de meme sens, supplementaires (somme = 180 deg) si de sens contraires.<br>
+      Angles a cotes perpendiculaires : la meme regle s'applique.
+    </div>
+    <p><strong>Exemple :</strong> un angle inscrit vaut 35&deg;. L'angle au centre qui intercepte le meme arc vaut 2&times;35&deg; = 70&deg;. Inversement, un angle au centre de 100&deg; correspond a un angle inscrit de 50&deg;.</p>
+  `
+},
+{
+  title: "3. Triangle rectangle inscrit dans un demi-cercle",
+  html: `
+    <p>Un triangle est rectangle si et seulement si il est inscrit dans un demi-cercle dont le diametre est son hypotenuse : le sommet de l'angle droit se trouve sur le cercle de diametre l'hypotenuse.</p>
+    <p>De maniere equivalente, la mediane relative a l'hypotenuse d'un triangle rectangle mesure exactement la moitie de l'hypotenuse.</p>
+    <p><strong>Exemple :</strong> un triangle rectangle a une hypotenuse de 10 cm. Sa mediane relative a l'hypotenuse mesure 10/2 = 5 cm.</p>
+  `
+},
+{
+  title: "4. Isometrie des triangles",
+  html: `
+    <p>Deux figures sont <strong class="term" data-def="Deux figures sont isometriques si elles sont superposables : on passe de l'une a l'autre par une ou plusieurs translations, rotations ou symetries, sans changer les longueurs ni les angles.">isometriques</strong> si elles sont superposables. Pour prouver que deux triangles sont isometriques, trois cas suffisent :</p>
+    <table class="data">
+      <tr><th>Cas</th><th>Donnees minimales</th></tr>
+      <tr><td>CCC</td><td>Les trois cotes egaux deux a deux.</td></tr>
+      <tr><td>CAC</td><td>Deux cotes egaux et l'angle qu'ils forment (l'angle compris) egal.</td></tr>
+      <tr><td>ACA</td><td>Deux angles egaux et le cote compris entre eux egal.</td></tr>
+    </table>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> deux triangles ayant deux cotes egaux et un angle egal qui n'est PAS l'angle compris entre ces deux cotes ne sont pas forcement isometriques : l'angle doit etre celui forme par les deux cotes donnes.
+    </div>
+  `
+},
+{
+  title: "5. Similitude des triangles",
+  html: `
+    <p>Deux figures sont <strong class="term" data-def="Deux figures sont semblables si elles ont la meme forme : leurs angles correspondants sont egaux et leurs cotes correspondants sont proportionnels.">semblables</strong> si elles ont la meme forme, sans forcement la meme taille : leurs angles correspondants sont egaux et leurs cotes correspondants sont proportionnels (meme rapport, dit <strong>rapport de similitude</strong>).</p>
+    <p>Pour prouver que deux triangles sont semblables, il suffit de montrer que deux de leurs angles sont egaux deux a deux (cas AA), ou que leurs trois cotes sont proportionnels.</p>
+    <div class="callout formule">
+      Si le rapport de similitude est k :<br>
+      rapport des perimetres = k<br>
+      rapport des aires = k&sup2;
+    </div>
+    <p><strong>Exemple :</strong> un triangle rectangle de cotes 3, 4, 5 (perimetre 12, aire 6) est agrandi avec un rapport k=2, donnant un triangle de cotes 6, 8, 10. Son perimetre est 24 (rapport 2) et son aire est 24 (rapport 4 = 2&sup2;).</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Relation angle au centre / angle inscrit", back:"L'angle au centre vaut le double de l'angle inscrit qui intercepte le meme arc."},
+  {front:"Triangle rectangle et demi-cercle", back:"Un triangle est rectangle si et seulement si il est inscrit dans un demi-cercle de diametre son hypotenuse."},
+  {front:"Mediane relative a l'hypotenuse d'un triangle rectangle", back:"Elle mesure exactement la moitie de l'hypotenuse."},
+  {front:"Cas d'isometrie CCC", back:"Les trois cotes des deux triangles sont egaux deux a deux."},
+  {front:"Cas d'isometrie CAC", back:"Deux cotes egaux et l'angle compris entre eux egal."},
+  {front:"Cas d'isometrie ACA", back:"Deux angles egaux et le cote compris entre eux egal."},
+  {front:"Cas de similitude AA", back:"Deux angles egaux deux a deux suffisent a prouver que deux triangles sont semblables."},
+  {front:"Rapport des aires de deux figures semblables", back:"Le carre du rapport de similitude (k au carre)."}
+];
+
+const game = {
+  type: 'match',
+  instructions: "Associe chaque situation au cas d'isometrie ou de similitude qui la justifie.",
+  prompt: "Associe chaque description au cas correspondant.",
+  items:[
+    {left:"Trois cotes egaux deux a deux", options:["CCC","CAC","ACA","AA"], correct:"CCC"},
+    {left:"Deux cotes et l'angle compris entre eux egaux", options:["CCC","CAC","ACA","AA"], correct:"CAC"},
+    {left:"Deux angles et le cote compris egaux", options:["CCC","CAC","ACA","AA"], correct:"ACA"},
+    {left:"Deux angles egaux deux a deux (similitude)", options:["CCC","CAC","ACA","AA"], correct:"AA"}
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Un angle inscrit vaut 42deg. Calcule l'angle au centre qui intercepte le meme arc.",
+    accepted:[84], tolerance:0.01,
+    explain:"L'angle au centre vaut le double de l'angle inscrit : 2*42 = 84."
+  },
+  { type:'numeric', points:1,
+    prompt:"Un triangle rectangle a une hypotenuse de 14 cm. Calcule la longueur de sa mediane relative a l'hypotenuse.",
+    accepted:[7], tolerance:0.01,
+    explain:"La mediane relative a l'hypotenuse mesure la moitie de l'hypotenuse : 14/2 = 7."
+  },
+  { type:'mcq', points:1,
+    prompt:"Deux triangles ont leurs trois cotes egaux deux a deux. On peut conclure qu'ils sont isometriques grace au cas :",
+    options:["CAC","ACA","CCC","AA"],
+    correct:2,
+    explain:"Trois cotes egaux = cas CCC."
+  },
+  { type:'tf', points:1,
+    prompt:"Deux figures semblables ont necessairement la meme taille.",
+    correct:false,
+    explain:"Faux : semblable signifie meme forme (angles egaux, cotes proportionnels), pas forcement meme taille."
+  },
+  { type:'numeric', points:1,
+    prompt:"Deux triangles semblables ont un rapport de similitude k=3. Si l'aire du petit triangle est 5 cm2, quelle est l'aire du grand ?",
+    accepted:[45], tolerance:0.01,
+    explain:"Le rapport des aires est k^2 = 9, donc aire grande = 5*9 = 45."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, la difference entre isometrie et similitude, avec un exemple pour chacune.",
+    keywordGroups:[["isometrie","superposable"],["similitude","forme"],["proportionnel"],["exemple"]],
+    modelAnswer:"Deux figures isometriques sont superposables : elles ont exactement les memes longueurs et les memes angles, on peut passer de l'une a l'autre par translation, rotation ou symetrie. Deux figures semblables ont la meme forme mais pas forcement la meme taille : leurs angles correspondants sont egaux, mais leurs cotes correspondants sont seulement proportionnels, dans un rapport constant appele rapport de similitude. Par exemple, deux triangles equilateraux de cotes 2 cm et 5 cm sont semblables (meme forme, rapport 5/2) mais pas isometriques, alors que deux triangles de cotes 2, 2, 2 et 2, 2, 2 sont isometriques."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Un angle au centre vaut 130deg. Calcule l'angle inscrit qui intercepte le meme arc.",
+    accepted:[65], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Un triangle rectangle a une mediane relative a l'hypotenuse de 6 cm. Calcule la longueur de l'hypotenuse.",
+    accepted:[12], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"Le cas d'isometrie ACA repose sur :",
+    options:["trois cotes egaux","deux cotes et l'angle compris","deux angles et le cote compris","deux angles seulement"],
+    correct:2
+  },
+  { type:'mcq', points:1,
+    prompt:"Pour prouver que deux triangles sont semblables, le cas le plus rapide est souvent :",
+    options:["CCC","CAC","deux angles egaux (AA)","aucun cas ne suffit"],
+    correct:2
+  },
+  { type:'tf', points:1,
+    prompt:"Le rapport des perimetres de deux figures semblables est egal au carre du rapport de similitude.",
+    correct:false
+  },
+  { type:'tf', points:1,
+    prompt:"Un triangle inscrit dans un demi-cercle, dont un cote est le diametre, est necessairement rectangle.",
+    correct:true
+  },
+  { type:'numeric', points:1,
+    prompt:"Deux triangles semblables ont un rapport de similitude k=4. Le perimetre du petit triangle est 9 cm. Calcule le perimetre du grand.",
+    accepted:[36], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Un triangle de cotes 5, 12, 13 (rectangle) est agrandi avec un rapport de similitude k=3.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule le perimetre du triangle agrandi.", accepted:[90], tolerance:0.01},
+      {prompt:"L'aire du petit triangle est 30 cm2. Calcule l'aire du triangle agrandi.", accepted:[270], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque situation, indique le cas d'isometrie ou de similitude concerne.",
+    classifyOptions:["CCC","CAC","ACA","AA"],
+    items:[
+      {text:"Deux triangles ont deux cotes proportionnels dans le meme rapport, et l'angle qu'ils forment egal", correct:"CAC"},
+      {text:"Deux triangles ont leurs trois cotes deux a deux egaux", correct:"CCC"},
+      {text:"Deux triangles ont un cote egal encadre par deux angles egaux", correct:"ACA"},
+      {text:"Deux triangles ont deux paires d'angles egaux", correct:"AA"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Deux poteaux verticaux projettent une ombre au meme moment de la journee. Le petit poteau mesure 1,5 m et projette une ombre de 2 m. Le grand poteau projette une ombre de 6 m. Explique pourquoi les deux triangles (poteau-ombre-rayon) sont semblables, puis calcule la hauteur du grand poteau.",
+    keywordGroups:[["semblable","parallele","angle"],["rapport","proportionnel"],["4,5"],["hauteur"]],
+    modelAnswer:"Les rayons du soleil sont paralleles au meme moment, donc les deux triangles formes par chaque poteau, son ombre et le rayon lumineux ont les memes angles (meme angle d'incidence du soleil, meme angle droit avec le sol) : ils sont semblables par le cas AA. Le rapport de similitude est le rapport des ombres, 6/2 = 3. La hauteur du grand poteau vaut donc 1,5 * 3 = 4,5 m."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p5-isometrie-similitude',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 3e annee) &middot; Prerequis 5/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Angles, isometrie et similitude des triangles",
+  subtitle: "Module de remise a niveau : angles particuliers, cas d'isometrie et de similitude. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "angles, isometrie et similitude",
+  passThreshold: 60,
+  gameLabel: "Jeu : association",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p6.html',
+  nextTitle: 'Trigonometrie du triangle rectangle',
+  footerHtml: 'Prerequis 5/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

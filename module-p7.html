@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 7 : Fonctions de reference</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module ouvre le programme de <strong>4e annee</strong> avec les fonctions de reference et leurs transformations : la base de toute l'etude des fonctions en 5e-6e annee.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>relier le graphique de chaque fonction de reference a son equation ;</li>
+        <li>deduire le graphique de f(x)+k, f(x+k), kf(x), f(kx), |f(x)| a partir de celui de f ;</li>
+        <li>determiner le <strong class="term" data-def="Le domaine de definition d'une fonction est l'ensemble des valeurs de x pour lesquelles f(x) existe.">domaine de definition</strong>, les zeros, la parite et la croissance d'une fonction de reference.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Fonctions usuelles de reference",
+  html: `
+    <p>Il faut reconnaitre ces graphiques et les associer a leur equation :</p>
+    <table class="data">
+      <tr><th>Fonction</th><th>Domaine</th><th>Particularite</th></tr>
+      <tr><td>f(x) = x</td><td>tous les reels</td><td>droite passant par l'origine, pente 1</td></tr>
+      <tr><td>f(x) = x&sup2;</td><td>tous les reels</td><td>parabole, toujours &ge; 0</td></tr>
+      <tr><td>f(x) = x&sup3;</td><td>tous les reels</td><td>croissante partout</td></tr>
+      <tr><td>f(x) = 1/x</td><td>x &ne; 0</td><td>deux branches, jamais nulle</td></tr>
+      <tr><td>f(x) = &radic;x</td><td>x &ge; 0</td><td>toujours &ge; 0</td></tr>
+      <tr><td>f(x) = &#8731;x (racine cubique)</td><td>tous les reels</td><td>definie meme pour x negatif</td></tr>
+      <tr><td>f(x) = |x|</td><td>tous les reels</td><td>toujours &ge; 0, forme de V</td></tr>
+      <tr><td>f(x) = sin x, cos x</td><td>tous les reels</td><td>periodiques, entre -1 et 1</td></tr>
+    </table>
+  `
+},
+{
+  title: "3. Domaine, zeros, parite, croissance",
+  html: `
+    <p>Le <strong class="term" data-def="Le domaine de definition d'une fonction est l'ensemble des valeurs de x pour lesquelles f(x) existe.">domaine de definition</strong> est l'ensemble des x pour lesquels f(x) existe. Les <strong>zeros</strong> sont les x tels que f(x) = 0.</p>
+    <p><strong>Exemple :</strong> f(x) = x&sup2; - 4 a pour zeros x = 2 et x = -2 (car 2&sup2;-4=0 et (-2)&sup2;-4=0).</p>
+    <div class="callout formule">
+      Fonction paire : f(-x) = f(x) pour tout x (graphique symetrique par rapport a Oy). Exemple : f(x) = x&sup2;.<br>
+      Fonction impaire : f(-x) = -f(x) pour tout x (graphique symetrique par rapport a l'origine). Exemple : f(x) = x&sup3;.
+    </div>
+  `
+},
+{
+  title: "4. Transformations : f(x)+k et f(x+k)",
+  html: `
+    <p>A partir du graphique de f, on deduit facilement celui de fonctions transformees :</p>
+    <div class="callout formule">
+      f(x) + k : translation verticale de k unites (vers le haut si k &gt; 0)<br>
+      f(x + k) : translation horizontale de -k unites (vers la gauche si k &gt; 0)
+    </div>
+    <p><strong>Exemple :</strong> avec f(x) = x&sup2;, la fonction g(x) = f(x) + 3 = x&sup2; + 3 donne g(2) = 4+3 = 7 (translation verticale de 3 vers le haut par rapport a f(2) = 4). La fonction h(x) = f(x+2) = (x+2)&sup2; donne h(0) = 4 = f(2) : le graphique de h est celui de f decale de 2 vers la gauche.</p>
+  `
+},
+{
+  title: "5. Transformations : kf(x), f(kx) et |f(x)|",
+  html: `
+    <div class="callout formule">
+      k &times; f(x) : dilatation verticale (le graphique s'etire si |k|&gt;1, se resserre si |k|&lt;1 ; se retourne si k&lt;0)<br>
+      f(k &times; x) : dilatation horizontale (effet inverse sur l'axe des x)<br>
+      |f(x)| : la partie du graphique situee sous l'axe Ox est repliee au-dessus
+    </div>
+    <p><strong>Exemple :</strong> avec f(x) = x&sup2;, 2f(x) = 2x&sup2; est "plus etroite" que f (elle monte plus vite). f(2x) = 4x&sup2; a le meme effet, car (2x)&sup2; = 4x&sup2;.</p>
+    <p>Pour g(x) = x - 2 (qui est negative pour x &lt; 2), |g(x)| = |x-2| est toujours &ge; 0 : la partie du graphique sous l'axe est repliee vers le haut, formant un V.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Domaine de definition de f(x) = 1/x", back:"Tous les reels sauf x = 0."},
+  {front:"Domaine de definition de f(x) = racine(x)", back:"x >= 0 (les reels positifs ou nuls)."},
+  {front:"Fonction paire", back:"f(-x) = f(x) pour tout x : graphique symetrique par rapport a l'axe Oy. Exemple : x^2."},
+  {front:"Fonction impaire", back:"f(-x) = -f(x) pour tout x : graphique symetrique par rapport a l'origine. Exemple : x^3."},
+  {front:"Effet de f(x) + k", back:"Translation verticale de k unites."},
+  {front:"Effet de f(x + k)", back:"Translation horizontale de -k unites (vers la gauche si k>0)."},
+  {front:"Effet de |f(x)|", back:"La partie du graphique sous l'axe Ox est repliee au-dessus."},
+  {front:"Zeros d'une fonction", back:"Les valeurs de x pour lesquelles f(x) = 0."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"f(x)=x^2. Calcule g(x)=f(x)+3 en x=2.", accepted:[7] },
+    { prompt:"f(x)=x^2. Calcule h(x)=f(x+2) en x=0 (rappel : h(0)=f(2)).", accepted:[4] },
+    { prompt:"f(x)=x^2-9. Donne le zero positif de f.", accepted:[3] },
+    { prompt:"f(x)=x^3 est-elle paire ou impaire ? Reponds 'impaire'.", accepted:['impaire'] },
+    { prompt:"Domaine de f(x)=1/x : reponds 'x different de 0' (ecris juste 0).", accepted:['0','x different de 0'] },
+    { prompt:"f(x)=2x^2. Calcule f(3).", accepted:[18] },
+    { prompt:"f(x)=x^2. Calcule f(-2) pour verifier la parite (doit egaler f(2)=4).", accepted:[4] },
+    { prompt:"g(x)=|x-5|. Calcule g(2).", accepted:[3] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"Le domaine de definition de f(x) = racine(x) est :",
+    options:["tous les reels","x >= 0","x > 0 seulement","x different de 0"],
+    correct:1,
+    explain:"Une racine carree n'est definie que pour des nombres positifs ou nuls."
+  },
+  { type:'tf', points:1,
+    prompt:"f(x) = x^2 est une fonction impaire.",
+    correct:false,
+    explain:"f(x)=x^2 est paire : f(-x) = (-x)^2 = x^2 = f(x)."
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = x^2. Calcule g(x) = f(x) - 5 en x = 3.",
+    accepted:[4], tolerance:0.01,
+    explain:"g(3) = f(3) - 5 = 9 - 5 = 4."
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = x^2 - 1. Donne le zero positif de f.",
+    accepted:[1], tolerance:0.01,
+    explain:"x^2-1=0 -> x^2=1 -> x=1 ou x=-1, le zero positif est 1."
+  },
+  { type:'mcq', points:1,
+    prompt:"g(x) = f(x + 3) par rapport au graphique de f est :",
+    options:["translate de 3 vers la droite","translate de 3 vers la gauche","translate de 3 vers le haut","dilate verticalement"],
+    correct:1,
+    explain:"f(x+k) translate le graphique de -k, donc vers la gauche si k=3>0."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, la difference entre l'effet de f(x)+k et celui de f(x+k) sur le graphique d'une fonction.",
+    keywordGroups:[["f(x)+k","vertical"],["f(x+k)","horizontal"],["gauche","droite"],["exemple"]],
+    modelAnswer:"f(x) + k translate le graphique verticalement de k unites : vers le haut si k est positif, vers le bas si k est negatif, sans changer sa forme horizontale. f(x + k), au contraire, translate le graphique horizontalement, mais dans le sens oppose au signe de k : vers la gauche si k est positif, vers la droite si k est negatif. Par exemple, avec f(x) = x^2, f(x)+3 = x^2+3 remonte la parabole de 3, tandis que f(x+3) = (x+3)^2 la decale de 3 vers la gauche."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Le domaine de definition de f(x) = 1/x est :",
+    options:["tous les reels","x >= 0","x different de 0","x > 0"],
+    correct:2
+  },
+  { type:'tf', points:1,
+    prompt:"f(x) = x^3 est une fonction impaire.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"|f(x)| peut prendre des valeurs negatives.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = x^2. Calcule g(x) = 3f(x) en x = 2.",
+    accepted:[12], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = x^2 - 16. Donne le zero positif de f.",
+    accepted:[4], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"g(x) = f(x) - 4 par rapport au graphique de f est :",
+    options:["translate de 4 vers le haut","translate de 4 vers le bas","translate de 4 vers la gauche","dilate horizontalement"],
+    correct:1
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = x^2. Calcule h(x) = f(2x) en x = 3.",
+    accepted:[36], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"f(x) = x - 4.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule f(1).", accepted:[-3], tolerance:0.01},
+      {prompt:"Calcule |f(1)|.", accepted:[3], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque fonction, indique si elle est paire, impaire, ou ni l'une ni l'autre.",
+    classifyOptions:["Paire","Impaire","Ni l'une ni l'autre"],
+    items:[
+      {text:"f(x) = x^2", correct:"Paire"},
+      {text:"f(x) = x^3", correct:"Impaire"},
+      {text:"f(x) = x + 1", correct:"Ni l'une ni l'autre"},
+      {text:"f(x) = |x|", correct:"Paire"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"On donne f(x) = x^2. Decris precisement le graphique de g(x) = -f(x) + 2, en expliquant chaque transformation applique a f.",
+    keywordGroups:[["-f(x)","retourne","symetrique"],["+2","translate","haut"],["parabole"],["vers le bas"]],
+    modelAnswer:"g(x) = -f(x) + 2 s'obtient en deux etapes a partir de f(x) = x^2. D'abord, -f(x) = -x^2 retourne la parabole vers le bas (symetrie par rapport a l'axe Ox), elle devient donc toujours negative ou nulle. Ensuite, ajouter 2 translate ce graphique de 2 unites vers le haut. Le resultat est une parabole tournee vers le bas, avec un sommet en (0,2), qui est le maximum de la fonction."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p7-fonctions-reference',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 7/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Fonctions de reference et transformations",
+  subtitle: "Module de remise a niveau : fonctions usuelles, domaine, parite et transformations de graphiques. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240). Il ouvre la partie 4e annee de ce parcours.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les fonctions de reference",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p8.html',
+  nextTitle: 'Radicaux, puissances rationnelles et coefficients indetermines',
+  footerHtml: 'Prerequis 7/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

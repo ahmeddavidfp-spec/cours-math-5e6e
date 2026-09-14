@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 9 : Fonction du deuxieme degre</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module etudie la <strong class="term" data-def="Une fonction du deuxieme degre s'ecrit f(x) = ax^2+bx+c, avec a different de zero ; son graphique est une parabole.">fonction du deuxieme degre</strong> (programme de 4e annee) : un prerequis essentiel avant d'aborder la derivee en 5e annee.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>construire le graphique de y = ax&sup2;+bx+c et trouver son sommet ;</li>
+        <li>resoudre une <strong class="term" data-def="Le discriminant d'une equation du deuxieme degre ax^2+bx+c=0 vaut b^2-4ac : son signe indique le nombre de solutions reelles.">equation du deuxieme degre</strong> (avec le discriminant) ;</li>
+        <li>factoriser un trinome et resoudre une inequation du deuxieme degre.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Graphique : sommet et axe de symetrie",
+  html: `
+    <p>Le graphique de f(x) = ax&sup2;+bx+c (a &ne; 0) est une <strong>parabole</strong>. Elle est tournee vers le haut si a &gt; 0, vers le bas si a &lt; 0.</p>
+    <div class="callout formule">
+      Abscisse du sommet : x_s = -b / (2a)<br>
+      Axe de symetrie : la droite verticale x = x_s
+    </div>
+    <p><strong>Exemple :</strong> f(x) = x&sup2; - 5x + 6. Le sommet a pour abscisse x_s = -(-5)/(2&times;1) = 2,5. Son ordonnee vaut f(2,5) = 6,25 - 12,5 + 6 = -0,25. Le sommet est donc (2,5 ; -0,25), et c'est un minimum car a = 1 &gt; 0.</p>
+  `
+},
+{
+  title: "3. Resolution de l'equation du deuxieme degre",
+  html: `
+    <p>Pour resoudre ax&sup2;+bx+c = 0 (a &ne; 0), on calcule le <strong class="term" data-def="Le discriminant d'une equation du deuxieme degre ax^2+bx+c=0 vaut b^2-4ac : son signe indique le nombre de solutions reelles.">discriminant</strong> &Delta; = b&sup2; - 4ac.</p>
+    <div class="callout formule">
+      Si &Delta; &gt; 0 : deux solutions, x = (-b &plusmn; &radic;&Delta;) / (2a)<br>
+      Si &Delta; = 0 : une solution (double), x = -b / (2a)<br>
+      Si &Delta; &lt; 0 : aucune solution reelle
+    </div>
+    <p><strong>Exemple :</strong> x&sup2; - 5x + 6 = 0. &Delta; = 25 - 24 = 1 &gt; 0. Les solutions sont x = (5&plusmn;1)/2, soit x = 3 et x = 2.</p>
+    <p><strong>Produit et somme des racines</strong> (utiles pour verifier) : somme = -b/a = 5, produit = c/a = 6. On verifie : 2+3=5 et 2&times;3=6, correct.</p>
+  `
+},
+{
+  title: "4. Factorisation d'un trinome",
+  html: `
+    <p>Des qu'on connait les racines x1 et x2 (ou une seule racine double), on peut factoriser directement :</p>
+    <div class="callout formule">
+      ax&sup2;+bx+c = a(x - x1)(x - x2)
+    </div>
+    <p><strong>Exemple :</strong> x&sup2; - 5x + 6, de racines 2 et 3, se factorise en (x-2)(x-3). Verification : (x-2)(x-3) = x&sup2;-3x-2x+6 = x&sup2;-5x+6.</p>
+  `
+},
+{
+  title: "5. Inequations du deuxieme degre",
+  html: `
+    <p>Pour resoudre ax&sup2;+bx+c &gt; 0 (ou &lt; 0), on etudie le signe du trinome a l'aide de ses racines : entre les racines, le trinome a le signe oppose a a ; a l'exterieur des racines, il a le meme signe que a.</p>
+    <p><strong>Exemple :</strong> x&sup2; - 5x + 6 &gt; 0, avec a=1&gt;0 et racines 2 et 3. Le trinome est negatif entre 2 et 3, et positif a l'exterieur. La solution est donc x &lt; 2 ou x &gt; 3.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> si &Delta; &lt; 0, le trinome garde le signe de a pour <strong>tout</strong> x (pas de racine reelle pour changer de signe). Exemple : x&sup2;+x+1 (&Delta;=1-4=-3&lt;0) est toujours strictement positif, car a=1&gt;0.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Abscisse du sommet d'une parabole y=ax^2+bx+c", back:"x_s = -b / (2a)."},
+  {front:"Discriminant", back:"Delta = b^2 - 4ac."},
+  {front:"Delta > 0", back:"Deux solutions reelles distinctes."},
+  {front:"Delta = 0", back:"Une solution (racine double)."},
+  {front:"Delta < 0", back:"Aucune solution reelle."},
+  {front:"Somme et produit des racines", back:"Somme = -b/a, produit = c/a."},
+  {front:"Factorisation d'un trinome connaissant ses racines", back:"ax^2+bx+c = a(x-x1)(x-x2)."},
+  {front:"Signe d'un trinome (a>0) entre ses racines", back:"Negatif entre les racines, positif a l'exterieur."}
+];
+
+const game = {
+  type: 'order',
+  challenges: [
+    { prompt:"Remets dans l'ordre la resolution de x^2 - 7x + 12 = 0.",
+      steps: [
+        "On calcule le discriminant : Delta = 49 - 48 = 1",
+        "Comme Delta > 0, il y a deux solutions",
+        "x = (7 plus ou moins 1) / 2",
+        "On trouve x = 4 et x = 3"
+      ] },
+    { prompt:"Remets dans l'ordre la recherche du sommet de y = x^2 - 6x + 5.",
+      steps: [
+        "On calcule x_s = -b/(2a) = 6/2 = 3",
+        "On calcule y_s = f(3) = 9 - 18 + 5",
+        "On trouve y_s = -4",
+        "Le sommet est (3, -4), un minimum car a=1>0"
+      ] },
+    { prompt:"Remets dans l'ordre la resolution de l'inequation x^2 - 9 > 0.",
+      steps: [
+        "On factorise : (x-3)(x+3) > 0",
+        "Les racines sont -3 et 3",
+        "Le trinome est negatif entre -3 et 3 (a=1>0)",
+        "La solution est x < -3 ou x > 3"
+      ] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"y = x^2 - 8x + 15. Calcule l'abscisse du sommet.",
+    accepted:[4], tolerance:0.01,
+    explain:"x_s = -b/(2a) = 8/2 = 4."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule le discriminant de x^2 - 6x + 9 = 0.",
+    accepted:[0], tolerance:0.01,
+    explain:"Delta = 36 - 36 = 0."
+  },
+  { type:'mcq', points:1,
+    prompt:"Si Delta < 0, l'equation ax^2+bx+c=0 a :",
+    options:["deux solutions","une solution double","aucune solution reelle","une infinite de solutions"],
+    correct:2,
+    explain:"Un discriminant negatif signifie qu'il n'y a pas de racine reelle."
+  },
+  { type:'data', points:2,
+    prompt:"Equation x^2 - 3x - 10 = 0.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule le discriminant.", accepted:[49], tolerance:0.01},
+      {prompt:"Donne la plus grande solution.", accepted:[5], tolerance:0.01}
+    ]
+  },
+  { type:'tf', points:1,
+    prompt:"Pour x^2 - 4x + 4 > 0, la solution est tous les reels sauf x = 2.",
+    correct:true,
+    explain:"Delta=0, racine double x=2 : le trinome (x-2)^2 est toujours >= 0, et vaut exactement 0 en x=2, donc strictement positif partout ailleurs."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, comment le signe du discriminant permet de savoir si une parabole coupe l'axe des x, le touche, ou ne le touche jamais.",
+    keywordGroups:[["delta positif","deux points"],["delta nul","touche","tangente"],["delta negatif","jamais"],["axe"]],
+    modelAnswer:"Le discriminant Delta = b^2-4ac indique le nombre de solutions reelles de ax^2+bx+c=0, c'est-a-dire le nombre de points ou la parabole coupe l'axe des x. Si Delta est positif, il y a deux solutions distinctes, donc la parabole coupe l'axe des x en deux points. Si Delta est nul, il y a une seule solution (racine double), la parabole touche l'axe des x en un seul point, exactement en son sommet. Si Delta est negatif, il n'y a aucune solution reelle, donc la parabole ne touche jamais l'axe des x."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"y = x^2 - 10x + 21. Calcule l'abscisse du sommet.",
+    accepted:[5], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule le discriminant de x^2 + 2x - 15 = 0.",
+    accepted:[64], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous x^2 + 2x - 15 = 0 : donne la plus grande solution.",
+    accepted:[3], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"x^2 - 5x + 6 se factorise en :",
+    options:["(x-1)(x-6)","(x-2)(x-3)","(x+2)(x+3)","(x-6)(x+1)"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Si a > 0 et Delta > 0, le trinome est negatif entre ses deux racines.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Le sommet d'une parabole y=ax^2+bx+c a pour abscisse -b/a.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous l'inequation x^2 - 4 > 0 : donne la plus petite valeur entiere de x qui convient parmi les solutions positives (indice : solutions x<-2 ou x>2).",
+    accepted:[3], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"y = 2x^2 - 8x + 6.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule le discriminant.", accepted:[16], tolerance:0.01},
+      {prompt:"Donne la plus petite racine.", accepted:[1], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque equation, indique le nombre de solutions reelles.",
+    classifyOptions:["Deux solutions","Une solution","Aucune solution"],
+    items:[
+      {text:"x^2 - 4x + 4 = 0", correct:"Une solution"},
+      {text:"x^2 - x - 6 = 0", correct:"Deux solutions"},
+      {text:"x^2 + x + 5 = 0", correct:"Aucune solution"},
+      {text:"x^2 - 9 = 0", correct:"Deux solutions"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Un ballon est lance et sa hauteur (en metres) est donnee par h(t) = -5t^2 + 20t, ou t est le temps en secondes. Calcule a quel instant le ballon atteint sa hauteur maximale et calcule cette hauteur, en expliquant ta demarche avec le sommet de la parabole.",
+    keywordGroups:[["sommet"],["t=2","-b/2a"],["20","hauteur maximale"],["parabole"]],
+    modelAnswer:"La hauteur h(t) = -5t^2+20t est une fonction du deuxieme degre avec a=-5 (negatif, la parabole est tournee vers le bas, donc le sommet est un maximum). L'instant du maximum est l'abscisse du sommet : t_s = -b/(2a) = -20/(2*(-5)) = -20/-10 = 2 secondes. La hauteur maximale est h(2) = -5*4+20*2 = -20+40 = 20 metres. Le ballon atteint donc sa hauteur maximale de 20 m apres 2 secondes."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p9-fonction-deuxieme-degre',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 9/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Fonction du deuxieme degre",
+  subtitle: "Module de remise a niveau : parabole, discriminant, factorisation et inequations. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240). Prerequis direct pour la derivee, etudiee en 5e annee.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la fonction du deuxieme degre",
+  passThreshold: 60,
+  gameLabel: "Jeu : remettre les etapes en ordre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p10.html',
+  nextTitle: 'Calcul vectoriel et produit scalaire',
+  footerHtml: 'Prerequis 9/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

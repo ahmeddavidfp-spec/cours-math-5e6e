@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 12 : Lieux geometriques</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module (4e annee) etudie les <strong class="term" data-def="Un lieu geometrique est l'ensemble de tous les points qui verifient une condition donnee, par exemple etre a egale distance de deux points fixes.">lieux geometriques</strong> de base : mediatrice, cercle et parabole, en reliant leur definition geometrique a leur equation analytique.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>etablir l'equation de la <strong class="term" data-def="La mediatrice d'un segment est l'ensemble des points equidistants des deux extremites de ce segment ; c'est une droite perpendiculaire au segment en son milieu.">mediatrice</strong> d'un segment ;</li>
+        <li>etablir l'equation d'un cercle de centre et de rayon donnes ;</li>
+        <li>etablir l'equation d'une <strong class="term" data-def="Une parabole de foyer F et de directrice d est l'ensemble des points equidistants de F et de d.">parabole</strong> a partir de son foyer et de sa directrice.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. La mediatrice d'un segment",
+  html: `
+    <p>La <strong class="term" data-def="La mediatrice d'un segment est l'ensemble des points equidistants des deux extremites de ce segment ; c'est une droite perpendiculaire au segment en son milieu.">mediatrice</strong> d'un segment [AB] est le lieu des points equidistants de A et de B : une droite perpendiculaire a [AB] passant par son milieu.</p>
+    <p><strong>Exemple :</strong> A(1,2) et B(5,6). Le milieu de [AB] est (3,4). Le coefficient angulaire de AB est (6-2)/(5-1) = 1, donc celui de la mediatrice (perpendiculaire) est -1. L'equation de la mediatrice est y - 4 = -1(x - 3), soit y = -x + 7.</p>
+  `
+},
+{
+  title: "3. Le cercle",
+  html: `
+    <p>Le <strong>cercle</strong> de centre C(a,b) et de rayon r est le lieu des points a distance r de C.</p>
+    <div class="callout formule">
+      (x - a)&sup2; + (y - b)&sup2; = r&sup2;
+    </div>
+    <p><strong>Exemple :</strong> cercle de centre (2,3) et de rayon 5 : (x-2)&sup2; + (y-3)&sup2; = 25. Le point (5,7) appartient-il a ce cercle ? (5-2)&sup2;+(7-3)&sup2; = 9+16 = 25 : oui, il appartient au cercle.</p>
+  `
+},
+{
+  title: "4. La parabole (foyer et directrice)",
+  html: `
+    <p>Une <strong class="term" data-def="Une parabole de foyer F et de directrice d est l'ensemble des points equidistants de F et de d.">parabole</strong> de foyer F et de directrice d (une droite) est le lieu des points equidistants de F et de d.</p>
+    <p><strong>Exemple :</strong> foyer F(0,2), directrice d : y = -2. Un point (x,y) de la parabole verifie : distance a F = distance a d, soit &radic;(x&sup2;+(y-2)&sup2;) = |y+2|. En elevant au carre et en simplifiant, on obtient x&sup2; = 8y, soit y = x&sup2;/8.</p>
+    <p><strong>Verification :</strong> le point (4,2) est sur la parabole car 4&sup2;/8 = 2. Sa distance au foyer F(0,2) vaut &radic;((4-0)&sup2;+(2-2)&sup2;) = 4. Sa distance a la directrice y=-2 vaut |2-(-2)| = 4. Les deux distances sont bien egales.</p>
+  `
+},
+{
+  title: "5. Methode generale pour etablir l'equation d'un lieu",
+  html: `
+    <p>Pour etablir l'equation d'un lieu geometrique, on traduit sa <strong>definition</strong> (une egalite de distances) en une equation, en posant un point generique (x,y) qui doit verifier la condition.</p>
+    <div class="callout">
+      Methode en trois etapes :
+      <ol class="clean">
+        <li>ecrire la condition geometrique (par exemple : distance a A = distance a B) ;</li>
+        <li>traduire chaque distance en fonction des coordonnees (formule de distance entre deux points, ou distance a une droite) ;</li>
+        <li>simplifier l'egalite obtenue pour arriver a l'equation la plus simple possible.</li>
+      </ol>
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Definition de la mediatrice d'un segment [AB]", back:"L'ensemble des points equidistants de A et de B."},
+  {front:"Equation d'un cercle de centre (a,b) et rayon r", back:"(x-a)^2 + (y-b)^2 = r^2."},
+  {front:"Definition d'une parabole (foyer F, directrice d)", back:"L'ensemble des points equidistants de F et de d."},
+  {front:"Coefficient angulaire de la mediatrice par rapport a AB", back:"Oppose de l'inverse du coefficient angulaire de AB (perpendicularite)."},
+  {front:"Methode pour etablir l'equation d'un lieu", back:"Ecrire la condition geometrique, traduire les distances en coordonnees, simplifier."},
+  {front:"Point de passage de la mediatrice", back:"Le milieu du segment [AB]."},
+  {front:"Cercle centre (0,0) rayon r", back:"x^2 + y^2 = r^2."},
+  {front:"Un point est-il sur un cercle donne ?", back:"On verifie si ses coordonnees satisfont l'equation (x-a)^2+(y-b)^2=r^2."}
+];
+
+const game = {
+  type: 'match',
+  instructions: "Associe chaque lieu geometrique a sa definition.",
+  prompt: "Associe chaque lieu a sa description.",
+  items:[
+    {left:"Mediatrice de [AB]", options:["Points equidistants de A et B","Points a distance r d'un centre","Points equidistants d'un foyer et d'une directrice","Points a distance donnee d'une droite"], correct:"Points equidistants de A et B"},
+    {left:"Cercle de centre C, rayon r", options:["Points equidistants de A et B","Points a distance r d'un centre","Points equidistants d'un foyer et d'une directrice","Points a distance donnee d'une droite"], correct:"Points a distance r d'un centre"},
+    {left:"Parabole de foyer F, directrice d", options:["Points equidistants de A et B","Points a distance r d'un centre","Points equidistants d'un foyer et d'une directrice","Points a distance donnee d'une droite"], correct:"Points equidistants d'un foyer et d'une directrice"}
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Cercle de centre (0,0) et rayon 7. Le point (7,0) appartient-il au cercle ? Calcule (x-a)^2+(y-b)^2 pour verifier (donne le resultat).",
+    accepted:[49], tolerance:0.01,
+    explain:"(7-0)^2+(0-0)^2 = 49 = 7^2 : le point appartient bien au cercle."
+  },
+  { type:'numeric', points:1,
+    prompt:"A(2,3), B(8,3). Donne l'abscisse x du milieu de [AB] (point de passage de la mediatrice).",
+    accepted:[5], tolerance:0.01,
+    explain:"Milieu = ((2+8)/2, (3+3)/2) = (5,3)."
+  },
+  { type:'tf', points:1,
+    prompt:"La mediatrice d'un segment [AB] passe toujours par le milieu de [AB].",
+    correct:true,
+    explain:"C'est une propriete fondamentale de la mediatrice : elle passe par le milieu et est perpendiculaire au segment."
+  },
+  { type:'mcq', points:1,
+    prompt:"L'equation (x-3)^2+(y+1)^2=16 represente un cercle de :",
+    options:["centre (3,-1) et rayon 4","centre (-3,1) et rayon 16","centre (3,1) et rayon 4","centre (3,-1) et rayon 16"],
+    correct:0,
+    explain:"Le centre est (3,-1) (attention au signe) et le rayon est racine(16)=4."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, la methode generale pour etablir l'equation d'un lieu geometrique, en l'illustrant avec le cercle.",
+    keywordGroups:[["condition","distance"],["point generique","x,y"],["simplifier"],["cercle","exemple"]],
+    modelAnswer:"Pour etablir l'equation d'un lieu geometrique, on part d'un point generique de coordonnees (x,y) et on ecrit la condition qui definit ce lieu, en general une egalite de distances. On traduit ensuite chaque distance a l'aide de la formule de distance entre deux points ou de distance a une droite. Par exemple, pour le cercle de centre (a,b) et de rayon r, la condition est que la distance du point (x,y) au centre vaut r, ce qui s'ecrit racine((x-a)^2+(y-b)^2)=r ; en elevant les deux membres au carre pour eliminer la racine, on obtient l'equation (x-a)^2+(y-b)^2=r^2."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Cercle de centre (1,2) et rayon 5. Calcule (x-a)^2+(y-b)^2 pour le point (4,6), pour verifier s'il appartient au cercle.",
+    accepted:[25], tolerance:0.01
+  },
+  { type:'tf', points:1,
+    prompt:"Le point (4,6) appartient au cercle de centre (1,2) et de rayon 5.",
+    correct:true
+  },
+  { type:'mcq', points:1,
+    prompt:"L'equation d'un cercle de centre (0,0) et de rayon 6 est :",
+    options:["x+y=6","x^2+y^2=6","x^2+y^2=36","x^2-y^2=36"],
+    correct:2
+  },
+  { type:'numeric', points:1,
+    prompt:"A(4,1), B(4,9). Donne l'ordonnee y du milieu de [AB].",
+    accepted:[5], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"Une parabole de foyer F et de directrice d est definie comme :",
+    options:["les points a distance constante de F","les points equidistants de F et de d","les points sur la droite d","les points a l'interieur d'un cercle de centre F"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"La mediatrice d'un segment est parallele a ce segment.",
+    correct:false
+  },
+  { type:'data', points:2,
+    prompt:"Parabole de foyer F(0,3) et directrice y=-3.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Le sommet de la parabole est le point equidistant de F et de la directrice, sur l'axe de symetrie. Donne son ordonnee y.", accepted:[0], tolerance:0.01},
+      {prompt:"Quelle est la distance entre le foyer et la directrice ?", accepted:[6], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque equation, indique quel lieu geometrique elle represente.",
+    classifyOptions:["Droite (mediatrice)","Cercle","Parabole"],
+    items:[
+      {text:"x^2 + y^2 = 9", correct:"Cercle"},
+      {text:"y = -x + 5", correct:"Droite (mediatrice)"},
+      {text:"y = x^2 / 4", correct:"Parabole"},
+      {text:"(x-1)^2 + (y-2)^2 = 4", correct:"Cercle"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Etablis l'equation de la mediatrice du segment [AB] avec A(0,4) et B(6,4), en expliquant ta demarche (indice : A et B ont la meme ordonnee).",
+    keywordGroups:[["milieu","3,4"],["verticale"],["x=3"],["perpendiculaire"]],
+    modelAnswer:"Comme A(0,4) et B(6,4) ont la meme ordonnee, le segment [AB] est horizontal, et sa mediatrice est donc une droite verticale passant par le milieu de [AB]. Le milieu de [AB] est ((0+6)/2, (4+4)/2) = (3,4). La mediatrice est donc la droite verticale d'equation x = 3 : tout point de cette droite est bien equidistant de A et de B, par symetrie."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p12-lieux-geometriques',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 12/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Lieux geometriques",
+  subtitle: "Module de remise a niveau : mediatrice, cercle et parabole. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les lieux geometriques",
+  passThreshold: 60,
+  gameLabel: "Jeu : association",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p13.html',
+  nextTitle: 'Statistique a une variable',
+  footerHtml: 'Prerequis 12/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

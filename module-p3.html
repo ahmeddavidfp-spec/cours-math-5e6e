@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 3 : Calcul numerique et polynomes</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module reprend le calcul avec les puissances et les <strong class="term" data-def="Un polynome est une expression algebrique formee d'une somme de termes contenant des puissances entieres d'une variable, chacun multiplie par un coefficient.">polynomes</strong> (programme de 3e annee) : des outils de manipulation algebrique indispensables partout ailleurs.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>utiliser les proprietes des puissances a exposants entiers ;</li>
+        <li>calculer le degre, la somme et le produit de deux polynomes, et leur valeur numerique ;</li>
+        <li>factoriser une expression par mise en evidence ou par <strong class="term" data-def="Les produits remarquables sont des egalites toujours vraies qui permettent de developper ou de factoriser rapidement certaines expressions : (a+b)^2, (a-b)^2, et (a+b)(a-b) = a^2-b^2.">produit remarquable</strong> ;</li>
+        <li>appliquer la <strong class="term" data-def="La loi du reste dit que le reste de la division d'un polynome P(x) par (x-a) est egal a P(a), la valeur du polynome en a.">loi du reste</strong> pour diviser un polynome par (x - a) et simplifier une fraction algebrique.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Puissances a exposants entiers",
+  html: `
+    <div class="callout formule">
+      a^m &times; a^n = a^(m+n)<br>
+      (a^m)^n = a^(m&times;n)<br>
+      a^-n = 1 / a^n (pour a &ne; 0)<br>
+      a^0 = 1 (pour a &ne; 0)
+    </div>
+    <p><strong>Exemples :</strong> 2&sup3; &times; 2&#8308; = 2&#8311; = 128. (3&sup2;)&sup3; = 3&#8310; = 729. 5&#8315;&sup2; = 1/25 = 0,04. 7&#8304; = 1.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> un exposant negatif ne rend pas le nombre negatif : il indique un inverse. 5&#8315;&sup2; = 1/25, pas -25.
+    </div>
+  `
+},
+{
+  title: "3. Polynomes : degre, somme, produit, valeur numerique",
+  html: `
+    <p>Le <strong>degre</strong> d'un <strong class="term" data-def="Un polynome est une expression algebrique formee d'une somme de termes contenant des puissances entieres d'une variable, chacun multiplie par un coefficient.">polynome</strong> est la plus haute puissance de la variable qui apparait, avec un coefficient non nul.</p>
+    <p><strong>Exemple :</strong> P(x) = 2x&sup2; - 3x + 5 est de degre 2. Sa valeur numerique en x = 2 vaut P(2) = 2&times;4 - 3&times;2 + 5 = 8 - 6 + 5 = 7.</p>
+    <p><strong>Produit de deux polynomes :</strong> (x + 3)(x - 2) = x&sup2; - 2x + 3x - 6 = x&sup2; + x - 6. On developpe terme a terme puis on reduit les termes semblables.</p>
+  `
+},
+{
+  title: "4. Mise en evidence et produits remarquables",
+  html: `
+    <p>La <strong>mise en evidence</strong> consiste a sortir un facteur commun a tous les termes.</p>
+    <p><strong>Exemple :</strong> 4x&sup2; + 8x = 4x(x + 2).</p>
+    <div class="callout formule">
+      Produits remarquables :<br>
+      (a + b)&sup2; = a&sup2; + 2ab + b&sup2;<br>
+      (a - b)&sup2; = a&sup2; - 2ab + b&sup2;<br>
+      (a + b)(a - b) = a&sup2; - b&sup2;
+    </div>
+    <p><strong>Exemples de factorisation :</strong> x&sup2; - 9 = (x-3)(x+3) &nbsp;&middot;&nbsp; x&sup2; + 6x + 9 = (x+3)&sup2; &nbsp;&middot;&nbsp; x&sup2; - 8x + 16 = (x-4)&sup2;.</p>
+  `
+},
+{
+  title: "5. Division de polynomes et loi du reste",
+  html: `
+    <p>Diviser un polynome par un polynome fonctionne comme la division des naturels : on cherche un quotient et il peut rester un reste.</p>
+    <p>La <strong class="term" data-def="La loi du reste dit que le reste de la division d'un polynome P(x) par (x-a) est egal a P(a), la valeur du polynome en a.">loi du reste</strong> dit que le reste de la division de P(x) par (x - a) vaut P(a). En particulier, si P(a) = 0, alors (x - a) est un facteur de P(x) : cela permet de factoriser rapidement.</p>
+    <p><strong>Exemple :</strong> P(x) = x&sup3; - 2x&sup2; - 5x + 6. On teste x = 1 : P(1) = 1 - 2 - 5 + 6 = 0. Donc (x - 1) est un facteur. En divisant, on obtient P(x) = (x - 1)(x&sup2; - x - 6) = (x - 1)(x - 3)(x + 2).</p>
+    <div class="callout">
+      Cette loi sert aussi a simplifier une fraction algebrique : si le numerateur et le denominateur partagent un facteur (x - a), on peut le simplifier apres factorisation.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"a^m fois a^n", back:"a^(m+n) : on additionne les exposants de meme base."},
+  {front:"(a^m)^n", back:"a^(m fois n) : on multiplie les exposants."},
+  {front:"a^-n", back:"1 / a^n : un exposant negatif indique un inverse, pas un nombre negatif."},
+  {front:"Degre d'un polynome", back:"La plus haute puissance de la variable presente avec un coefficient non nul."},
+  {front:"(a+b)^2", back:"a^2 + 2ab + b^2."},
+  {front:"(a-b)^2", back:"a^2 - 2ab + b^2."},
+  {front:"(a+b)(a-b)", back:"a^2 - b^2."},
+  {front:"Loi du reste", back:"Le reste de la division de P(x) par (x-a) vaut P(a). Si P(a)=0, (x-a) est un facteur de P(x)."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Calcule 2^3 fois 2^2.", accepted:[32] },
+    { prompt:"Calcule (2^2)^3.", accepted:[64] },
+    { prompt:"Calcule 3^-2 (sous forme decimale).", accepted:[0.111,1/9], tolerance:0.01 },
+    { prompt:"P(x) = x^2 + 3x - 1. Calcule P(2).", accepted:[9] },
+    { prompt:"Factorise x^2 - 16 : donne la racine positive de (x-a)(x+a).", accepted:[4] },
+    { prompt:"P(x) = x^2 - 7x + 10. Calcule P(2) (teste si x=2 est racine, reponds 0 si oui).", accepted:[0] },
+    { prompt:"Developpe (x+5)^2 : donne le coefficient du terme en x.", accepted:[10] },
+    { prompt:"Mets en evidence : 6x^2 + 9x = 3x fois (...). Donne le terme constant entre parentheses divise par x (ici 9x/3x).", accepted:[3] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Calcule 2^4 fois 2^3.",
+    accepted:[128], tolerance:0.01,
+    explain:"2^4 * 2^3 = 2^7 = 128."
+  },
+  { type:'numeric', points:1,
+    prompt:"P(x) = 2x^2 - 3x + 5. Calcule P(2).",
+    accepted:[7], tolerance:0.01,
+    explain:"P(2) = 2*4 - 3*2 + 5 = 8-6+5 = 7."
+  },
+  { type:'mcq', points:1,
+    prompt:"(x + 3)(x - 2) developpe donne :",
+    options:["x^2 - 6","x^2 + x - 6","x^2 - x - 6","x^2 + 5x - 6"],
+    correct:1,
+    explain:"(x+3)(x-2) = x^2 -2x+3x-6 = x^2+x-6."
+  },
+  { type:'mcq', points:1,
+    prompt:"x^2 - 25 se factorise en :",
+    options:["(x-5)^2","(x+5)^2","(x-5)(x+5)","x(x-25)"],
+    correct:2,
+    explain:"Produit remarquable a^2-b^2 = (a-b)(a+b), avec a=x et b=5."
+  },
+  { type:'tf', points:1,
+    prompt:"D'apres la loi du reste, si P(3) = 0, alors (x-3) est un facteur de P(x).",
+    correct:true,
+    explain:"C'est exactement l'enonce de la loi du reste : le reste de la division par (x-a) vaut P(a)."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, comment la loi du reste permet de factoriser un polynome de degre 3, avec un exemple.",
+    keywordGroups:[["reste","P(a)"],["facteur","(x-a)"],["exemple"],["diviser","division"]],
+    modelAnswer:"La loi du reste indique que le reste de la division d'un polynome P(x) par (x-a) vaut P(a). Si on trouve une valeur a pour laquelle P(a) = 0, cela signifie que le reste de cette division est nul, donc que (x-a) divise exactement P(x) et en est un facteur. Par exemple, pour P(x) = x^3 - 2x^2 - 5x + 6, on calcule P(1) = 1-2-5+6 = 0, donc (x-1) est un facteur ; en effectuant la division, on trouve P(x) = (x-1)(x^2-x-6), qui se factorise encore en (x-1)(x-3)(x+2)."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Calcule (3^2)^2.",
+    accepted:[81], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"P(x) = x^2 - 4x + 1. Calcule P(3).",
+    accepted:[-2], tolerance:0.01
+  },
+  { type:'mcq', points:1,
+    prompt:"a^-3 est egal a :",
+    options:["-a^3","1/a^3","a^3","-1/a^3"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"(x - 4)^2 developpe donne :",
+    options:["x^2 - 16","x^2 - 8x + 16","x^2 + 8x + 16","x^2 - 4x + 16"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Le degre du polynome 5x^4 - 3x^2 + 7 est :",
+    options:["2","3","4","7"],
+    correct:2
+  },
+  { type:'tf', points:1,
+    prompt:"a^0 vaut toujours 0.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Mets en evidence : 5x^2 + 15x = 5x fois (x + ...). Donne le nombre manquant.",
+    accepted:[3], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"P(x) = x^3 - 2x^2 - 5x + 6 (exemple du cours).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule P(1), pour verifier si (x-1) est un facteur.", accepted:[0], tolerance:0.01},
+      {prompt:"Le quotient de la division de P(x) par (x-1) est x^2 - x - 6. Factorise ce quotient : donne sa plus grande racine.", accepted:[3], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque expression, indique si elle utilise (a+b)^2, (a-b)^2 ou a^2-b^2.",
+    classifyOptions:["(a+b)^2","(a-b)^2","a^2-b^2"],
+    items:[
+      {text:"x^2 + 10x + 25", correct:"(a+b)^2"},
+      {text:"x^2 - 49", correct:"a^2-b^2"},
+      {text:"x^2 - 12x + 36", correct:"(a-b)^2"},
+      {text:"x^2 - 100", correct:"a^2-b^2"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Un rectangle a pour largeur x et pour longueur (x+4). Exprime son aire A(x) sous forme de polynome developpe, calcule A(3), et explique ce que represente ce resultat.",
+    keywordGroups:[["x","x+4"],["x^2+4x"],["21"],["aire"]],
+    modelAnswer:"L'aire du rectangle est A(x) = x fois (x+4) = x^2 + 4x. Pour x = 3, A(3) = 9 + 12 = 21. Ce resultat represente l'aire du rectangle, en unites carrees, lorsque la largeur vaut 3 (et donc la longueur 7) : on verifie d'ailleurs directement que 3 fois 7 = 21."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p3-polynomes',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 3e annee) &middot; Prerequis 3/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Calcul numerique et polynomes",
+  subtitle: "Module de remise a niveau : puissances, polynomes, factorisation et loi du reste. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module fait partie d'un parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "le calcul numerique et les polynomes",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-p4.html',
+  nextTitle: 'Theoreme de Pythagore et configurations de Thales',
+  footerHtml: 'Prerequis 3/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

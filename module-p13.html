@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Prerequis 13 : Statistique a une variable</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Dernier module de remise a niveau (4e annee) : le traitement numerique de donnees a une seule variable, base de la statistique a deux variables etudiee en 5e annee.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>calculer le <strong class="term" data-def="Le mode est la valeur qui apparait le plus souvent dans une serie de donnees.">mode</strong>, la <strong class="term" data-def="La moyenne d'une serie est la somme de toutes les valeurs divisee par le nombre de valeurs.">moyenne</strong> et la <strong class="term" data-def="La mediane d'une serie ordonnee est la valeur du milieu : autant de valeurs sont inferieures que superieures a elle.">mediane</strong> d'une serie de donnees ;</li>
+        <li>calculer les <strong class="term" data-def="Les parametres de dispersion (etendue, ecart type...) mesurent a quel point les valeurs d'une serie sont dispersees autour de leur valeur centrale.">parametres de dispersion</strong> : etendue, variance, ecart type ;</li>
+        <li>comprendre l'effet d'un changement d'origine ou d'unite sur la moyenne et l'ecart type.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Valeurs centrales : mode, moyenne, mediane",
+  html: `
+    <p><strong>Exemple :</strong> notes sur 20 obtenues par 10 eleves a un test : 8, 10, 10, 12, 14, 14, 14, 16, 18, 20.</p>
+    <div class="callout formule">
+      Mode = la valeur la plus frequente<br>
+      Moyenne = somme des valeurs / nombre de valeurs<br>
+      Mediane = la valeur du milieu (serie ordonnee), ou la moyenne des deux valeurs centrales si le nombre de donnees est pair
+    </div>
+    <p>Pour cette serie : le <strong class="term" data-def="Le mode est la valeur qui apparait le plus souvent dans une serie de donnees.">mode</strong> est 14 (il apparait 3 fois). La <strong class="term" data-def="La moyenne d'une serie est la somme de toutes les valeurs divisee par le nombre de valeurs.">moyenne</strong> vaut (8+10+10+12+14+14+14+16+18+20)/10 = 136/10 = 13,6. La serie a 10 valeurs (nombre pair) deja ordonnees, donc la <strong class="term" data-def="La mediane d'une serie ordonnee est la valeur du milieu : autant de valeurs sont inferieures que superieures a elle.">mediane</strong> est la moyenne des 5e et 6e valeurs : (14+14)/2 = 14.</p>
+  `
+},
+{
+  title: "3. Parametres de dispersion",
+  html: `
+    <p>Les <strong class="term" data-def="Les parametres de dispersion (etendue, ecart type...) mesurent a quel point les valeurs d'une serie sont dispersees autour de leur valeur centrale.">parametres de dispersion</strong> indiquent si les valeurs sont regroupees autour de la moyenne ou au contraire dispersees.</p>
+    <div class="callout formule">
+      Etendue = valeur maximale - valeur minimale<br>
+      Variance = moyenne des carres des ecarts a la moyenne<br>
+      Ecart type = racine carree de la variance
+    </div>
+    <p><strong>Exemple (meme serie) :</strong> etendue = 20 - 8 = 12. La variance vaut environ 12,64 et l'ecart type environ 3,56 (racine de 12,64).</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> deux series peuvent avoir la meme moyenne mais des ecarts types tres differents : la moyenne seule ne dit rien sur la dispersion des donnees.
+    </div>
+  `
+},
+{
+  title: "4. Effet d'un changement d'origine ou d'unite",
+  html: `
+    <p>Si on transforme chaque donnee x en y = x + k (changement d'origine) ou en y = k&times;x (changement d'unite), la moyenne et l'ecart type se transforment de facon previsible.</p>
+    <div class="callout formule">
+      y = x + k : nouvelle moyenne = ancienne moyenne + k ; ecart type inchange<br>
+      y = k &times; x : nouvelle moyenne = k &times; ancienne moyenne ; nouvel ecart type = |k| &times; ancien ecart type
+    </div>
+    <p><strong>Exemple :</strong> avec la moyenne 13,6 ci-dessus, si on ajoute 5 points bonus a chaque note (y = x+5), la nouvelle moyenne est 13,6+5 = 18,6. Si on double chaque note (y = 2x), la nouvelle moyenne est 27,2 et le nouvel ecart type est 2&times;3,56 &asymp; 7,11.</p>
+    <p><strong>Tu as termine la theorie de ce module. Bravo, tu as termine tout le parcours de remise a niveau !</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Mode d'une serie", back:"La valeur qui apparait le plus souvent."},
+  {front:"Moyenne d'une serie", back:"Somme de toutes les valeurs, divisee par le nombre de valeurs."},
+  {front:"Mediane d'une serie ordonnee (nombre pair de valeurs)", back:"La moyenne des deux valeurs centrales."},
+  {front:"Etendue", back:"Valeur maximale moins valeur minimale."},
+  {front:"Ecart type", back:"La racine carree de la variance ; mesure la dispersion autour de la moyenne."},
+  {front:"Effet de y=x+k sur la moyenne et l'ecart type", back:"La moyenne augmente de k ; l'ecart type ne change pas."},
+  {front:"Effet de y=k*x sur la moyenne et l'ecart type", back:"La moyenne et l'ecart type sont tous les deux multiplies par |k|."},
+  {front:"Deux series avec la meme moyenne", back:"Peuvent avoir des ecarts types tres differents : la moyenne seule ne dit rien sur la dispersion."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Serie : 4, 6, 6, 8. Calcule la moyenne.", accepted:[6] },
+    { prompt:"Serie : 4, 6, 6, 8. Calcule le mode.", accepted:[6] },
+    { prompt:"Serie : 2, 4, 6, 8, 10. Calcule la mediane.", accepted:[6] },
+    { prompt:"Serie : 3, 7, 10, 15. Calcule l'etendue.", accepted:[12] },
+    { prompt:"Moyenne actuelle = 10. On ajoute 3 a chaque donnee. Nouvelle moyenne ?", accepted:[13] },
+    { prompt:"Moyenne actuelle = 8, ecart type = 2. On double chaque donnee. Nouvel ecart type ?", accepted:[4] },
+    { prompt:"Serie : 5, 5, 5, 5. Calcule l'ecart type (les donnees sont identiques).", accepted:[0] },
+    { prompt:"Serie : 1, 2, 3, 4, 5, 6. Calcule la mediane.", accepted:[3.5] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Serie : 5, 7, 7, 9, 12. Calcule la moyenne.",
+    accepted:[8], tolerance:0.01,
+    explain:"(5+7+7+9+12)/5 = 40/5 = 8."
+  },
+  { type:'numeric', points:1,
+    prompt:"Serie : 5, 7, 7, 9, 12. Calcule le mode.",
+    accepted:[7], tolerance:0.01,
+    explain:"7 est la valeur la plus frequente (deux fois)."
+  },
+  { type:'numeric', points:1,
+    prompt:"Serie ordonnee : 3, 5, 8, 11, 14, 20. Calcule la mediane (6 valeurs, moyenne des deux centrales).",
+    accepted:[9.5], tolerance:0.01,
+    explain:"Les deux valeurs centrales sont 8 et 11 ; (8+11)/2 = 9,5."
+  },
+  { type:'tf', points:1,
+    prompt:"L'etendue d'une serie est la difference entre la moyenne et la mediane.",
+    correct:false,
+    explain:"Faux : l'etendue est valeur maximale moins valeur minimale."
+  },
+  { type:'numeric', points:1,
+    prompt:"Une moyenne actuelle vaut 15. On soustrait 3 a chaque donnee. Quelle est la nouvelle moyenne ?",
+    accepted:[12], tolerance:0.01,
+    explain:"Un changement d'origine (x-3) deplace la moyenne de la meme quantite : 15-3=12."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3-4 phrases, pourquoi deux series de donnees peuvent avoir la meme moyenne mais des ecarts types tres differents, avec un exemple.",
+    keywordGroups:[["dispersion"],["meme moyenne"],["ecart type","different"],["exemple"]],
+    modelAnswer:"La moyenne resume la tendance centrale d'une serie, mais ne dit rien sur la facon dont les valeurs sont reparties autour de cette moyenne. Deux series peuvent avoir exactement la meme moyenne tout en etant tres differentes : dans l'une, les valeurs peuvent etre toutes proches de la moyenne (faible ecart type), dans l'autre, tres eloignees (ecart type eleve). Par exemple, les series (10,10,10,10) et (0,5,15,20) ont toutes les deux une moyenne de 10, mais la premiere a un ecart type nul (aucune dispersion) alors que la seconde a un ecart type important."
+  }
+];
+
+const examBank = [
+  { type:'numeric', points:1,
+    prompt:"Serie : 6, 8, 8, 10, 13. Calcule la moyenne.",
+    accepted:[9], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Serie : 6, 8, 8, 10, 13. Calcule le mode.",
+    accepted:[8], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Serie ordonnee : 2, 4, 6, 8, 10, 12. Calcule la mediane.",
+    accepted:[7], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Serie : 12, 15, 9, 20, 8. Calcule l'etendue.",
+    accepted:[12], tolerance:0.01
+  },
+  { type:'tf', points:1,
+    prompt:"Un changement d'unite (y = k*x) multiplie la moyenne ET l'ecart type par |k|.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Un changement d'origine (y = x+k) change l'ecart type.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Moyenne actuelle = 20, ecart type = 4. On multiplie chaque donnee par 1,5. Calcule le nouvel ecart type.",
+    accepted:[6], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Serie de tailles (en cm) de 8 eleves : 150, 155, 155, 160, 162, 165, 168, 170 (deja ordonnee).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule l'etendue.", accepted:[20], tolerance:0.01},
+      {prompt:"Calcule la mediane (8 valeurs, moyenne des deux centrales : 160 et 162).", accepted:[161], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque description, indique le parametre statistique concerne.",
+    classifyOptions:["Mode","Moyenne","Mediane","Ecart type"],
+    items:[
+      {text:"La valeur la plus frequente d'une serie", correct:"Mode"},
+      {text:"La somme des valeurs divisee par leur nombre", correct:"Moyenne"},
+      {text:"La valeur du milieu d'une serie ordonnee", correct:"Mediane"},
+      {text:"Une mesure de la dispersion autour de la moyenne", correct:"Ecart type"}
+    ],
+    explain:""
+  },
+  { type:'open', points:3,
+    prompt:"Une classe a une moyenne de 12/20 avec un ecart type de 3. Le professeur decide d'ajouter 2 points bonus a tout le monde. Explique ce que deviennent la moyenne et l'ecart type, en justifiant avec la regle du changement d'origine.",
+    keywordGroups:[["origine"],["moyenne","14"],["ecart type","inchange","3"],["ajouter"]],
+    modelAnswer:"Ajouter 2 points a chaque note correspond a un changement d'origine, du type y = x + 2. D'apres la regle, la moyenne augmente exactement de cette meme quantite : la nouvelle moyenne est 12 + 2 = 14/20. En revanche, l'ecart type ne change pas, car ajouter une meme valeur a toutes les donnees ne modifie pas leur dispersion les unes par rapport aux autres : il reste egal a 3. Toute la classe est simplement decalee de 2 points, sans que les ecarts entre eleves ne changent."
+  }
+];
+
+MathEngine.initModule({
+  id: 'p13-statistique-une-variable',
+  eyebrow: "Mathematiques generales &middot; Remise a niveau (2e degre, 4e annee) &middot; Prerequis 13/13 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Statistique a une variable",
+  subtitle: "Dernier module de remise a niveau : mode, moyenne, mediane, dispersion. 60% requis pour terminer la remise a niveau et debloquer le module 1.",
+  introHtml: `
+    <p>Ce module conclut le parcours de remise a niveau base sur le programme officiel FESeC du <strong>deuxieme degre</strong> (3e-4e annee, D/2000/240). Une fois reussi, le module 1 du programme de 5e annee sera debloque.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la statistique a une variable",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-1.html',
+  nextTitle: 'Statistique a deux variables',
+  footerHtml: 'Prerequis 13/13 (remise a niveau, 2e degre) &middot; programme officiel FESeC "Mathematiques" (39/2000/240) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
