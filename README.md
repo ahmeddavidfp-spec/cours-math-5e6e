@@ -50,8 +50,9 @@ qui convient le mieux au chapitre (`cfg.game.type`) :
 
 ## Statut
 
-Module 1 construit, teste et pret a deployer. Modules 2 a 10 restants a
-construire sur le meme modele.
+Les 10 modules (5e et 6e annees completes) sont construits, testes et
+deployes. Chaque section de theorie contient des termes techniques marques
+pour l'infobulle et la lecture orale au survol (voir shared/engine.js).
 
 ## Deploiement
 
