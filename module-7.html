@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 6e - Module 7 : Lois de probabilite</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Le module 6 t'a appris a calculer une probabilite ponctuelle. Ce module etudie des <strong class="term" data-def="Une variable aleatoire, c'est un nombre dont la valeur depend du resultat d'une experience aleatoire : par exemple, le gain a un jeu de hasard.">variables aleatoires</strong> completes, avec leur distribution, leur esperance et leur ecart-type, a travers trois lois de reference.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>calculer l'esperance mathematique et l'ecart-type d'une variable aleatoire discrete ;</li>
+        <li>reconnaitre et utiliser la loi uniforme et la loi binomiale ;</li>
+        <li>utiliser la loi normale et sa table pour calculer une probabilite.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Esperance mathematique et ecart-type",
+  html: `
+    <p>Pour une variable aleatoire discrete X qui prend les valeurs x1, x2, ... avec les probabilites p1, p2, ..., on definit :</p>
+    <div class="callout formule">
+      <strong class="term" data-def="L'esperance mathematique d'une variable aleatoire, c'est la moyenne de ses valeurs possibles, ponderee par leurs probabilites : c'est le gain moyen auquel on peut s'attendre a long terme.">Esperance</strong> : E(X) = somme de chaque valeur fois sa probabilite<br>
+      <strong class="term" data-def="L'ecart-type d'une variable aleatoire mesure la dispersion de ses valeurs autour de l'esperance : plus il est grand, plus les resultats sont variables d'une experience a l'autre.">Ecart-type</strong> : racine carree de [E(X squared) - E(X) au carre]
+    </div>
+    <p><strong>Exemple :</strong> un jeu rapporte 10&euro; avec une probabilite de 0,2, rien avec une probabilite de 0,5, et fait perdre 5&euro; avec une probabilite de 0,3.</p>
+    <div class="callout formule">
+      E(X) = 10&times;0,2 + 0&times;0,5 + (-5)&times;0,3 = 2 + 0 - 1,5 = 0,5&euro;<br>
+      Ecart-type &asymp; 5,22&euro;
+    </div>
+    <p>En moyenne, sur un grand nombre de parties, ce jeu rapporte 0,50&euro; par partie, mais avec une grande variabilite (ecart-type de plus de 5&euro;) d'une partie a l'autre.</p>
+  `
+},
+{
+  title: "3. La loi uniforme",
+  html: `
+    <p>Une variable aleatoire suit une <strong class="term" data-def="Une loi uniforme, c'est une distribution de probabilite ou toutes les valeurs possibles ont exactement la meme probabilite : le lancer d'un de non biaise en est l'exemple le plus simple.">loi uniforme</strong> quand toutes ses valeurs possibles ont la meme probabilite.</p>
+    <div class="callout formule">
+      Exemple : le lancer d'un de a 6 faces non biaise. Chaque face a une probabilite de 1/6.<br>
+      E(X) = (1+2+3+4+5+6)/6 = 3,5<br>
+      Ecart-type &asymp; 1,71
+    </div>
+    <p>Remarque : l'esperance (3,5) n'est pas une valeur que le de peut effectivement prendre ; c'est une moyenne theorique sur un tres grand nombre de lancers.</p>
+  `
+},
+{
+  title: "4. La loi binomiale",
+  html: `
+    <p>Une <strong class="term" data-def="Une epreuve de Bernoulli, c'est une experience aleatoire qui n'a que deux issues possibles : succes ou echec.">epreuve de Bernoulli</strong> n'a que deux issues : succes (probabilite p) ou echec (probabilite 1-p). Quand on repete n fois la meme epreuve de Bernoulli de maniere independante, le nombre total de succes suit une <strong class="term" data-def="Une loi binomiale decrit le nombre de succes obtenus en repetant n fois, de maniere independante, une meme epreuve qui n'a que deux issues possibles.">loi binomiale</strong>.</p>
+    <div class="callout formule">
+      P(X = k) = C(n,k) &times; p&#7509; &times; (1-p)&#8319;&#8315;&#7509;<br>
+      E(X) = n &times; p<br>
+      Ecart-type = &radic;[n &times; p &times; (1-p)]
+    </div>
+    <p><strong>Exemple :</strong> on lance une piece de monnaie equilibree 10 fois (n=10, p=0,5). Le nombre de "Face" obtenus suit une loi binomiale.</p>
+    <div class="callout formule">
+      E(X) = 10 &times; 0,5 = 5<br>
+      Ecart-type = &radic;(10 &times; 0,5 &times; 0,5) = &radic;2,5 &asymp; 1,58<br>
+      P(X = 3) = C(10,3) &times; 0,5&sup3; &times; 0,5&#8309; &asymp; 0,117
+    </div>
+  `
+},
+{
+  title: "5. La loi normale",
+  html: `
+    <p>La <strong class="term" data-def="Une loi normale, aussi appelee courbe de Gauss, decrit une variable aleatoire continue dont les valeurs se repartissent symetriquement autour de sa moyenne, en forme de cloche.">loi normale</strong> (courbe de Gauss) decrit des variables continues (tailles, notes, mesures physiques) reparties symetriquement autour de leur moyenne <strong>&mu;</strong>, avec un ecart-type <strong>&sigma;</strong>.</p>
+    <div class="callout">
+      Plus &sigma; est petit, plus la courbe est resserree autour de &mu; ; plus &sigma; est grand, plus la courbe est etalee.
+    </div>
+    <p>Pour calculer une probabilite avec la loi normale, on utilise une table qui donne P(Z &lt; z) pour la loi normale centree reduite (&mu;=0, &sigma;=1).</p>
+    <table class="data">
+      <caption>Extrait d'une table de la loi normale centree reduite</caption>
+      <tr><th>z</th><td>-1</td><td>0</td><td>1</td><td>1,5</td><td>2</td></tr>
+      <tr><th>P(Z &lt; z)</th><td>0,1587</td><td>0,5000</td><td>0,8413</td><td>0,9332</td><td>0,9772</td></tr>
+    </table>
+    <p><strong>Exemple :</strong> les notes d'un examen suivent une loi normale de moyenne &mu;=100 et d'ecart-type &sigma;=15. Quelle est la probabilite d'obtenir moins de 115 ?</p>
+    <div class="callout formule">
+      z = (115 - 100) / 15 = 1<br>
+      P(X &lt; 115) = P(Z &lt; 1) = 0,8413 (lu dans la table)
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Esperance mathematique E(X)", back:"Somme de chaque valeur possible multipliee par sa probabilite : le gain moyen a long terme."},
+  {front:"Ecart-type d'une variable aleatoire", back:"Mesure de la dispersion des valeurs autour de l'esperance."},
+  {front:"Loi uniforme", back:"Toutes les valeurs possibles ont la meme probabilite (exemple : un de non biaise)."},
+  {front:"Epreuve de Bernoulli", back:"Experience a deux issues seulement : succes (probabilite p) ou echec (probabilite 1-p)."},
+  {front:"Esperance de la loi binomiale", back:"E(X) = n fois p."},
+  {front:"Ecart-type de la loi binomiale", back:"Racine carree de [n fois p fois (1-p)]."},
+  {front:"Loi normale", back:"Distribution continue en forme de cloche, symetrique autour de la moyenne mu, avec un ecart-type sigma."},
+  {front:"Score reduit z", back:"z = (x - mu) / sigma : convertit une valeur x en nombre d'ecarts-types par rapport a la moyenne."},
+  {front:"Table de la loi normale", back:"Donne P(Z < z) pour la loi normale centree reduite (mu=0, sigma=1)."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"De a 6 faces. Calcule l'esperance E(X).", accepted:[3.5], tolerance:0.01 },
+    { prompt:"Loi binomiale n=8, p=0,5. Calcule E(X).", accepted:[4] },
+    { prompt:"Loi binomiale n=20, p=0,1. Calcule E(X).", accepted:[2] },
+    { prompt:"Loi binomiale n=4, p=0,5. Calcule l'ecart-type (valeur decimale).", accepted:[1], tolerance:0.05 },
+    { prompt:"X vaut 2 avec probabilite 0,5 et 6 avec probabilite 0,5. Calcule E(X).", accepted:[4] },
+    { prompt:"Loi normale mu=50, sigma=10. Calcule le score reduit z pour x=60.", accepted:[1] },
+    { prompt:"Loi normale mu=100, sigma=15. Calcule z pour x=85.", accepted:[-1] },
+    { prompt:"Table : P(Z<1) = 0,8413. Donne P(Z<1) directement.", accepted:[0.8413], tolerance:0.001 }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"L'esperance mathematique d'une variable aleatoire represente :",
+    options:["sa valeur la plus probable","sa valeur moyenne a long terme","sa valeur maximale possible","son ecart-type"],
+    correct:1,
+    explain:"L'esperance est une moyenne ponderee par les probabilites, pas forcement une valeur possible."
+  },
+  { type:'tf', points:1,
+    prompt:"Dans une loi uniforme, toutes les valeurs possibles ont la meme probabilite.",
+    correct:true,
+    explain:"C'est la definition de la loi uniforme."
+  },
+  { type:'numeric', points:1,
+    prompt:"Loi binomiale n=6, p=0,5. Calcule E(X).",
+    accepted:[3], tolerance:0.01,
+    explain:"E(X) = n fois p = 6 fois 0,5 = 3."
+  },
+  { type:'numeric', points:1,
+    prompt:"Loi normale mu=70, sigma=5. Calcule le score reduit z pour x=80.",
+    accepted:[2], tolerance:0.01,
+    explain:"z = (80-70)/5 = 2."
+  },
+  { type:'data', points:2,
+    prompt:"X vaut 20 avec probabilite 0,3 et -10 avec probabilite 0,7.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule E(X).", accepted:[-1], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:2,
+    prompt:"Pour chaque situation, indique la loi de probabilite la plus adaptee.",
+    classifyOptions:["Loi uniforme","Loi binomiale"],
+    items:[
+      {text:"Le nombre obtenu en lancant un de non biaise", correct:"Loi uniforme"},
+      {text:"Le nombre de piles obtenus en lancant 10 fois une piece de monnaie", correct:"Loi binomiale"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, ce que represente le score reduit z et pourquoi il permet d'utiliser une seule table de la loi normale pour tous les problemes.",
+    keywordGroups:[["ecart-type"],["moyenne","mu"],["standardise","centree reduite"],["table"]],
+    modelAnswer:"Le score reduit z indique a combien d'ecarts-types une valeur se situe par rapport a la moyenne de sa distribution. En transformant n'importe quelle valeur x en z = (x - mu)/sigma, on ramene toujours le probleme a la meme loi normale centree reduite, de moyenne 0 et d'ecart-type 1. C'est ce qui permet d'utiliser une seule table de valeurs, quelle que soit la moyenne et l'ecart-type reels du probleme etudie."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Une epreuve de Bernoulli est une experience qui a :",
+    options:["une infinite d'issues possibles","exactement deux issues possibles","toujours six issues possibles","une issue certaine"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"L'esperance d'une loi binomiale de parametres n et p vaut :",
+    options:["n + p","n fois p","p divise par n","racine de n fois p"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Dans la loi normale, le parametre sigma represente :",
+    options:["la moyenne","l'ecart-type","la probabilite maximale","le nombre d'epreuves"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Plus l'ecart-type d'une loi normale est grand, plus la courbe est etalee autour de la moyenne.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"L'esperance mathematique d'une variable aleatoire est toujours l'une des valeurs qu'elle peut prendre.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Loi binomiale n=12, p=0,5. Calcule E(X).",
+    accepted:[6], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Loi binomiale n=16, p=0,25. Calcule l'ecart-type (valeur decimale).",
+    accepted:[1.732], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Loi normale mu=200, sigma=20. Calcule le score reduit z pour x=230.",
+    accepted:[1.5], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Un jeu rapporte 20 euros avec une probabilite de 0,25, et fait perdre 5 euros avec une probabilite de 0,75.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule l'esperance E(X) de ce jeu (en euros).", accepted:[1.25], tolerance:0.01}
+    ]
+  },
+  { type:'data', points:2,
+    prompt:"Une table de la loi normale centree reduite donne P(Z<1) = 0,8413. Les notes d'un examen suivent une loi normale de moyenne 100 et d'ecart-type 15.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quel est le score reduit z correspondant a la note 115 ?", accepted:[1], tolerance:0.01},
+      {prompt:"Quelle est alors la probabilite d'obtenir moins de 115 (utilise la table donnee) ?", accepted:[0.8413], tolerance:0.001}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque situation, indique la loi de probabilite la plus adaptee.",
+    classifyOptions:["Loi uniforme","Loi binomiale","Loi normale"],
+    items:[
+      {text:"Le numero tire au sort parmi 20 numeros equiprobables", correct:"Loi uniforme"},
+      {text:"Le nombre de reussites sur 15 tirs au but independants de meme probabilite", correct:"Loi binomiale"},
+      {text:"La taille des eleves d'une grande population, repartie symetriquement autour d'une moyenne", correct:"Loi normale"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, les conditions necessaires pour qu'une variable aleatoire suive une loi binomiale, en illustrant avec un exemple.",
+    keywordGroups:[["independant"],["deux issues","bernoulli"],["meme probabilite","constante"],["exemple"]],
+    modelAnswer:"Pour qu'une variable aleatoire suive une loi binomiale, il faut repeter un nombre fixe n de fois la meme epreuve de Bernoulli, c'est-a-dire une experience qui n'a que deux issues possibles (succes ou echec). Chaque repetition doit etre independante des autres, et la probabilite de succes p doit rester constante d'une repetition a l'autre. Un exemple typique est le lancer d'une piece de monnaie equilibree 10 fois de suite : chaque lancer est independant, a deux issues (pile ou face), et la probabilite de face reste toujours 0,5. Le nombre total de faces obtenues sur les 10 lancers suit alors une loi binomiale de parametres n=10 et p=0,5."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm7-lois-probabilite',
+  eyebrow: "Mathematiques generales (4p) &middot; 6e annee &middot; Module 7/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Lois de probabilite",
+  subtitle: "Deuxieme module du programme de 6e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module etudie les variables aleatoires (esperance, ecart-type) a travers trois lois de reference : la loi uniforme, la loi binomiale, et la loi normale (avec sa table).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les lois de probabilite",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-8.html',
+  nextTitle: 'Integrale',
+  footerHtml: 'Module 7/10 (6e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
