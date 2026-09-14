@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 6e - Module 6 : Probabilite</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module et de la 6e annee",
+  html: `
+    <p>Bienvenue en 6e annee. Ce module utilise le calcul des probabilites pour comprendre des phenomenes du hasard de la vie courante, et pour analyser des informations chiffrees de maniere critique.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>calculer une probabilite a l'aide d'un arbre, d'un tableau ou d'une formule de denombrement ;</li>
+        <li>utiliser l'analyse combinatoire (arrangements, permutations, combinaisons) ;</li>
+        <li>appliquer les proprietes des probabilites (dont l'union de deux evenements) ;</li>
+        <li>calculer une probabilite conditionnelle et verifier l'independance de deux evenements.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Vocabulaire et probabilite d'un evenement",
+  html: `
+    <p>Une <strong class="term" data-def="Une experience aleatoire, c'est une experience dont on ne peut pas prevoir le resultat a l'avance, meme si on connait tous les resultats possibles.">experience aleatoire</strong> est une experience dont le resultat depend du hasard (lancer un de, tirer une carte). Un <strong class="term" data-def="Un evenement, c'est un ensemble de resultats possibles d'une experience aleatoire.">evenement</strong> est un ensemble de resultats possibles.</p>
+    <div class="callout formule">
+      Probabilite d'un evenement A (cas equiprobables) : P(A) = nombre de cas favorables / nombre de cas possibles
+    </div>
+    <p><strong>Exemple :</strong> lancer un de a 6 faces, A = "obtenir un nombre pair" = {2, 4, 6}. P(A) = 3/6 = 0,5.</p>
+    <div class="callout">
+      <strong>Proprietes des probabilites :</strong> 0 &le; P(A) &le; 1 pour tout evenement A ; P(evenement certain) = 1 ; P(evenement impossible) = 0 ; P(A ou B) = P(A) + P(B) - P(A et B).
+    </div>
+    <p><strong>Exemple (union) :</strong> dans une classe de 30 eleves, 18 aiment les maths, 15 aiment le sport, 8 aiment les deux. P(aime maths ou sport) = (18 + 15 - 8) / 30 = 25/30 &asymp; 0,833.</p>
+  `
+},
+{
+  title: "3. Outils de denombrement : arbre et tableau",
+  html: `
+    <p>Un <strong>diagramme en arbre</strong> ou un <strong>tableau a double entree</strong> permettent de lister systematiquement tous les resultats possibles d'une experience a plusieurs etapes, sans en oublier.</p>
+    <div class="callout">
+      <strong>Exemple :</strong> on lance une piece de monnaie puis un de. L'arbre a deux branches (Pile, Face) qui se separent chacune en 6 branches (1 a 6) : il y a donc 2 &times; 6 = 12 resultats possibles au total. P(Face et nombre pair) = 1/2 &times; 1/2 = 1/4 (les deux etapes sont independantes).
+    </div>
+    <p>Ces outils sont particulierement utiles pour calculer une probabilite conditionnelle, car chaque branche de l'arbre peut porter une probabilite qui depend de ce qui s'est deja passe.</p>
+  `
+},
+{
+  title: "4. Analyse combinatoire",
+  html: `
+    <p>Quand denombrer a la main devient trop long, on utilise des formules de <strong>denombrement</strong>. Le choix de la formule depend de deux questions : y a-t-il repetition possible, et l'ordre compte-t-il ?</p>
+    <table class="data">
+      <tr><th>Situation</th><th>Formule</th><th>Exemple</th></tr>
+      <tr><td><strong class="term" data-def="Une permutation, c'est le nombre de facons differentes de ranger tous les elements d'un ensemble dans un ordre : il y en a n factorielle pour n elements.">Permutation</strong> de n elements (ordre compte, sans repetition)</td><td>n!</td><td>Ranger 3 livres differents sur une etagere : 3! = 6 facons.</td></tr>
+      <tr><td><strong class="term" data-def="Un arrangement, c'est le nombre de facons de choisir et ranger p elements parmi n, sans repetition, quand l'ordre compte.">Arrangement</strong> de p parmi n (ordre compte, sans repetition)</td><td>n! / (n-p)!</td><td>Tierce dans l'ordre parmi 8 chevaux : 8&times;7&times;6 = 336 facons.</td></tr>
+      <tr><td>Arrangement avec repetition</td><td>n puissance p</td><td>Code a 4 chiffres (0 a 9, repetitions possibles) : 10 puissance 4 = 10 000 codes.</td></tr>
+      <tr><td><strong class="term" data-def="Une combinaison, c'est le nombre de facons de choisir p elements parmi n, sans les ranger dans un ordre particulier.">Combinaison</strong> de p parmi n (ordre ne compte pas, sans repetition)</td><td>n! / (p! &times; (n-p)!)</td><td>Choisir 2 delegues parmi 5 eleves : 5!/(2!&times;3!) = 10 facons.</td></tr>
+    </table>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> la seule question a te poser est "l'ordre a-t-il de l'importance ?". Un tierce dans l'ordre (arrangement) et un tierce dans le desordre (combinaison) portent sur les memes chevaux, mais ne se comptent pas de la meme facon.
+    </div>
+  `
+},
+{
+  title: "5. Probabilite conditionnelle et independance",
+  html: `
+    <p>La <strong class="term" data-def="Une probabilite conditionnelle, notee P de A sachant B, c'est la probabilite qu'un evenement A se realise, sachant qu'un autre evenement B s'est deja realise.">probabilite conditionnelle</strong> de A sachant B, notee P(A | B), est la probabilite que A se realise sachant que B s'est deja realise.</p>
+    <p><strong>Exemple :</strong> un sac contient 3 boules rouges et 2 boules vertes. On tire 2 boules <strong>sans remise</strong>.</p>
+    <div class="callout formule">
+      P(2e rouge | 1re rouge) = 2/4 = 0,5 (il ne reste que 2 rouges parmi 4 boules apres le premier tirage)
+    </div>
+    <p>Si le tirage se faisait <strong>avec remise</strong> (on remet la boule avant de retirer), la probabilite de tirer rouge au 2e tirage resterait 3/5 = 0,6, quel que soit le resultat du premier tirage.</p>
+    <div class="callout formule">
+      Deux evenements A et B sont <strong class="term" data-def="Deux evenements sont independants quand la realisation de l'un ne change pas la probabilite de l'autre : P de A sachant B est alors egal a P de A tout court.">independants</strong> si P(A | B) = P(A), c'est-a-dire si le fait que B se realise ne change rien a la probabilite de A.
+    </div>
+    <p>Dans notre exemple : le tirage sans remise rend les deux tirages <strong>dependants</strong> (0,5 &ne; 0,6), tandis que le tirage avec remise les rend <strong>independants</strong> (toujours 0,6).</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Probabilite d'un evenement (cas equiprobables)", back:"Nombre de cas favorables divise par le nombre de cas possibles."},
+  {front:"P(A ou B)", back:"P(A) + P(B) - P(A et B)."},
+  {front:"Permutation de n elements", back:"n factorielle : nombre de facons de les ranger tous dans un ordre."},
+  {front:"Arrangement de p parmi n (sans repetition)", back:"n factorielle divise par (n-p) factorielle : ordre compte, pas de repetition."},
+  {front:"Arrangement avec repetition de p parmi n", back:"n puissance p."},
+  {front:"Combinaison de p parmi n", back:"n factorielle divise par (p factorielle fois (n-p) factorielle) : ordre ne compte pas."},
+  {front:"Probabilite conditionnelle P(A sachant B)", back:"Probabilite que A se realise, sachant que B s'est deja realise."},
+  {front:"Evenements independants", back:"P(A sachant B) = P(A) : le fait que B se realise ne change rien a la probabilite de A."},
+  {front:"Tirage sans remise", back:"Rend generalement les tirages successifs dependants (les probabilites changent a chaque tirage)."},
+  {front:"Tirage avec remise", back:"Rend les tirages successifs independants (les probabilites restent identiques)."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"On lance un de a 6 faces. Calcule P(obtenir un multiple de 3).", accepted:[0.3333], tolerance:0.01 },
+    { prompt:"Combien de facons de ranger 4 livres differents sur une etagere (4!) ?", accepted:[24] },
+    { prompt:"Code a 3 chiffres (0 a 9, repetitions possibles). Combien de codes possibles ?", accepted:[1000] },
+    { prompt:"Combinaison : choisir 2 delegues parmi 4 eleves. Combien de possibilites ?", accepted:[6] },
+    { prompt:"Sac de 4 rouges et 2 vertes. On tire 1 boule. Calcule P(rouge).", accepted:[0.6667], tolerance:0.01 },
+    { prompt:"P(A)=0,4 et P(B)=0,3 et P(A et B)=0,1. Calcule P(A ou B).", accepted:[0.6], tolerance:0.01 },
+    { prompt:"Arrangement de 2 parmi 5 (ordre compte, sans repetition). Calcule le resultat.", accepted:[20] },
+    { prompt:"Sac de 3 rouges et 3 vertes, tirage sans remise. Calcule P(2e rouge sachant 1re rouge).", accepted:[0.4], tolerance:0.01 }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"On tire une carte dans un jeu de 32 cartes. P(tirer un roi) vaut :",
+    options:["4/32","1/32","8/32","32/4"],
+    correct:0,
+    explain:"Il y a 4 rois parmi 32 cartes : P = 4/32 = 1/8."
+  },
+  { type:'tf', points:1,
+    prompt:"Dans une combinaison, l'ordre dans lequel on choisit les elements n'a pas d'importance.",
+    correct:true,
+    explain:"C'est la difference essentielle avec un arrangement."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule 5! (5 factorielle).",
+    accepted:[120], tolerance:0.01,
+    explain:"5! = 5x4x3x2x1 = 120."
+  },
+  { type:'numeric', points:1,
+    prompt:"Combien de facons de choisir 2 delegues parmi 5 eleves (combinaison) ?",
+    accepted:[10], tolerance:0.01,
+    explain:"C(5,2) = 5!/(2! fois 3!) = 10."
+  },
+  { type:'data', points:2,
+    prompt:"Sac de 3 boules rouges et 2 boules vertes (5 au total). On tire 2 boules sans remise.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est la probabilite de tirer rouge au premier tirage ?", accepted:[0.6], tolerance:0.01},
+      {prompt:"Sachant que la premiere boule tiree est rouge, quelle est la probabilite que la seconde soit aussi rouge ?", accepted:[0.5], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:2,
+    prompt:"Pour chaque situation, indique s'il s'agit d'un arrangement ou d'une combinaison.",
+    classifyOptions:["Arrangement","Combinaison"],
+    items:[
+      {text:"Le tierce dans l'ordre exact parmi des chevaux", correct:"Arrangement"},
+      {text:"Choisir 3 fruits pour une salade parmi 8 fruits disponibles", correct:"Combinaison"}
+    ],
+    explain:"L'ordre compte pour un tierce exact ; il ne compte pas pour une salade de fruits."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, la difference entre un tirage avec remise et un tirage sans remise, et son effet sur l'independance des evenements.",
+    keywordGroups:[["remise"],["independant"],["change","modifie"],["probabilite"]],
+    modelAnswer:"Dans un tirage avec remise, on replace l'element tire avant le tirage suivant, ce qui fait que la composition de l'ensemble ne change jamais : les tirages successifs sont donc independants, avec toujours la meme probabilite. Dans un tirage sans remise, l'element tire n'est pas replace, ce qui modifie la composition restante et donc les probabilites pour le tirage suivant : les evenements deviennent dependants. C'est pour cela qu'il faut toujours preciser si un tirage se fait avec ou sans remise avant de calculer une probabilite conditionnelle."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Un evenement impossible a une probabilite de :",
+    options:["1","0","0,5","cela depend"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Pour un arrangement (ordre important, sans repetition) de p elements parmi n, la formule est :",
+    options:["n!","n! / (n-p)!","n! / (p! fois (n-p)!)","n puissance p"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Pour une combinaison de p elements parmi n, la formule est :",
+    options:["n!","n! / (n-p)!","n! / (p! fois (n-p)!)","n puissance p"],
+    correct:2
+  },
+  { type:'tf', points:1,
+    prompt:"Deux evenements sont independants si P(A sachant B) = P(A).",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Un tirage sans remise rend toujours les evenements independants.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Combien de codes a 4 chiffres (0 a 9, repetitions possibles) peut-on former ?",
+    accepted:[10000], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule le nombre d'arrangements de 3 elements parmi 8 (ordre compte, sans repetition).",
+    accepted:[336], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"P(A) = 0,5 et P(B) = 0,4 et P(A et B) = 0,2. Calcule P(A ou B).",
+    accepted:[0.7], tolerance:0.01
+  },
+  { type:'data', points:3,
+    prompt:"Sac de 3 boules rouges et 3 boules vertes (6 au total). On tire 2 boules sans remise.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est la probabilite de tirer rouge au premier tirage ?", accepted:[0.5], tolerance:0.01},
+      {prompt:"Sachant que la premiere boule est rouge, quelle est la probabilite que la seconde soit aussi rouge ?", accepted:[0.4], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:4,
+    prompt:"Pour chaque situation, indique la formule de denombrement adaptee.",
+    classifyOptions:["Permutation (n!)","Arrangement","Combinaison","Arrangement avec repetition"],
+    items:[
+      {text:"Ranger 6 personnes sur 6 chaises alignees", correct:"Permutation (n!)"},
+      {text:"Choisir le podium (1er, 2e, 3e) parmi 10 coureurs", correct:"Arrangement"},
+      {text:"Choisir 3 joueurs parmi 12 pour une equipe (sans role distinct)", correct:"Combinaison"},
+      {text:"Former un mot de passe de 4 lettres, repetitions permises", correct:"Arrangement avec repetition"}
+    ]
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque description a son resultat de denombrement.",
+    items:[
+      {left:"Nombre de facons de ranger 4 objets differents", options:["24","4","16"], correct:"24"},
+      {left:"Nombre de codes a 2 chiffres (0-9), repetitions permises", options:["20","100","90"], correct:"100"},
+      {left:"Nombre de facons de choisir 2 elements parmi 4 (combinaison)", options:["6","12","8"], correct:"6"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, la demarche pour decider quelle formule de denombrement utiliser face a un probleme donne.",
+    keywordGroups:[["ordre"],["repetition"],["permutation","arrangement","combinaison"],["exemple"]],
+    modelAnswer:"Pour choisir la bonne formule de denombrement, il faut d'abord se demander si l'ordre dans lequel on selectionne les elements a de l'importance ou non. Si l'ordre compte et qu'on prend tous les elements disponibles, c'est une permutation ; si l'ordre compte mais qu'on n'en choisit qu'une partie, c'est un arrangement. Si l'ordre ne compte pas, c'est une combinaison. Il faut ensuite verifier si la repetition d'un meme element est possible (par exemple un code avec des chiffres qui peuvent se repeter) : dans ce cas, on utilise la formule avec repetition plutot que la formule classique. Un exemple concret, comme un code, un podium ou une equipe, aide toujours a clarifier la situation avant de choisir la formule."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm6-probabilite',
+  eyebrow: "Mathematiques generales (4p) &middot; 6e annee &middot; Module 6/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Probabilite",
+  subtitle: "Premier module du programme de 6e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module etudie le calcul des probabilites : vocabulaire de base, proprietes, outils de denombrement (arbre, tableau, analyse combinatoire), probabilite conditionnelle et independance d'evenements.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la probabilite",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-7.html',
+  nextTitle: 'Lois de probabilite',
+  footerHtml: 'Module 6/10 (6e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
