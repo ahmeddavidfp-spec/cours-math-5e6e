@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 5e - Module 3 : Asymptotes et limites</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Tu sais deja etudier une <strong class="term" data-def="Une fonction rationnelle, c'est une fonction qui s'ecrit comme le quotient de deux polynomes.">fonction rationnelle</strong> comme x fois 1/x en 4e annee. Ce module va plus loin : il te donne les outils pour predire precisement le comportement d'une fonction rationnelle aux bornes de son <strong class="term" data-def="Le domaine de definition d'une fonction rationnelle, c'est l'ensemble des reels sauf ceux qui annulent le denominateur.">domaine</strong>, et pour ecrire l'equation de ses asymptotes.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>determiner le domaine et les limites utiles d'une fonction rationnelle ;</li>
+        <li>calculer une limite et l'interpreter graphiquement ;</li>
+        <li>rechercher les equations des asymptotes horizontale, verticale et oblique d'une fonction rationnelle ;</li>
+        <li>reconnaitre un cas d'indetermination et une discontinuite supprimable.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Rappel : fonctions rationnelles et domaine",
+  html: `
+    <p>Une fonction rationnelle s'ecrit f(x) = N(x) / D(x), ou N et D sont des polynomes. Elle n'est pas definie la ou le denominateur s'annule.</p>
+    <div class="callout formule">
+      Exemple : f(x) = (2x + 1) / (x - 1). Le denominateur s'annule pour x = 1, donc le domaine de f est R \\ {1} (tous les reels sauf 1).
+    </div>
+    <p>Dans ce module, on se limite aux fonctions rationnelles pour tous les calculs de limites et d'asymptotes.</p>
+  `
+},
+{
+  title: "3. La notion de limite et l'asymptote horizontale",
+  html: `
+    <p>Une <strong class="term" data-def="Une limite decrit la valeur dont s'approche f de x quand x se rapproche d'une valeur donnee, ou quand x devient tres grand.">limite</strong> decrit ce dont s'approche f(x) quand x se rapproche d'une valeur (ou de l'infini). On note lim x tend vers a de f(x) = L.</p>
+    <p>Reprenons f(x) = (2x + 1) / (x - 1) et observons ce qui se passe quand x devient tres grand.</p>
+    <table class="data">
+      <tr><th>x</th><td>10</td><td>100</td><td>1000</td></tr>
+      <tr><th>f(x)</th><td>2,33</td><td>2,03</td><td>2,003</td></tr>
+    </table>
+    <p>Plus x est grand, plus f(x) se rapproche de 2. On ecrit : lim x&rarr;+&infin; f(x) = 2.</p>
+    <div class="callout formule">
+      Si lim x&rarr;+&infin; f(x) = L (un nombre fini), le graphique de f admet une <strong class="term" data-def="Une asymptote horizontale, c'est une droite horizontale dont le graphique d'une fonction se rapproche indefiniment quand x devient tres grand ou tres negatif.">asymptote horizontale</strong> d'equation y = L.
+    </div>
+    <p><strong>Astuce de calcul :</strong> pour une fonction rationnelle, la limite en +&infin; ou -&infin; se calcule en ne gardant que les termes de plus haut degre du numerateur et du denominateur. Ici : (2x)/(x) = 2.</p>
+  `
+},
+{
+  title: "4. Limite en un reel, asymptote verticale et indetermination",
+  html: `
+    <p>Etudions maintenant ce qui se passe pres de x = 1 (la valeur exclue du domaine) pour f(x) = (2x + 1) / (x - 1).</p>
+    <table class="data">
+      <tr><th>x</th><td>0,9</td><td>0,99</td><td>1,01</td><td>1,1</td></tr>
+      <tr><th>f(x)</th><td>-28</td><td>-298</td><td>302</td><td>32</td></tr>
+    </table>
+    <p>A gauche de 1, f(x) devient tres negatif ; a droite de 1, f(x) devient tres positif.</p>
+    <div class="callout formule">
+      Si f(x) tend vers +&infin; ou -&infin; quand x se rapproche d'un reel a, le graphique de f admet une <strong class="term" data-def="Une asymptote verticale, c'est une droite verticale que le graphique d'une fonction se rapproche indefiniment sans jamais l'atteindre, pres d'une valeur exclue du domaine.">asymptote verticale</strong> d'equation x = a.
+    </div>
+    <p>Mais attention : une valeur exclue du domaine ne donne pas toujours une asymptote verticale ! Prenons g(x) = (x&sup2; - 4) / (x - 2). En remplacant x par 2 directement, on obtient 0/0 : c'est une <strong class="term" data-def="Une indetermination, c'est une expression comme 0 sur 0 qui ne donne pas directement la valeur d'une limite : il faut transformer l'expression, par exemple en factorisant, avant de conclure.">indetermination</strong>.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> une indetermination ne veut pas dire "pas de limite". Ici, on factorise : x&sup2; - 4 = (x-2)(x+2), donc g(x) = (x-2)(x+2)/(x-2) = x+2 pour x &ne; 2. Donc lim x&rarr;2 g(x) = 2+2 = 4. Le graphique de g a un simple "trou" en x=2 (une <strong class="term" data-def="Une discontinuite supprimable, c'est un point isole ou une fonction n'est pas definie, alors que sa limite existe et est finie : le graphique presente un simple trou, pas une asymptote.">discontinuite supprimable</strong>), pas une asymptote verticale.
+    </div>
+  `
+},
+{
+  title: "5. Asymptote oblique",
+  html: `
+    <p>Parfois, la limite a l'infini n'est ni finie ni verticale : le graphique se rapproche d'une droite oblique. Prenons h(x) = (x&sup2; + 1) / x.</p>
+    <p>On effectue la <strong>division euclidienne</strong> du numerateur par le denominateur : x&sup2; + 1 = x &times; x + 1. Donc :</p>
+    <div class="callout formule">
+      h(x) = (x&sup2; + 1) / x = x + 1/x
+    </div>
+    <p>Quand x devient tres grand, 1/x se rapproche de 0, donc h(x) se rapproche de x. Le graphique de h admet donc une <strong class="term" data-def="Une asymptote oblique, c'est une droite ni horizontale ni verticale dont le graphique d'une fonction se rapproche indefiniment quand x devient tres grand ou tres negatif. On la trouve par la division euclidienne du numerateur par le denominateur : le quotient donne l'equation de l'asymptote.">asymptote oblique</strong> d'equation y = x. Le domaine de h exclut x = 0, ou h admet aussi une asymptote verticale.</p>
+    <table class="data">
+      <tr><th>x</th><td>10</td><td>-10</td></tr>
+      <tr><th>h(x)</th><td>10,1</td><td>-10,1</td></tr>
+      <tr><th>Droite y = x</th><td>10</td><td>-10</td></tr>
+    </table>
+    <p>L'ecart entre h(x) et la droite y = x (soit 1/x) devient de plus en plus petit quand x s'eloigne de 0, ce qui confirme l'asymptote oblique.</p>
+  `
+},
+{
+  title: "6. Synthese : reconnaitre le type d'asymptote",
+  html: `
+    <p>Pour une fonction rationnelle f(x) = N(x)/D(x), le type d'asymptote a l'infini depend de la comparaison des degres de N et de D.</p>
+    <table class="data">
+      <tr><th>Comparaison des degres</th><th>Type d'asymptote en &plusmn;&infin;</th></tr>
+      <tr><td>degre(N) = degre(D)</td><td>Horizontale (rapport des coefficients de plus haut degre)</td></tr>
+      <tr><td>degre(N) = degre(D) + 1</td><td>Oblique (quotient de la division euclidienne)</td></tr>
+      <tr><td>degre(N) &gt; degre(D) + 1</td><td>Ni l'une ni l'autre (hors programme de ce module)</td></tr>
+    </table>
+    <div class="callout">
+      Une valeur qui annule le denominateur donne toujours soit une asymptote verticale (si le numerateur ne s'annule pas en meme temps), soit une discontinuite supprimable (si numerateur et denominateur s'annulent ensemble et se simplifient).
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Asymptote horizontale", back:"Droite y = L quand lim x tend vers plus ou moins l'infini de f(x) = L (limite finie)."},
+  {front:"Asymptote verticale", back:"Droite x = a quand f(x) tend vers plus ou moins l'infini pres de x = a."},
+  {front:"Asymptote oblique", back:"Droite y = ax + b obtenue par division euclidienne, quand le degre du numerateur depasse celui du denominateur d'exactement 1."},
+  {front:"Domaine d'une fonction rationnelle", back:"Tous les reels sauf ceux qui annulent le denominateur."},
+  {front:"Indetermination 0/0", back:"Expression qui ne donne pas directement la limite : il faut factoriser et simplifier avant de conclure."},
+  {front:"Discontinuite supprimable", back:"Un 'trou' dans le graphique ou la limite existe et est finie, mais la fonction n'est pas definie (pas une asymptote)."},
+  {front:"Calcul rapide d'une limite a l'infini (fonctions rationnelles)", back:"Ne garder que les termes de plus haut degre du numerateur et du denominateur."},
+  {front:"Methode pour trouver une asymptote oblique", back:"Division euclidienne du numerateur par le denominateur : le quotient donne l'equation de l'asymptote."},
+  {front:"lim x tend vers +infini de (2x+1)/(x-1)", back:"2 (rapport des coefficients de x : 2/1)."}
+];
+
+const game = {
+  type: 'match',
+  instructions: "Associe chaque comportement de limite au type d'asymptote qu'il produit.",
+  prompt: "Associe chaque limite a son asymptote.",
+  items: [
+    {left:"lim x tend vers +infini f(x) = 4", options:["Asymptote horizontale y=4","Asymptote verticale x=4","Asymptote oblique y=4x"], correct:"Asymptote horizontale y=4"},
+    {left:"lim x tend vers 2 (a gauche) f(x) = -infini", options:["Asymptote horizontale y=2","Asymptote verticale x=2","Asymptote oblique y=2x"], correct:"Asymptote verticale x=2"},
+    {left:"f(x) - (x+3) tend vers 0 quand x tend vers +infini", options:["Asymptote horizontale y=3","Asymptote oblique y=x+3","Asymptote verticale x=3"], correct:"Asymptote oblique y=x+3"},
+    {left:"lim x tend vers 5 f(x) = 7, alors que 5 est hors domaine", options:["Asymptote verticale x=5","Discontinuite supprimable (pas d'asymptote)","Asymptote horizontale y=7"], correct:"Discontinuite supprimable (pas d'asymptote)"}
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"Quel est le domaine de definition de f(x) = (3x - 1) / (x + 2) ?",
+    options:["Tous les reels","Tous les reels sauf 2","Tous les reels sauf -2","Tous les reels sauf 0"],
+    correct:2,
+    explain:"Le denominateur x+2 s'annule pour x=-2."
+  },
+  { type:'tf', points:1,
+    prompt:"Si lim x tend vers +infini de f(x) = 3, alors le graphique de f admet l'asymptote horizontale y = 3.",
+    correct:true,
+    explain:"C'est exactement la definition d'une asymptote horizontale."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule lim x tend vers +infini de (3x - 1) / (x + 2).",
+    accepted:[3], tolerance:0.01,
+    explain:"On ne garde que les termes de plus haut degre : 3x/x = 3."
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = (x&sup2; - 9) / (x - 3). Calcule lim x tend vers 3 de f(x) (attention a l'indetermination).",
+    accepted:[6], tolerance:0.01,
+    explain:"x^2-9 = (x-3)(x+3), donc f(x) = x+3 pour x different de 3 ; la limite en 3 vaut 3+3=6."
+  },
+  { type:'data', points:2,
+    prompt:"Soit h(x) = (5x + 2) / (x - 3).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est la valeur de x exclue du domaine ?", accepted:[3], tolerance:0.01},
+      {prompt:"Quelle est l'ordonnee de l'asymptote horizontale (valeur de y) ?", accepted:[5], tolerance:0.01}
+    ]
+  },
+  { type:'match', points:4,
+    prompt:"Associe chaque limite a son asymptote.",
+    items:[
+      {left:"lim x tend vers +infini f(x) = 4", options:["Asymptote horizontale","Asymptote verticale","Asymptote oblique"], correct:"Asymptote horizontale"},
+      {left:"lim x tend vers 2 (a gauche) f(x) = -infini", options:["Asymptote horizontale","Asymptote verticale","Asymptote oblique"], correct:"Asymptote verticale"},
+      {left:"f(x) - (x+3) tend vers 0 a l'infini", options:["Asymptote horizontale","Asymptote verticale","Asymptote oblique"], correct:"Asymptote oblique"}
+    ],
+    explain:"Limite finie a l'infini = horizontale ; limite infinie en un reel = verticale ; ecart qui tend vers 0 avec une droite oblique = asymptote oblique."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, la difference entre une asymptote verticale et une discontinuite supprimable dans le graphique d'une fonction rationnelle.",
+    keywordGroups:[["infini"],["trou","supprimable"],["limite finie","finie"],["facteur","simplifie","factorise"]],
+    modelAnswer:"Une asymptote verticale apparait quand f(x) tend vers plus ou moins l'infini pres d'une valeur exclue du domaine : le graphique s'approche indefiniment d'une droite verticale sans jamais la toucher. Une discontinuite supprimable, au contraire, correspond a un simple trou dans le graphique : la fonction n'est pas definie en ce point, mais sa limite y existe et est finie. On reconnait ce second cas quand un facteur commun au numerateur et au denominateur se simplifie, ce qui fait disparaitre l'indetermination 0/0."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Quel est le domaine de definition de f(x) = (x + 4) / (x - 5) ?",
+    options:["Tous les reels","Tous les reels sauf 5","Tous les reels sauf -4","Tous les reels sauf 4"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Si lim x tend vers +infini de f(x) = -2, le graphique de f admet :",
+    options:["une asymptote verticale x=-2","une asymptote horizontale y=-2","une asymptote oblique y=-2x","aucune asymptote"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Une asymptote verticale en x=a apparait quand :",
+    options:["le numerateur et le denominateur s'annulent tous les deux en a","seul le denominateur s'annule en a (pas le numerateur)","la fonction est definie en a","le degre du numerateur est superieur a celui du denominateur"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Pour une fonction rationnelle, une asymptote oblique n'existe que si le degre du numerateur depasse celui du denominateur d'exactement 1.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Une indetermination 0/0 signifie que la limite n'existe jamais.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule lim x tend vers +infini de (4x - 3) / (2x + 5).",
+    accepted:[2], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = (x&sup2; - 16) / (x - 4). Calcule lim x tend vers 4 de f(x).",
+    accepted:[8], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Soit g(x) = (x&sup2; + 4) / x (division euclidienne : x&sup2; + 4 = x fois x + 4).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est la valeur de x exclue du domaine ?", accepted:[0], tolerance:0.01},
+      {prompt:"Quel est le coefficient directeur (la pente) de l'asymptote oblique ?", accepted:[1], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:4,
+    prompt:"Pour chaque fonction, indique si elle admet une asymptote horizontale ou oblique en +infini (compare les degres du numerateur et du denominateur).",
+    classifyOptions:["Horizontale","Oblique"],
+    items:[
+      {text:"(2x + 1) / (x - 3)", correct:"Horizontale"},
+      {text:"(x&sup2; + 1) / (x - 1)", correct:"Oblique"},
+      {text:"(5x - 2) / (x + 4)", correct:"Horizontale"},
+      {text:"(x&sup2; - 3x) / (x - 1)", correct:"Oblique"}
+    ],
+    explain:"Memes degres = horizontale ; degre du numerateur superieur d'exactement 1 = oblique."
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque limite a son type d'asymptote.",
+    items:[
+      {left:"lim x tend vers -infini f(x) = 0", options:["Horizontale","Verticale","Oblique"], correct:"Horizontale"},
+      {left:"lim x tend vers 1 (a droite) f(x) = +infini", options:["Horizontale","Verticale","Oblique"], correct:"Verticale"},
+      {left:"f(x) - (2x - 1) tend vers 0 a l'infini", options:["Horizontale","Verticale","Oblique"], correct:"Oblique"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, la demarche pour determiner l'equation d'une asymptote oblique d'une fonction rationnelle, et explique pourquoi le reste de la division devient negligeable.",
+    keywordGroups:[["division euclidienne","division"],["quotient"],["reste"],["tend vers 0","negligeable","zero"]],
+    modelAnswer:"Pour trouver une asymptote oblique, on effectue la division euclidienne du numerateur par le denominateur : on obtient un quotient (un polynome du premier degre) et un reste. La fonction s'ecrit alors comme la somme du quotient et d'une fraction ou le reste est divise par le denominateur original. Quand x devient tres grand ou tres negatif, cette fraction (reste sur denominateur) tend vers zero, car le denominateur devient beaucoup plus grand que le reste, qui est un nombre fixe. Le graphique de la fonction se rapproche donc de plus en plus de la droite representant le quotient : c'est l'equation de l'asymptote oblique."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm3-asymptotes-limites',
+  eyebrow: "Mathematiques generales (4p) &middot; 5e annee &middot; Module 3/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Asymptotes et limites",
+  subtitle: "Troisieme module du programme de 5e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module etudie le comportement asymptotique des fonctions rationnelles : domaine, limites a l'infini et en un reel, asymptotes horizontale, verticale et oblique, et les cas d'indetermination.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les asymptotes et les limites",
+  passThreshold: 60,
+  gameLabel: "Jeu : associer limites et asymptotes",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-4.html',
+  nextTitle: 'Derivee',
+  footerHtml: 'Module 3/10 (5e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
