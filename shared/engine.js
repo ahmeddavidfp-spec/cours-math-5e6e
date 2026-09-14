@@ -8,6 +8,56 @@
 
 const REGISTRY_KEY = 'math_5e6e_registry';
 
+/* ============================================================
+   TELEMETRIE (tableau de bord centralise) : envoi discret et
+   sans blocage vers le Worker de progression. N'affecte jamais
+   l'usage local si le reseau ou le Worker est indisponible.
+   ============================================================ */
+const TELEMETRY_COURSE = 'math';
+const TELEMETRY_URL = 'https://ines-progress-api.mertens-david-1972.workers.dev/event';
+const TELEMETRY_KEY = 'cqU9qN47SRcwvLztKCY5hKXDDr83MCPk';
+function sendTelemetry(moduleId, type, payload){
+  try{
+    fetch(TELEMETRY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: TELEMETRY_KEY, course: TELEMETRY_COURSE, moduleId, type, payload: payload||{} }),
+      keepalive: true
+    }).catch(function(){});
+  }catch(e){}
+}
+function startHeartbeat(moduleId){
+  let accum = 0, lastTick = null;
+  function flush(){
+    if(accum < 1) return;
+    const seconds = Math.round(accum);
+    accum = 0;
+    sendTelemetry(moduleId, 'heartbeat', { seconds });
+  }
+  function tick(){
+    if(document.visibilityState === 'visible'){
+      const now = Date.now();
+      if(lastTick) accum += (now - lastTick)/1000;
+      lastTick = now;
+    } else {
+      lastTick = null;
+    }
+    if(accum >= 20) flush();
+  }
+  setInterval(tick, 5000);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden'){ tick(); flush(); }
+  });
+  window.addEventListener('pagehide', function(){
+    tick();
+    if(accum >= 1 && navigator.sendBeacon){
+      const seconds = Math.round(accum);
+      navigator.sendBeacon(TELEMETRY_URL, new Blob([JSON.stringify({ key: TELEMETRY_KEY, course: TELEMETRY_COURSE, moduleId, type:'heartbeat', payload:{ seconds } })], { type:'application/json' }));
+      accum = 0;
+    }
+  });
+}
+
 function loadRegistry(){
   try{ const raw = localStorage.getItem(REGISTRY_KEY); if(raw) return JSON.parse(raw); }catch(e){}
   return {};
@@ -355,7 +405,11 @@ function initModule(cfg){
     refreshUI();
     goTo('accueil');
   }
-  function markExerciseDone(){ state.exerciseDone = true; saveState(); }
+  function markExerciseDone(){
+    const wasDone = state.exerciseDone;
+    state.exerciseDone = true; saveState();
+    if(!wasDone) sendTelemetry(cfg.id, 'exercise_done', {});
+  }
 
   /* ---- theorie ---- */
   let theoryIndex = 0;
@@ -369,7 +423,10 @@ function initModule(cfg){
   }
   function theoryStep(delta){
     if(delta > 0 && theoryIndex === cfg.theorySlides.length - 1){
-      state.theoryDone = true; saveState(); refreshUI(); goTo('exercices'); return;
+      const wasDone = state.theoryDone;
+      state.theoryDone = true; saveState();
+      if(!wasDone) sendTelemetry(cfg.id, 'theory_done', {});
+      refreshUI(); goTo('exercices'); return;
     }
     theoryIndex = Math.max(0, Math.min(cfg.theorySlides.length - 1, theoryIndex + delta));
     if(theoryIndex+1 > (state.theoryStepSeen||0)){ state.theoryStepSeen = theoryIndex+1; saveState(); }
@@ -624,6 +681,7 @@ function initModule(cfg){
     state.attempts.push({ date: new Date().toLocaleDateString('fr-BE'), pct: pct });
     saveState();
     if(passed) setModulePassed(cfg.id, pct);
+    sendTelemetry(cfg.id, 'exam_attempt', { pct: pct });
 
     let html = `<div class="score-box"><div>Ton score</div><div class="score-number ${passed?'pass':'fail'}">${pct.toFixed(0)}%</div>
       <div>${earnedTotal.toFixed(1)} / ${total} points</div>
@@ -653,6 +711,7 @@ function initModule(cfg){
   buildExam();
   refreshUI();
   goTo('accueil');
+  startHeartbeat(cfg.id);
 }
 
 window.MathEngine = { initModule, getModuleStatus };
