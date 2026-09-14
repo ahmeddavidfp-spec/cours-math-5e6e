@@ -88,6 +88,58 @@ function stopSpeaking(){
   }
 }
 
+/* ============================================================
+   TERMES EXPLIQUES AU SURVOL (infobulle + lecture orale, mise en
+   cache par definition pour ne pas re-appeler ElevenLabs a chaque
+   survol du meme mot).
+   ============================================================ */
+let _termAudioCache = {};
+function speakTermDefinition(text){
+  if(!text) return;
+  if(_termAudioCache[text]){
+    stopSpeaking();
+    const audio = new Audio(_termAudioCache[text]);
+    _currentAudio = audio;
+    audio.play().catch(function(){});
+    return;
+  }
+  stopSpeaking();
+  fetch(TELEMETRY_URL.replace('/event','/speak'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: TELEMETRY_KEY, text: text })
+  }).then(function(res){
+    if(!res.ok) throw new Error('tts failed');
+    return res.blob();
+  }).then(function(blob){
+    const url = URL.createObjectURL(blob);
+    _termAudioCache[text] = url;
+    const audio = new Audio(url);
+    _currentAudio = audio;
+    audio.play().catch(function(){});
+  }).catch(function(){});
+}
+let _termTooltipEl = null;
+function ensureTermTooltipEl(){
+  if(_termTooltipEl) return _termTooltipEl;
+  _termTooltipEl = document.createElement('div');
+  _termTooltipEl.className = 'term-tooltip';
+  document.body.appendChild(_termTooltipEl);
+  return _termTooltipEl;
+}
+function showTermTooltip(el, defText){
+  const tip = ensureTermTooltipEl();
+  tip.textContent = defText;
+  const rect = el.getBoundingClientRect();
+  const left = Math.min(Math.max(8, rect.left), window.innerWidth - 268);
+  tip.style.left = left + 'px';
+  tip.style.top = (rect.bottom + 8) + 'px';
+  tip.classList.add('show');
+}
+function hideTermTooltip(){
+  if(_termTooltipEl) _termTooltipEl.classList.remove('show');
+}
+
 function loadRegistry(){
   try{ const raw = localStorage.getItem(REGISTRY_KEY); if(raw) return JSON.parse(raw); }catch(e){}
   return {};
@@ -384,7 +436,7 @@ function initModule(cfg){
     root.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('active'));
     const btn = root.querySelector('.step-btn[data-view="'+view+'"]');
     if(btn) btn.classList.add('active');
-    if(view !== 'theorie') stopSpeaking();
+    if(view !== 'theorie'){ stopSpeaking(); hideTermTooltip(); }
     window.scrollTo({top:0, behavior:'smooth'});
     if(view === 'exercices' && !exTabInit.flashcards){ switchExTab('flashcards'); }
     refreshUI();
@@ -470,6 +522,34 @@ function initModule(cfg){
     root.querySelector('#theory-next').textContent = (theoryIndex === cfg.theorySlides.length - 1) ? 'Terminer la theorie' : 'Suivant';
     if(s.postRender) s.postRender();
     resetHelpBubble();
+    setupTermTooltips();
+  }
+
+  /* ---- termes expliques au survol ---- */
+  let _termHoverTimer = null;
+  function setupTermTooltips(){
+    const container = root.querySelector('#theory-slides');
+    if(!container) return;
+    container.querySelectorAll('.term').forEach(function(el){
+      const def = el.dataset.def || '';
+      if(!def) return;
+      el.addEventListener('mouseenter', function(){
+        clearTimeout(_termHoverTimer);
+        _termHoverTimer = setTimeout(function(){
+          showTermTooltip(el, def);
+          speakTermDefinition(def);
+        }, 300);
+      });
+      el.addEventListener('mouseleave', function(){
+        clearTimeout(_termHoverTimer);
+        hideTermTooltip();
+      });
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        showTermTooltip(el, def);
+        speakTermDefinition(def);
+      });
+    });
   }
 
   /* ---- bulle d'aide : tuteur IA scope a la section de theorie ---- */
