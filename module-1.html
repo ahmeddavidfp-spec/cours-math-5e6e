@@ -29,7 +29,7 @@ const theorySlides = [
 {
   title: "2. Representer une serie statistique a deux variables",
   html: `
-    <p>Quand on mesure deux caracteristiques (x et y) sur les memes individus, on peut representer chaque individu par un point de coordonnees (x, y) : c'est un <strong>nuage de points</strong>.</p>
+    <p>Quand on mesure deux caracteristiques (x et y) sur les memes individus, on peut representer chaque individu par un point de coordonnees (x, y) : c'est un <strong class="term" data-def="Un nuage de points, c'est la representation graphique de plusieurs individus places selon leurs coordonnees x et y.">nuage de points</strong>.</p>
     <table class="data">
       <caption>Exemple : heures d'etude (x) et note sur 100 (y) pour 6 eleves</caption>
       <tr><th>x (heures)</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
@@ -49,8 +49,8 @@ const theorySlides = [
       <strong>Exemple classique :</strong> le nombre de glaces vendues et le nombre de noyades augmentent tous les deux en ete. Ils sont <strong>correles</strong> (lies statistiquement), mais manger une glace ne cause evidemment pas de noyade : les deux sont causes par un troisieme facteur, la chaleur estivale.
     </div>
     <div class="callout">
-      <strong>Correlation</strong> : deux variables evoluent ensemble de maniere statistiquement liee.<br>
-      <strong>Causalite</strong> : une variable provoque directement le changement de l'autre.
+      <strong class="term" data-def="La correlation, c'est le fait que deux variables evoluent ensemble de maniere statistiquement liee, sans que l'une provoque forcement l'autre.">Correlation</strong> : deux variables evoluent ensemble de maniere statistiquement liee.<br>
+      <strong class="term" data-def="La causalite, c'est le fait qu'une variable provoque directement le changement d'une autre.">Causalite</strong> : une variable provoque directement le changement de l'autre.
     </div>
     <p>Dans notre exemple (heures d'etude / note), une causalite est plausible : etudier davantage peut raisonnablement ameliorer la note. Mais meme dans ce cas, d'autres facteurs (methode de travail, comprehension prealable...) interviennent aussi.</p>
   `
@@ -58,7 +58,7 @@ const theorySlides = [
 {
   title: "4. Le coefficient de correlation lineaire",
   html: `
-    <p>Le coefficient de correlation lineaire, note <strong>r</strong>, mesure a quel point deux variables sont liees par une relation... lineaire (une droite).</p>
+    <p>Le <strong class="term" data-def="Le coefficient de correlation lineaire, note r, mesure a quel point deux variables sont liees par une relation lineaire, c'est-a-dire une droite. Il vaut toujours entre moins un et plus un.">coefficient de correlation lineaire</strong>, note <strong>r</strong>, mesure a quel point deux variables sont liees par une relation... lineaire (une droite).</p>
     <div class="callout formule">
       -1 &le; r &le; 1
     </div>
@@ -77,7 +77,7 @@ const theorySlides = [
 {
   title: "5. Ajustement lineaire : methode de Mayer",
   html: `
-    <p>La <strong>methode de Mayer</strong> est une methode simple (a la main) pour tracer une droite d'ajustement.</p>
+    <p>La <strong class="term" data-def="La methode de Mayer est une methode simple pour tracer a la main une droite d'ajustement : on separe le nuage de points en deux groupes, on calcule leur point moyen, et on trace la droite qui les relie.">methode de Mayer</strong> est une methode simple (a la main) pour tracer une droite d'ajustement.</p>
     <ol class="clean">
       <li>Trier les points du nuage par abscisse x croissante.</li>
       <li>Partager le nuage en deux sous-groupes de tailles egales (ou presque).</li>
@@ -94,7 +94,7 @@ const theorySlides = [
 {
   title: "6. Ajustement lineaire : methode des moindres carres",
   html: `
-    <p>La <strong>methode des moindres carres</strong> est plus rigoureuse : elle cherche la droite qui minimise la somme des carres des ecarts verticaux entre les points et la droite. Les formules ne sont pas a demontrer, mais a connaitre et utiliser.</p>
+    <p>La <strong class="term" data-def="La methode des moindres carres cherche la droite qui minimise la somme des carres des ecarts verticaux entre les points et la droite. C'est la methode la plus rigoureuse.">methode des moindres carres</strong> est plus rigoureuse : elle cherche la droite qui minimise la somme des carres des ecarts verticaux entre les points et la droite. Les formules ne sont pas a demontrer, mais a connaitre et utiliser.</p>
     <div class="callout formule">
       Droite de regression : y = ax + b<br>
       a = covariance(x,y) / variance(x)<br>
