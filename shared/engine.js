@@ -59,36 +59,33 @@ function startHeartbeat(moduleId){
 }
 
 /* ============================================================
-   LECTURE VOCALE des reponses du tuteur (Web Speech API du
-   navigateur : aucun cout, aucune cle, fonctionne hors ligne).
+   LECTURE VOCALE des reponses du tuteur (voix ElevenLabs, via le
+   Worker ines-progress-api : POST /speak).
    ============================================================ */
-let _ttsVoices = [];
-if(typeof window !== 'undefined' && 'speechSynthesis' in window){
-  (function(){
-    function refreshVoices(){ _ttsVoices = window.speechSynthesis.getVoices() || []; }
-    refreshVoices();
-    window.speechSynthesis.onvoiceschanged = refreshVoices;
-  })();
-}
-function pickFrenchVoice(){
-  if(!_ttsVoices.length) return null;
-  function find(prefix){ return _ttsVoices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf(prefix) === 0; }); }
-  return find('fr-be') || find('fr-fr') || find('fr') || null;
-}
+let _currentAudio = null;
 function speakText(text){
-  if(!text || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-  try{
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    const voice = pickFrenchVoice();
-    utter.lang = voice ? voice.lang : 'fr-FR';
-    if(voice) utter.voice = voice;
-    utter.rate = 1;
-    window.speechSynthesis.speak(utter);
-  }catch(e){}
+  if(!text) return;
+  stopSpeaking();
+  fetch(TELEMETRY_URL.replace('/event','/speak'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: TELEMETRY_KEY, text: text })
+  }).then(function(res){
+    if(!res.ok) throw new Error('tts failed');
+    return res.blob();
+  }).then(function(blob){
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    _currentAudio = audio;
+    audio.addEventListener('ended', function(){ URL.revokeObjectURL(url); if(_currentAudio === audio) _currentAudio = null; });
+    audio.play().catch(function(){});
+  }).catch(function(){});
 }
 function stopSpeaking(){
-  try{ if(typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }catch(e){}
+  if(_currentAudio){
+    try{ _currentAudio.pause(); }catch(e){}
+    _currentAudio = null;
+  }
 }
 
 function loadRegistry(){
