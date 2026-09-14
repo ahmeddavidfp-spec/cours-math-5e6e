@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 5e - Module 4 : Derivee</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce module relie plusieurs notions que tu connais deja separement (pente d'une droite, taux d'accroissement constant des suites, limites) autour d'un seul outil : la <strong class="term" data-def="La derivee est un outil qui relie la tangente, le taux d'accroissement, la croissance et la concavite d'une fonction.">derivee</strong>.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>calculer un taux d'accroissement moyen et un nombre derive ;</li>
+        <li>calculer la derivee d'une fonction (somme, produit, quotient) ;</li>
+        <li>determiner l'equation de la tangente en un point d'un graphique ;</li>
+        <li>relier le signe de la derivee premiere a la croissance, et celui de la derivee seconde a la concavite.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Du taux d'accroissement moyen au nombre derive",
+  html: `
+    <p>Le <strong class="term" data-def="Le taux d'accroissement moyen d'une fonction entre deux points, c'est la variation de f divisee par la variation de x entre ces deux points : c'est aussi la pente de la droite qui relie les deux points du graphique.">taux d'accroissement moyen</strong> d'une fonction f entre deux valeurs a et b est : [f(b) - f(a)] / (b - a). C'est la pente de la droite qui relie les deux points du graphique.</p>
+    <p>Si on rapproche b de a de plus en plus, ce taux moyen tend vers une limite : le <strong class="term" data-def="Le nombre derive de f en a, note f prime de a, c'est la limite du taux d'accroissement moyen quand les deux points se rapprochent l'un de l'autre : c'est la pente de la tangente au graphique en ce point.">nombre derive</strong> de f en a, note f'(a).</p>
+    <div class="callout formule">
+      f'(a) = lim h&rarr;0 de [f(a+h) - f(a)] / h
+    </div>
+    <p><strong>Exemple :</strong> f(x) = x&sup2;, calculons f'(1) avec h = 0,001 : [f(1,001) - f(1)] / 0,001 &asymp; 2,001. Plus h se rapproche de 0, plus ce taux se rapproche de 2. Donc f'(1) = 2.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> ce calcul donne, comme au module 3, une indetermination 0/0 (h au denominateur, mais h qui tend vers 0). Il faut d'abord simplifier algebriquement avant de faire tendre h vers 0.
+    </div>
+    <p><strong>Interpretation geometrique :</strong> f'(a) est la pente de la <strong class="term" data-def="La tangente au graphique d'une fonction en un point, c'est la droite qui touche le graphique en ce point avec exactement la meme pente que la fonction a cet endroit.">tangente</strong> au graphique de f au point d'abscisse a.</p>
+  `
+},
+{
+  title: "3. La fonction derivee et les regles de calcul",
+  html: `
+    <p>En repetant ce calcul pour chaque valeur de x, on obtient la <strong>fonction derivee</strong> f'. Pour les fonctions de reference de ce module (rationnelles et racines carrees) :</p>
+    <div class="callout formule">
+      (k)' = 0 (k constant)<br>
+      (x&#8319;)' = n &times; x&#8319;&#8315;&sup1; (n entier)<br>
+      (&radic;x)' = 1 / (2&radic;x)
+    </div>
+    <p>Pour combiner des fonctions, on utilise ces regles :</p>
+    <div class="callout formule">
+      Somme : (u + v)' = u' + v'<br>
+      Produit : (u &times; v)' = u' &times; v + u &times; v'<br>
+      Quotient : (u / v)' = (u' &times; v - u &times; v') / v&sup2;
+    </div>
+    <p><strong>Exemple (produit) :</strong> f(x) = x&radic;x. Avec u=x (u'=1) et v=&radic;x (v'=1/(2&radic;x)) : f'(x) = 1&times;&radic;x + x&times;1/(2&radic;x) = &radic;x + &radic;x/2 = (3/2)&radic;x. Verification a x=4 : f'(4) = 1,5 &times; 2 = 3.</p>
+    <p><strong>Exemple (quotient) :</strong> f(x) = (x+1)/(x-1). Avec u=x+1 (u'=1) et v=x-1 (v'=1) : f'(x) = [1&times;(x-1) - (x+1)&times;1] / (x-1)&sup2; = -2/(x-1)&sup2;. A x=3 : f'(3) = -2/4 = -0,5.</p>
+  `
+},
+{
+  title: "4. La tangente en un point",
+  html: `
+    <p>Une fois f'(a) connu, l'equation de la tangente au graphique de f au point d'abscisse a s'ecrit :</p>
+    <div class="callout formule">
+      y - f(a) = f'(a) &times; (x - a)
+    </div>
+    <p><strong>Exemple :</strong> f(x) = x&sup2; - 4x + 3. Cherchons la tangente en x=0. On a f(0) = 3 et f'(x) = 2x - 4, donc f'(0) = -4.</p>
+    <div class="callout formule">
+      y - 3 = -4 &times; (x - 0), soit y = -4x + 3
+    </div>
+    <p>Verification : pour x = 0,01, la fonction vaut f(0,01) = 2,9601, tres proche de la tangente y = -4&times;0,01+3 = 2,96. Plus on est pres de x=0, plus la tangente colle au graphique.</p>
+  `
+},
+{
+  title: "5. Derivee premiere et croissance",
+  html: `
+    <p>Le signe de f' renseigne directement sur la croissance de f.</p>
+    <div class="callout formule">
+      f'(x) &gt; 0 sur un intervalle &rArr; f est croissante sur cet intervalle<br>
+      f'(x) &lt; 0 sur un intervalle &rArr; f est decroissante sur cet intervalle<br>
+      f'(a) = 0 et changement de signe autour de a &rArr; <strong class="term" data-def="Un extremum local, c'est un point ou une fonction passe de croissante a decroissante (maximum) ou de decroissante a croissante (minimum) : sa derivee premiere s'y annule et change de signe.">extremum local</strong> en a
+    </div>
+    <p><strong>Exemple :</strong> f(x) = x&sup2; - 4x + 3, f'(x) = 2x - 4. f'(x) = 0 pour x = 2. Pour x &lt; 2, f'(x) &lt; 0 (decroissante) ; pour x &gt; 2, f'(x) &gt; 0 (croissante). Donc x=2 est un minimum local, avec f(2) = -1.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> f'(a) = 0 ne suffit pas pour conclure a un extremum ! Exemple : f(x) = x&sup3;, alors f'(x) = 3x&sup2; &ge; 0 partout, donc f'(0) = 0 mais f est croissante avant ET apres x=0 (pas de changement de signe) : x=0 n'est pas un extremum.
+    </div>
+  `
+},
+{
+  title: "6. Derivee seconde, concavite et point d'inflexion",
+  html: `
+    <p>La derivee seconde f'' (la derivee de la derivee) renseigne sur la <strong class="term" data-def="La concavite du graphique d'une fonction, c'est le sens de sa courbure : concave vers le haut si le graphique ressemble a une vallee, concave vers le bas si il ressemble a une colline.">concavite</strong> du graphique.</p>
+    <div class="callout formule">
+      f''(x) &gt; 0 &rArr; concavite vers le haut (comme une vallee)<br>
+      f''(x) &lt; 0 &rArr; concavite vers le bas (comme une colline)<br>
+      f''(a) = 0 et changement de signe autour de a &rArr; <strong class="term" data-def="Un point d'inflexion, c'est un point ou le graphique d'une fonction change de sens de concavite : la derivee seconde s'y annule et change de signe.">point d'inflexion</strong> en a
+    </div>
+    <p><strong>Exemple :</strong> g(x) = x&sup3; - 3x&sup2;. On calcule g'(x) = 3x&sup2; - 6x = 3x(x-2), qui s'annule en x=0 et x=2. On calcule g''(x) = 6x - 6, qui s'annule en x=1.</p>
+    <table class="data">
+      <tr><th>x</th><td>x &lt; 0</td><td>0</td><td>0 &lt; x &lt; 1</td><td>1</td><td>1 &lt; x &lt; 2</td><td>2</td><td>x &gt; 2</td></tr>
+      <tr><th>g'(x)</th><td>+</td><td>0</td><td>-</td><td></td><td>-</td><td>0</td><td>+</td></tr>
+      <tr><th>g''(x)</th><td>-</td><td></td><td>-</td><td>0</td><td>+</td><td></td><td>+</td></tr>
+      <tr><th>g(x)</th><td>croissante</td><td>max local (0)</td><td>decroissante</td><td>inflexion (-2)</td><td>decroissante</td><td>min local (-4)</td><td>croissante</td></tr>
+    </table>
+    <p>Ce tableau (un <strong>tableau de variations</strong>) resume toute l'information utile pour esquisser le graphique de g, en combinant le signe de g' et celui de g''.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Taux d'accroissement moyen", back:"[f(b)-f(a)] / (b-a) : la pente de la droite entre deux points du graphique."},
+  {front:"Nombre derive f'(a)", back:"Limite du taux d'accroissement moyen quand les deux points se rapprochent : pente de la tangente en a."},
+  {front:"Derivee de x puissance n", back:"n fois x puissance (n-1)."},
+  {front:"Derivee de racine de x", back:"1 divise par (2 fois racine de x)."},
+  {front:"Regle du produit", back:"(u fois v)' = u' fois v + u fois v'."},
+  {front:"Regle du quotient", back:"(u/v)' = (u' fois v - u fois v') / v au carre."},
+  {front:"Equation de la tangente en a", back:"y - f(a) = f'(a) fois (x - a)."},
+  {front:"Signe de f' et croissance", back:"f' positive = croissante ; f' negative = decroissante ; f'=0 avec changement de signe = extremum local."},
+  {front:"Signe de f'' et concavite", back:"f'' positive = concave vers le haut ; f'' negative = concave vers le bas ; f''=0 avec changement de signe = point d'inflexion."},
+  {front:"f'(a) = 0 suffit-il pour un extremum ?", back:"Non : il faut en plus un changement de signe de f' autour de a (contre-exemple : x cube en x=0)."}
+];
+
+const game = {
+  type: 'order',
+  challenges: [
+    { prompt: "Remets dans l'ordre les etapes pour trouver les extremums locaux d'une fonction.",
+      steps: [
+        "Calculer f'(x).",
+        "Resoudre f'(x) = 0.",
+        "Etudier le signe de f'(x) de part et d'autre des solutions.",
+        "Conclure : maximum si + puis -, minimum si - puis +."
+      ]
+    },
+    { prompt: "Remets dans l'ordre les etapes pour trouver l'equation de la tangente en x=a.",
+      steps: [
+        "Calculer f(a).",
+        "Calculer f'(x) puis evaluer f'(a).",
+        "Ecrire y - f(a) = f'(a) fois (x - a).",
+        "Simplifier pour obtenir y = ... "
+      ]
+    }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"f(x) = x&sup2;. Calcule f'(3).",
+    accepted:[6], tolerance:0.01,
+    explain:"f'(x) = 2x, donc f'(3) = 6."
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = &radic;x. Calcule f'(4).",
+    accepted:[0.25], tolerance:0.01,
+    explain:"f'(x) = 1/(2 fois racine de x), donc f'(4) = 1/(2 fois 2) = 0,25."
+  },
+  { type:'mcq', points:1,
+    prompt:"Si f'(x) &gt; 0 sur un intervalle, alors sur cet intervalle f est :",
+    options:["croissante","decroissante","constante","non definie"],
+    correct:0,
+    explain:"Une derivee positive signale une fonction croissante."
+  },
+  { type:'tf', points:1,
+    prompt:"Si f''(x) &gt; 0 sur un intervalle, le graphique de f y est concave vers le haut.",
+    correct:true,
+    explain:"C'est exactement la definition."
+  },
+  { type:'data', points:2,
+    prompt:"Soit f(x) = x&sup2; - 4x + 3.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule f'(0).", accepted:[-4], tolerance:0.01},
+      {prompt:"Pour quelle valeur de x la fonction admet-elle un minimum local ?", accepted:[2], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour f(x) = x&sup2; - 4x + 3 (minimum en x=2), indique si f est croissante ou decroissante sur chaque intervalle.",
+    classifyOptions:["Croissante","Decroissante"],
+    items:[
+      {text:"Sur l'intervalle x < 2", correct:"Decroissante"},
+      {text:"Sur l'intervalle x > 2", correct:"Croissante"}
+    ],
+    explain:"f'(x)=2x-4 est negative avant x=2 et positive apres."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, pourquoi f'(a) = 0 ne suffit pas pour affirmer qu'il y a un extremum local en a.",
+    keywordGroups:[["changement de signe","signe"],["exemple","x cube","x au cube"],["croissante"],["extremum"]],
+    modelAnswer:"Un extremum local existe seulement si la derivee s'annule ET change de signe autour de ce point : positive puis negative pour un maximum, negative puis positive pour un minimum. Si la derivee s'annule sans changer de signe, la fonction continue de croitre (ou de decroitre) des deux cotes, et il n'y a pas d'extremum. L'exemple classique est f(x) = x au cube : sa derivee 3x carre s'annule en x=0, mais reste positive avant et apres, donc la fonction est croissante partout et x=0 n'est pas un extremum."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Le nombre derive f'(a) correspond geometriquement a :",
+    options:["l'ordonnee du point d'abscisse a","la pente de la tangente au graphique en a","la valeur maximale de f","le domaine de f"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Le taux d'accroissement moyen entre a et b est :",
+    options:["f(a) + f(b)","[f(b) - f(a)] / (b - a)","f'(a) - f'(b)","f(a) fois f(b)"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Si f'(a) = 0, alors a est necessairement un extremum local de f.",
+    correct:false
+  },
+  { type:'tf', points:1,
+    prompt:"Une derivee seconde negative sur un intervalle signale une concavite vers le bas.",
+    correct:true
+  },
+  { type:'numeric', points:1,
+    prompt:"h(x) = x&sup3;. Calcule h'(2).",
+    accepted:[12], tolerance:0.01,
+    explain:"h'(x) = 3x carre, donc h'(2) = 3 fois 4 = 12."
+  },
+  { type:'numeric', points:1,
+    prompt:"p(x) = &radic;x. Calcule p'(9).",
+    accepted:[0.1667], tolerance:0.01,
+    explain:"p'(x) = 1/(2 fois racine de x), donc p'(9) = 1/6 environ 0,1667."
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = (x+1)/(x-1). Calcule f'(3) avec la regle du quotient.",
+    accepted:[-0.5], tolerance:0.01,
+    explain:"f'(x) = [(x-1)-(x+1)]/(x-1) au carre = -2/(x-1) au carre, donc f'(3) = -2/4 = -0,5."
+  },
+  { type:'data', points:2,
+    prompt:"Soit f(x) = x&sup2; - 4x + 3. On cherche l'equation de la tangente au graphique en x=0.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quel est le coefficient angulaire (la pente) de cette tangente ?", accepted:[-4], tolerance:0.01},
+      {prompt:"Quelle est l'ordonnee a l'origine de cette tangente ?", accepted:[3], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:4,
+    prompt:"Pour g(x) = x&sup3; - 3x&sup2; (voir tableau de variations du cours), classe chaque point.",
+    classifyOptions:["Maximum local","Minimum local","Point d'inflexion"],
+    items:[
+      {text:"x = 0", correct:"Maximum local"},
+      {text:"x = 1", correct:"Point d'inflexion"},
+      {text:"x = 2", correct:"Minimum local"}
+    ],
+    explain:"g'(0)=0 avec signe +/- = maximum ; g''(1)=0 avec changement de concavite = inflexion ; g'(2)=0 avec signe -/+ = minimum."
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque situation a sa conclusion.",
+    items:[
+      {left:"f'(a)=0, signe de f' passe de + a -", options:["Maximum local","Minimum local","Point d'inflexion","Rien de particulier"], correct:"Maximum local"},
+      {left:"f'(a)=0, signe de f' passe de - a +", options:["Maximum local","Minimum local","Point d'inflexion","Rien de particulier"], correct:"Minimum local"},
+      {left:"f''(a)=0, signe de f'' change", options:["Maximum local","Minimum local","Point d'inflexion","Rien de particulier"], correct:"Point d'inflexion"},
+      {left:"f'(a)=0, signe de f' ne change pas", options:["Maximum local","Minimum local","Point d'inflexion","Rien de particulier"], correct:"Rien de particulier"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, la demarche complete pour construire le tableau de variations d'une fonction a partir de son expression analytique.",
+    keywordGroups:[["derivee premiere","f'"],["signe"],["derivee seconde","f''"],["croissance","concavite"]],
+    modelAnswer:"On calcule d'abord la derivee premiere f' de la fonction, on resout f'(x)=0, puis on etudie le signe de f' de part et d'autre de ces solutions pour determiner les intervalles de croissance et de decroissance, ainsi que les extremums locaux. On calcule ensuite la derivee seconde f'', on resout f''(x)=0 et on etudie son signe pour determiner la concavite du graphique et les eventuels points d'inflexion. En combinant ces deux etudes de signe dans un seul tableau, on obtient une vision complete de l'allure du graphique de la fonction, utile pour l'esquisser sans avoir besoin de calculer de nombreuses valeurs."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm4-derivee',
+  eyebrow: "Mathematiques generales (4p) &middot; 5e annee &middot; Module 4/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Derivee",
+  subtitle: "Quatrieme module du programme de 5e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module relie tangente, taux d'accroissement, croissance et concavite a l'outil derivee : calcul du nombre derive, regles de derivation, equation de la tangente, tableau de variations complet.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la derivee",
+  passThreshold: 60,
+  gameLabel: "Jeu : remettre les etapes dans l'ordre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-5.html',
+  nextTitle: 'Fonctions trigonometriques',
+  footerHtml: 'Module 4/10 (5e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
