@@ -86,9 +86,12 @@ table.data th{ background: #eef0f4; }
 .theory-help-log{ max-height: 260px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
 .theory-help-log:empty{ display:none; }
 .theory-help-q{ align-self:flex-end; background: var(--accent-soft); color: var(--accent-dark); padding:8px 12px; border-radius: 12px 12px 2px 12px; font-size:0.85rem; max-width:88%; }
-.theory-help-a{ align-self:flex-start; background:#f0ede4; color:var(--ink); padding:8px 12px; border-radius: 12px 12px 12px 2px; font-size:0.85rem; max-width:88%; white-space:pre-wrap; }
+.theory-help-a{ align-self:flex-start; display:flex; align-items:flex-start; gap:8px; background:#f0ede4; color:var(--ink); padding:8px 12px; border-radius: 12px 12px 12px 2px; font-size:0.85rem; max-width:88%; white-space:pre-wrap; }
 .theory-help-a.loading{ font-style:italic; color:var(--ink-soft); }
 .theory-help-a.error{ background: var(--danger-soft); color: var(--danger); }
+.theory-help-a-text{ flex:1; }
+.theory-help-speak{ flex-shrink:0; background:none; border:none; cursor:pointer; font-size:0.95rem; line-height:1.3; padding:0; color: var(--accent-dark); }
+.theory-help-speak:hover{ opacity:0.65; }
 .theory-help-input-row{ display:flex; gap:8px; }
 .theory-help-input-row input{ flex:1; min-width:0; font-family:"Helvetica Neue", Arial, sans-serif; padding:8px 10px; border-radius:8px; border:1.5px solid var(--border); font-size:0.85rem; }
 .theory-help-note{ margin:0; font-size:0.7rem; color:var(--ink-soft); text-align:center; }

@@ -58,6 +58,39 @@ function startHeartbeat(moduleId){
   });
 }
 
+/* ============================================================
+   LECTURE VOCALE des reponses du tuteur (Web Speech API du
+   navigateur : aucun cout, aucune cle, fonctionne hors ligne).
+   ============================================================ */
+let _ttsVoices = [];
+if(typeof window !== 'undefined' && 'speechSynthesis' in window){
+  (function(){
+    function refreshVoices(){ _ttsVoices = window.speechSynthesis.getVoices() || []; }
+    refreshVoices();
+    window.speechSynthesis.onvoiceschanged = refreshVoices;
+  })();
+}
+function pickFrenchVoice(){
+  if(!_ttsVoices.length) return null;
+  function find(prefix){ return _ttsVoices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf(prefix) === 0; }); }
+  return find('fr-be') || find('fr-fr') || find('fr') || null;
+}
+function speakText(text){
+  if(!text || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = pickFrenchVoice();
+    utter.lang = voice ? voice.lang : 'fr-FR';
+    if(voice) utter.voice = voice;
+    utter.rate = 1;
+    window.speechSynthesis.speak(utter);
+  }catch(e){}
+}
+function stopSpeaking(){
+  try{ if(typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }catch(e){}
+}
+
 function loadRegistry(){
   try{ const raw = localStorage.getItem(REGISTRY_KEY); if(raw) return JSON.parse(raw); }catch(e){}
   return {};
@@ -351,6 +384,7 @@ function initModule(cfg){
     root.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('active'));
     const btn = root.querySelector('.step-btn[data-view="'+view+'"]');
     if(btn) btn.classList.add('active');
+    if(view !== 'theorie') stopSpeaking();
     window.scrollTo({top:0, behavior:'smooth'});
     if(view === 'exercices' && !exTabInit.flashcards){ switchExTab('flashcards'); }
     refreshUI();
@@ -451,16 +485,17 @@ function initModule(cfg){
   }
   function resetHelpBubble(){
     helpLog = [];
+    stopSpeaking();
     renderHelpLog();
   }
   function renderHelpLog(){
     const el = root.querySelector('#theory-help-log');
     if(!el) return;
-    el.innerHTML = helpLog.map(function(turn){
+    el.innerHTML = helpLog.map(function(turn, idx){
       let html = '<div class="theory-help-q">'+escapeHtml(turn.q)+'</div>';
       if(turn.loading) html += '<div class="theory-help-a loading">Le tuteur reflechit...</div>';
       else if(turn.error) html += '<div class="theory-help-a error">'+escapeHtml(turn.error)+'</div>';
-      else html += '<div class="theory-help-a">'+escapeHtml(turn.a)+'</div>';
+      else html += '<div class="theory-help-a"><span class="theory-help-a-text">'+escapeHtml(turn.a)+'</span><button class="theory-help-speak" type="button" data-turn="'+idx+'" title="Ecouter la reponse">🔊</button></div>';
       return html;
     }).join('');
     el.scrollTop = el.scrollHeight;
@@ -478,7 +513,7 @@ function initModule(cfg){
       });
       const data = await res.json();
       turn.loading = false;
-      if(data.answer) turn.a = data.answer;
+      if(data.answer){ turn.a = data.answer; speakText(turn.a); }
       else turn.error = data.error || "Le tuteur n'est pas disponible pour le moment.";
     }catch(e){
       turn.loading = false;
@@ -491,18 +526,27 @@ function initModule(cfg){
     const q = input.value.trim();
     if(!q) return;
     input.value = '';
+    stopSpeaking();
     askTheoryHelp(q);
   }
   root.querySelector('#theory-help-toggle').addEventListener('click', function(){
     const panel = root.querySelector('#theory-help-panel');
     panel.hidden = !panel.hidden;
     if(!panel.hidden) root.querySelector('#theory-help-input').focus();
+    else stopSpeaking();
   });
   root.querySelector('#theory-help-close').addEventListener('click', function(){
     root.querySelector('#theory-help-panel').hidden = true;
+    stopSpeaking();
   });
   root.querySelector('#theory-help-send').addEventListener('click', submitHelpQuestion);
   root.querySelector('#theory-help-input').addEventListener('keydown', function(e){ if(e.key==='Enter') submitHelpQuestion(); });
+  root.querySelector('#theory-help-log').addEventListener('click', function(e){
+    const btn = e.target.closest('.theory-help-speak');
+    if(!btn) return;
+    const turn = helpLog[parseInt(btn.dataset.turn, 10)];
+    if(turn && turn.a) speakText(turn.a);
+  });
 
   function theoryStep(delta){
     if(delta > 0 && theoryIndex === cfg.theorySlides.length - 1){
