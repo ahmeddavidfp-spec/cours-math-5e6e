@@ -285,6 +285,21 @@ function initModule(cfg){
           <button class="btn" id="theory-next">Suivant</button>
         </div>
       </div>
+      <div class="theory-help">
+        <button class="theory-help-toggle" id="theory-help-toggle" type="button">Une question sur cette section ?</button>
+        <div class="theory-help-panel" id="theory-help-panel" hidden>
+          <div class="theory-help-head">
+            <strong>Pose ta question sur cette section</strong>
+            <button class="theory-help-close" id="theory-help-close" type="button" aria-label="Fermer">&times;</button>
+          </div>
+          <div class="theory-help-log" id="theory-help-log"></div>
+          <div class="theory-help-input-row">
+            <input type="text" id="theory-help-input" placeholder="Ex : pourquoi... ? Que veut dire... ?" autocomplete="off">
+            <button class="btn" id="theory-help-send" type="button">Envoyer</button>
+          </div>
+          <p class="theory-help-note">Le tuteur ne repond que sur le contenu de cette section.</p>
+        </div>
+      </div>
     </section>
 
     <section id="view-exercices" class="view">
@@ -420,7 +435,75 @@ function initModule(cfg){
     root.querySelector('#theory-prev').disabled = theoryIndex === 0;
     root.querySelector('#theory-next').textContent = (theoryIndex === cfg.theorySlides.length - 1) ? 'Terminer la theorie' : 'Suivant';
     if(s.postRender) s.postRender();
+    resetHelpBubble();
   }
+
+  /* ---- bulle d'aide : tuteur IA scope a la section de theorie ---- */
+  let helpLog = [];
+  function escapeHtml(str){
+    return (str||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function currentTheorySectionText(){
+    const s = cfg.theorySlides[theoryIndex];
+    const tmp = document.createElement('div');
+    tmp.innerHTML = s.html;
+    return { title: s.title, text: tmp.textContent.replace(/\s+/g,' ').trim().slice(0, 6000) };
+  }
+  function resetHelpBubble(){
+    helpLog = [];
+    renderHelpLog();
+  }
+  function renderHelpLog(){
+    const el = root.querySelector('#theory-help-log');
+    if(!el) return;
+    el.innerHTML = helpLog.map(function(turn){
+      let html = '<div class="theory-help-q">'+escapeHtml(turn.q)+'</div>';
+      if(turn.loading) html += '<div class="theory-help-a loading">Le tuteur reflechit...</div>';
+      else if(turn.error) html += '<div class="theory-help-a error">'+escapeHtml(turn.error)+'</div>';
+      else html += '<div class="theory-help-a">'+escapeHtml(turn.a)+'</div>';
+      return html;
+    }).join('');
+    el.scrollTop = el.scrollHeight;
+  }
+  async function askTheoryHelp(question){
+    const section = currentTheorySectionText();
+    const turn = { q: question, loading: true };
+    helpLog.push(turn);
+    renderHelpLog();
+    try{
+      const res = await fetch(TELEMETRY_URL.replace('/event','/ask'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: TELEMETRY_KEY, course: TELEMETRY_COURSE, moduleId: cfg.id, sectionTitle: section.title, sectionText: section.text, question: question })
+      });
+      const data = await res.json();
+      turn.loading = false;
+      if(data.answer) turn.a = data.answer;
+      else turn.error = data.error || "Le tuteur n'est pas disponible pour le moment.";
+    }catch(e){
+      turn.loading = false;
+      turn.error = "Le tuteur n'est pas disponible pour le moment (verifie ta connexion).";
+    }
+    renderHelpLog();
+  }
+  function submitHelpQuestion(){
+    const input = root.querySelector('#theory-help-input');
+    const q = input.value.trim();
+    if(!q) return;
+    input.value = '';
+    askTheoryHelp(q);
+  }
+  root.querySelector('#theory-help-toggle').addEventListener('click', function(){
+    const panel = root.querySelector('#theory-help-panel');
+    panel.hidden = !panel.hidden;
+    if(!panel.hidden) root.querySelector('#theory-help-input').focus();
+  });
+  root.querySelector('#theory-help-close').addEventListener('click', function(){
+    root.querySelector('#theory-help-panel').hidden = true;
+  });
+  root.querySelector('#theory-help-send').addEventListener('click', submitHelpQuestion);
+  root.querySelector('#theory-help-input').addEventListener('keydown', function(e){ if(e.key==='Enter') submitHelpQuestion(); });
+
   function theoryStep(delta){
     if(delta > 0 && theoryIndex === cfg.theorySlides.length - 1){
       const wasDone = state.theoryDone;
