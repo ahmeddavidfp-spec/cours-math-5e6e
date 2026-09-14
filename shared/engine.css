@@ -28,6 +28,8 @@ body{
 .app{ max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
 a.hub-link{ font-family:"Helvetica Neue", Arial, sans-serif; font-size: 0.82rem; color: var(--ink-soft); text-decoration: none; display:inline-block; margin-bottom: 10px; }
 a.hub-link:hover{ text-decoration: underline; }
+.top-nav{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+.top-nav a.hub-link{ margin-bottom: 10px; }
 header.top{ display:flex; flex-direction:column; gap:10px; margin-bottom: 22px; }
 .eyebrow{ font-family: "Helvetica Neue", Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72rem; color: var(--accent-dark); font-weight: 700; }
 h1{ font-size: 1.7rem; margin: 0; line-height:1.25; }

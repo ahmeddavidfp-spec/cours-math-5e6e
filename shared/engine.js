@@ -277,7 +277,10 @@ function initModule(cfg){
   const root = document.getElementById('app-root');
   root.innerHTML = `
   <div class="app">
-    <a class="hub-link" href="${cfg.hubHref || 'index.html'}">&larr; Tous les modules</a>
+    <div class="top-nav">
+      <a class="hub-link" href="${cfg.hubHref || 'index.html'}">&larr; Tous les modules</a>
+      <a class="hub-link" href="https://portail-ines.pages.dev/" target="_blank" rel="noopener">Tableau de bord &#8599;</a>
+    </div>
     <header class="top">
       <div class="eyebrow">${cfg.eyebrow}</div>
       <h1>${cfg.title}</h1>
