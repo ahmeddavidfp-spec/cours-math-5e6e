@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 5e - Module 1 : Statistique a deux variables</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Tu connais deja la statistique a une variable (moyenne, mediane, ecart-type...). Ce module etudie la relation entre <strong>deux</strong> variables mesurees sur une meme population : par exemple, le nombre d'heures d'etude et la note obtenue a un examen.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>differencier causalite et correlation ;</li>
+        <li>calculer et interpreter un coefficient de correlation lineaire ;</li>
+        <li>determiner une droite d'ajustement par la methode de Mayer et par la methode des moindres carres ;</li>
+        <li>juger si un ajustement lineaire est pertinent, et l'utiliser pour estimer une valeur.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Representer une serie statistique a deux variables",
+  html: `
+    <p>Quand on mesure deux caracteristiques (x et y) sur les memes individus, on peut representer chaque individu par un point de coordonnees (x, y) : c'est un <strong>nuage de points</strong>.</p>
+    <table class="data">
+      <caption>Exemple : heures d'etude (x) et note sur 100 (y) pour 6 eleves</caption>
+      <tr><th>x (heures)</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+      <tr><th>y (note)</th><td>45</td><td>50</td><td>55</td><td>65</td><td>70</td><td>80</td></tr>
+    </table>
+    <div class="callout formule">
+      Point moyen G(x&#772;, y&#772;) : x&#772; = moyenne des x, y&#772; = moyenne des y
+    </div>
+    <p>Pour notre exemple : x&#772; = (1+2+3+4+5+6)/6 = 3,5 et y&#772; = (45+50+55+65+70+80)/6 &asymp; 60,83. Le point moyen G(3,5 ; 60,83) est le "centre de gravite" du nuage de points : toute droite d'ajustement passera par ce point (pour la methode des moindres carres) ou proche de lui.</p>
+  `
+},
+{
+  title: "3. Correlation et causalite",
+  html: `
+    <p>Observer que deux variables evoluent ensemble (correlation) ne prouve pas que l'une cause l'autre (causalite).</p>
+    <div class="callout piege">
+      <strong>Exemple classique :</strong> le nombre de glaces vendues et le nombre de noyades augmentent tous les deux en ete. Ils sont <strong>correles</strong> (lies statistiquement), mais manger une glace ne cause evidemment pas de noyade : les deux sont causes par un troisieme facteur, la chaleur estivale.
+    </div>
+    <div class="callout">
+      <strong>Correlation</strong> : deux variables evoluent ensemble de maniere statistiquement liee.<br>
+      <strong>Causalite</strong> : une variable provoque directement le changement de l'autre.
+    </div>
+    <p>Dans notre exemple (heures d'etude / note), une causalite est plausible : etudier davantage peut raisonnablement ameliorer la note. Mais meme dans ce cas, d'autres facteurs (methode de travail, comprehension prealable...) interviennent aussi.</p>
+  `
+},
+{
+  title: "4. Le coefficient de correlation lineaire",
+  html: `
+    <p>Le coefficient de correlation lineaire, note <strong>r</strong>, mesure a quel point deux variables sont liees par une relation... lineaire (une droite).</p>
+    <div class="callout formule">
+      -1 &le; r &le; 1
+    </div>
+    <table class="data">
+      <tr><th>Valeur de r</th><th>Interpretation</th></tr>
+      <tr><td>proche de 1</td><td>correlation lineaire positive forte (quand x augmente, y augmente)</td></tr>
+      <tr><td>proche de -1</td><td>correlation lineaire negative forte (quand x augmente, y diminue)</td></tr>
+      <tr><td>proche de 0</td><td>quasi aucune correlation lineaire</td></tr>
+    </table>
+    <p>Pour notre exemple, le calcul donne r &asymp; 0,99 : une correlation lineaire positive tres forte, ce qui confirme qu'un ajustement lineaire est pertinent ici.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> r proche de 0 signifie qu'il n'y a pas de lien <em>lineaire</em>, mais il peut exister un lien d'un autre type (courbe, par exemple). r ne detecte que les liens lineaires.
+    </div>
+  `
+},
+{
+  title: "5. Ajustement lineaire : methode de Mayer",
+  html: `
+    <p>La <strong>methode de Mayer</strong> est une methode simple (a la main) pour tracer une droite d'ajustement.</p>
+    <ol class="clean">
+      <li>Trier les points du nuage par abscisse x croissante.</li>
+      <li>Partager le nuage en deux sous-groupes de tailles egales (ou presque).</li>
+      <li>Calculer le point moyen de chaque sous-groupe (G1 et G2).</li>
+      <li>Tracer la droite passant par G1 et G2 : c'est la droite de Mayer.</li>
+    </ol>
+    <p>Pour notre exemple : groupe 1 = {(1,45),(2,50),(3,55)}, point moyen G1(2 ; 50). Groupe 2 = {(4,65),(5,70),(6,80)}, point moyen G2(5 ; 71,67).</p>
+    <div class="callout formule">
+      Pente a = (71,67 - 50) / (5 - 2) &asymp; 7,22 <br>
+      Droite de Mayer : y &asymp; 7,22x + 35,56
+    </div>
+  `
+},
+{
+  title: "6. Ajustement lineaire : methode des moindres carres",
+  html: `
+    <p>La <strong>methode des moindres carres</strong> est plus rigoureuse : elle cherche la droite qui minimise la somme des carres des ecarts verticaux entre les points et la droite. Les formules ne sont pas a demontrer, mais a connaitre et utiliser.</p>
+    <div class="callout formule">
+      Droite de regression : y = ax + b<br>
+      a = covariance(x,y) / variance(x)<br>
+      b = y&#772; - a &times; x&#772;
+    </div>
+    <p>Pour notre exemple, le calcul donne a &asymp; 7,00 et b &asymp; 36,33, soit la droite <strong>y = 7x + 36,33</strong>. Remarque : cette droite passe exactement par le point moyen G(3,5 ; 60,83), puisque 7&times;3,5+36,33 = 60,83.</p>
+    <div class="callout">
+      On utilise ensuite cette equation pour estimer une valeur theorique : par exemple, pour x = 7 heures d'etude, la note estimee serait y = 7&times;7+36,33 = 85,33.
+    </div>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> extrapoler tres loin en dehors des valeurs observees (par exemple x = 50 heures) est risque : rien ne garantit que la relation reste lineaire au-dela des donnees mesurees.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Point moyen G", back:"Point de coordonnees (x barre, y barre), moyennes des x et des y de la serie."},
+  {front:"Correlation", back:"Deux variables evoluent ensemble de maniere statistiquement liee."},
+  {front:"Causalite", back:"Une variable provoque directement le changement de l'autre."},
+  {front:"Coefficient de correlation lineaire r", back:"Nombre entre -1 et 1 qui mesure la force d'une relation lineaire entre deux variables."},
+  {front:"r proche de 1 ou -1", back:"Correlation lineaire forte (positive si proche de 1, negative si proche de -1)."},
+  {front:"r proche de 0", back:"Quasi aucune correlation lineaire (mais un autre type de lien est possible)."},
+  {front:"Methode de Mayer, principe", back:"Partager le nuage en 2 sous-groupes, tracer la droite passant par leurs 2 points moyens."},
+  {front:"Methode des moindres carres, principe", back:"Trouver la droite qui minimise la somme des carres des ecarts verticaux entre les points et la droite."},
+  {front:"Formule de la pente a (moindres carres)", back:"a = covariance(x,y) / variance(x)"},
+  {front:"Formule de b (moindres carres)", back:"b = y barre - a fois x barre"},
+  {front:"La droite de regression passe-t-elle toujours par le point moyen ?", back:"Oui, pour la methode des moindres carres."}
+];
+
+const game = {
+  type: 'order',
+  challenges: [
+    { prompt: "Remets dans l'ordre les etapes de la methode de Mayer.",
+      steps: [
+        "Trier les points du nuage par abscisse x croissante.",
+        "Partager le nuage en deux sous-groupes de tailles egales (ou presque).",
+        "Calculer le point moyen de chaque sous-groupe.",
+        "Tracer la droite passant par ces deux points moyens : c'est la droite de Mayer."
+      ]
+    },
+    { prompt: "Remets dans l'ordre les etapes pour juger si un ajustement lineaire est pertinent.",
+      steps: [
+        "Representer le nuage de points.",
+        "Calculer le coefficient de correlation r.",
+        "Comparer la valeur absolue de r a 1 : plus elle est proche de 1, plus la correlation lineaire est forte.",
+        "Conclure sur la pertinence d'un ajustement lineaire."
+      ]
+    }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"Le coefficient de correlation lineaire r est toujours compris entre :",
+    options:["0 et 1","-1 et 1","-100 et 100","-infini et +infini"],
+    correct:1,
+    explain:"r est toujours compris entre -1 et 1, quelle que soit la serie statistique."
+  },
+  { type:'tf', points:1,
+    prompt:"Une correlation forte entre deux variables prouve qu'il existe une relation de cause a effet.",
+    correct:false,
+    explain:"Faux : correlation n'implique pas causalite (exemple des glaces et des noyades, dues a la chaleur estivale)."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule x barre (moyenne des x) pour la serie x : 2, 4, 6, 8, 10.",
+    accepted:[6], tolerance:0.01, acceptedDisplay:"6",
+    explain:"(2+4+6+8+10)/5 = 30/5 = 6."
+  },
+  { type:'match', points:4,
+    prompt:"Associe chaque valeur de r a son interpretation.",
+    items:[
+      {left:"r = 0,98", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Correlation positive tres forte"},
+      {left:"r = -0,85", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Correlation negative forte"},
+      {left:"r = 0,05", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Quasi aucune correlation lineaire"},
+      {left:"r = -0,99", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Correlation negative quasi parfaite"}
+    ],
+    explain:"Le signe de r indique le sens de la relation, sa valeur absolue indique la force de la relation lineaire."
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque paire de variables, indique si une causalite directe est plausible ou s'il s'agit surtout d'une correlation.",
+    classifyOptions:["Causalite plausible","Correlation seulement"],
+    items:[
+      {text:"Nombre d'heures d'etude et note obtenue a un examen", correct:"Causalite plausible"},
+      {text:"Nombre de glaces vendues et nombre de noyades (l'ete)", correct:"Correlation seulement"},
+      {text:"Quantite d'engrais utilisee et rendement agricole", correct:"Causalite plausible"},
+      {text:"Taille et niveau de vocabulaire chez les enfants (lies tous deux a l'age)", correct:"Correlation seulement"}
+    ],
+    explain:"Quand un troisieme facteur (la chaleur, l'age...) explique les deux variables a la fois, on parle de correlation sans causalite directe."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, pourquoi on dit que 'correlation n'implique pas causalite', en donnant un exemple different de celui du cours.",
+    keywordGroups:[["correlation"],["causalite"],["exemple"],["troisieme","facteur","cause"]],
+    modelAnswer:"Deux variables peuvent evoluer ensemble (etre correlees) sans que l'une soit la cause de l'autre. Par exemple, dans une ville, le nombre de pompiers envoyes sur un incendie et l'ampleur des degats sont fortement correles, mais ce ne sont pas les pompiers qui causent les degats : c'est la gravite de l'incendie qui explique a la fois l'envoi de plus de pompiers et l'ampleur des degats. Ce troisieme facteur commun explique la correlation observee sans qu'il y ait de lien de cause a effet direct entre les deux variables mesurees."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"La formule de la pente a de la droite de regression (moindres carres) est :",
+    options:["a = covariance(x,y) / variance(x)","a = variance(x) / covariance(x,y)","a = y barre / x barre","a = coefficient de correlation r"],
+    correct:0
+  },
+  { type:'mcq', points:1,
+    prompt:"Le point moyen G d'une serie statistique a deux variables a pour coordonnees :",
+    options:["(0, 0)","(x barre, y barre)","(x maximum, y maximum)","(mediane de x, mediane de y)"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"La methode de Mayer consiste a partager le nuage de points en :",
+    options:["trois sous-groupes","deux sous-groupes","autant de groupes que de points","un seul groupe"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Si r = -0,9, on peut dire que :",
+    options:["il n'y a aucune relation entre les deux variables","la relation lineaire est forte et negative","la relation lineaire est forte et positive","le calcul est impossible car r ne peut pas etre negatif"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Corrélation et causalité :",
+    options:["sont toujours la meme chose","une forte correlation prouve toujours une causalite","une correlation peut exister sans causalite directe","la causalite est plus facile a mesurer que la correlation"],
+    correct:2
+  },
+  { type:'tf', points:1,
+    prompt:"Un coefficient r proche de 0 signifie qu'il n'existe certainement aucun lien, quel qu'il soit, entre les deux variables.",
+    correct:false
+  },
+  { type:'tf', points:1,
+    prompt:"La droite de regression obtenue par la methode des moindres carres passe toujours par le point moyen du nuage.",
+    correct:true
+  },
+  { type:'numeric', points:1,
+    prompt:"Pour la serie x : 1, 2, 3, 4, 5, 6 (heures d'etude, vue dans la theorie), calcule x barre.",
+    accepted:[3.5], tolerance:0.01, acceptedDisplay:"3,5",
+    explain:""
+  },
+  { type:'numeric', points:1,
+    prompt:"Pour la serie y : 45, 50, 55, 65, 70, 80 (notes, vue dans la theorie), calcule y barre (arrondi au centieme).",
+    accepted:[60.83], tolerance:0.05, acceptedDisplay:"60,83",
+    explain:""
+  },
+  { type:'data', points:2,
+    prompt:"La droite de regression obtenue dans l'exemple du cours est y = 7x + 36,33.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule la valeur theorique de y pour x = 7 (arrondi au centieme).", accepted:[85.33], tolerance:0.1},
+      {prompt:"Calcule la valeur theorique de y pour x = 4 et compare-la a la valeur reellement observee (65). Donne juste la valeur calculee, arrondie au centieme.", accepted:[64.33], tolerance:0.1}
+    ]
+  },
+  { type:'match', points:4,
+    prompt:"Associe chaque valeur de r a son interpretation.",
+    items:[
+      {left:"r = 0,98", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Correlation positive tres forte"},
+      {left:"r = -0,85", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Correlation negative forte"},
+      {left:"r = 0,05", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Quasi aucune correlation lineaire"},
+      {left:"r = -0,99", options:["Correlation positive tres forte","Correlation negative forte","Quasi aucune correlation lineaire","Correlation negative quasi parfaite"], correct:"Correlation negative quasi parfaite"}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque paire de variables, indique si une causalite directe est plausible ou s'il s'agit surtout d'une correlation.",
+    classifyOptions:["Causalite plausible","Correlation seulement"],
+    items:[
+      {text:"Nombre d'heures d'etude et note obtenue a un examen", correct:"Causalite plausible"},
+      {text:"Nombre de glaces vendues et nombre de noyades (l'ete)", correct:"Correlation seulement"},
+      {text:"Quantite d'engrais utilisee et rendement agricole", correct:"Causalite plausible"},
+      {text:"Taille et niveau de vocabulaire chez les enfants (lies tous deux a l'age)", correct:"Correlation seulement"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 4 a 5 phrases, la difference entre la methode de Mayer et la methode des moindres carres pour ajuster une droite a un nuage de points.",
+    keywordGroups:[["mayer"],["moindres carres"],["deux sous-groupes","point moyen"],["minimise","ecarts","carres"]],
+    modelAnswer:"La methode de Mayer consiste a partager le nuage de points en deux sous-groupes de tailles egales, a calculer le point moyen de chaque sous-groupe, puis a tracer la droite passant par ces deux points moyens. C'est une methode simple, realisable a la main, mais moins precise. La methode des moindres carres, elle, calcule directement la droite qui minimise la somme des carres des ecarts verticaux entre chaque point du nuage et la droite. Elle donne un resultat plus rigoureux et passe toujours exactement par le point moyen de l'ensemble du nuage. Les deux methodes donnent generalement des resultats proches, mais la methode des moindres carres est la reference utilisee avec un outil informatique."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm1-statistique',
+  eyebrow: "Mathematiques generales (4p) &middot; 5e annee &middot; Module 1/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Statistique a deux variables",
+  subtitle: "Premier module du programme de 5e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module suit le programme officiel FESeC de mathematiques generales (4 periodes), 3e degre. Il porte sur l'etude conjointe de deux variables statistiques : correlation, causalite, coefficient de correlation, et deux methodes d'ajustement lineaire (Mayer et moindres carres).</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches (« connaitre », « appliquer », « transferer ») decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "statistique a deux variables",
+  passThreshold: 60,
+  gameLabel: "Jeu : remettre en ordre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-2.html',
+  nextTitle: 'Suites',
+  footerHtml: 'Module 1/10 (5e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>

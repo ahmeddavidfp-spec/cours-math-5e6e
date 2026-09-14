@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths - Ines Cabossart</title>
+<link rel="stylesheet" href="shared/engine.css">
+<style>
+  .hub-app{ max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
+</style>
+</head>
+<body>
+<div class="hub-app">
+  <header class="top">
+    <div class="eyebrow">Mathematiques generales (4 periodes) &middot; 3e degre (5e-6e) &middot; Reseau libre confessionnel (FESeC)</div>
+    <h1>Le parcours de mathematiques d'Ines Cabossart</h1>
+    <p class="subtitle">Dix modules, un chapitre du programme officiel par module. Chaque module se debloque quand le precedent est reussi a 60% ou plus. Ta progression est enregistree automatiquement dans ce navigateur.</p>
+  </header>
+
+  <div class="panel">
+    <span class="badge">Comment ca marche</span>
+    <p>Chaque module suit le meme format : <strong>theorie</strong> (formules et exemples resolus pas a pas), <strong>entrainement</strong> (flashcards, un jeu adapte au chapitre, quiz sans note), puis <strong>examen</strong> note (60% pour debloquer la suite, essais illimites). Tout est detaille dans l'accueil de chaque module.</p>
+  </div>
+
+  <h2 class="year-title">5e annee : mathematiques generales (4p)</h2>
+  <div id="modules-5e"></div>
+
+  <h2 class="year-title">6e annee : mathematiques generales (4p)</h2>
+  <div id="modules-6e"></div>
+
+  <div style="text-align:center; margin-top: 24px;">
+    <button class="reset-link" id="reset-all">Reinitialiser toute ma progression (tous les modules)</button>
+  </div>
+
+  <footer class="foot">
+    Programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.
+  </footer>
+</div>
+<script src="shared/engine.js"></script>
+<script>
+const MODULES = {
+  '5e': [
+    { id:'m1-statistique', href:'module-1.html', title:'Statistique a deux variables', desc:'Correlation, causalite, ajustement lineaire (Mayer, moindres carres).' },
+    { id:'m2-suites', href:'module-2.html', title:'Suites', desc:'Suites arithmetiques et geometriques, interets, tableaux amortissement.' },
+    { id:'m3-asymptotes-limites', href:'module-3.html', title:'Asymptotes et limites', desc:'Limites de fonctions, asymptotes horizontales, verticales, obliques.' },
+    { id:'m4-derivee', href:'module-4.html', title:'Derivee', desc:'Nombre derive, tangente, croissance, concavite, optimisation.' },
+    { id:'m5-trigonometrie', href:'module-5.html', title:'Fonctions trigonometriques', desc:'Radian, fonctions sinus/cosinus/tangente, equations trigonometriques.' }
+  ],
+  '6e': [
+    { id:'m6-probabilite', href:'module-6.html', title:'Probabilite', desc:'Denombrement, arbres, probabilite conditionnelle, independance.' },
+    { id:'m7-lois-probabilite', href:'module-7.html', title:'Lois de probabilite', desc:'Variable aleatoire, lois uniforme, binomiale, normale.' },
+    { id:'m8-integrale', href:'module-8.html', title:'Integrale', desc:'Primitives, integrale definie, aires, volumes de revolution.' },
+    { id:'m9-exponentielles-logarithmes', href:'module-9.html', title:'Fonctions exponentielles et logarithmes', desc:'Croissance exponentielle, proprietes des logarithmes, derivees.' },
+    { id:'m10-geometrie-espace', href:'module-10.html', title:'Geometrie analytique de l espace', desc:'Vecteurs, droites et plans dans l espace, systemes equations.' }
+  ]
+};
+
+function render(){
+  const order = [...MODULES['5e'], ...MODULES['6e']];
+  ['5e','6e'].forEach(year=>{
+    const container = document.getElementById('modules-'+year);
+    container.innerHTML = MODULES[year].map(m=>{
+      const idx = order.findIndex(o=>o.id===m.id);
+      const prev = idx > 0 ? order[idx-1] : null;
+      const status = MathEngine.getModuleStatus(m.id);
+      const unlocked = !prev || MathEngine.getModuleStatus(prev.id).passed;
+      const num = idx+1;
+      let statusHtml;
+      if(status.passed) statusHtml = `<strong>Reussi (${status.bestPct.toFixed(0)}%)</strong>`;
+      else if(!unlocked) statusHtml = 'Verrouille';
+      else if(status.bestPct>0) statusHtml = `En cours (${status.bestPct.toFixed(0)}%)`;
+      else statusHtml = 'A commencer';
+      return `
+        <div class="module-card ${unlocked?'':'locked'}">
+          <div class="module-num">${num}</div>
+          <div class="module-info">
+            <h3>${unlocked ? `<a href="${m.href}" style="color:inherit; text-decoration:none;">${m.title}</a>` : m.title}</h3>
+            <p>${m.desc}</p>
+          </div>
+          <div class="module-status">${statusHtml}</div>
+        </div>`;
+    }).join('');
+  });
+}
+document.getElementById('reset-all').addEventListener('click', ()=>{
+  if(!confirm('Effacer toute ta progression sur les 10 modules ? Cette action est irreversible.')) return;
+  Object.keys(localStorage).filter(k=>k.startsWith('math_5e6e_')).forEach(k=>localStorage.removeItem(k));
+  render();
+});
+render();
+</script>
+</body>
+</html>
