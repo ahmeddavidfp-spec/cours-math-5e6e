@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 6e - Module 8 : Integrale</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Tu sais deja calculer une derivee (module 4). Ce module fait le chemin inverse : a partir d'une derivee, retrouver la fonction de depart, et utiliser cet outil pour calculer des aires et des volumes qu'aucune formule simple ne permettait de calculer jusqu'ici.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>encadrer une aire par des sommes de rectangles ;</li>
+        <li>determiner une primitive et calculer une integrale definie ;</li>
+        <li>calculer l'aire d'une surface plane ;</li>
+        <li>calculer le volume d'un solide de revolution.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Encadrer une aire par des rectangles",
+  html: `
+    <p>Comment calculer l'aire exacte sous le graphique d'une fonction, entre deux valeurs de x, quand cette aire n'a pas une forme geometrique simple ? On l'<strong>encadre</strong> par des sommes d'aires de rectangles.</p>
+    <p><strong>Exemple :</strong> l'aire sous f(x) = x&sup2; entre x=0 et x=2, avec 4 rectangles de largeur 0,5.</p>
+    <div class="callout formule">
+      Avec les hauteurs a gauche de chaque rectangle (sous-estimation) : 0,5 &times; (0 + 0,25 + 1 + 2,25) = 1,75<br>
+      Avec les hauteurs a droite de chaque rectangle (sur-estimation) : 0,5 &times; (0,25 + 1 + 2,25 + 4) = 3,75
+    </div>
+    <p>L'aire exacte est donc encadree : 1,75 &lt; aire &lt; 3,75. En augmentant le nombre de rectangles (et en les rendant plus fins), cet encadrement se resserre de plus en plus vers une valeur unique : c'est l'<strong class="term" data-def="Une integrale definie represente l'aire exacte entre le graphique d'une fonction et l'axe des x, sur un intervalle donne : c'est la limite d'un encadrement par des sommes de rectangles de plus en plus fins.">integrale definie</strong> de f entre 0 et 2, notee integrale de 0 a 2 de f(x) dx.</p>
+  `
+},
+{
+  title: "3. Primitives",
+  html: `
+    <p>Une <strong class="term" data-def="Une primitive d'une fonction f, c'est une fonction F dont la derivee est exactement f.">primitive</strong> de f est une fonction F dont la derivee est f. Comme la derivation, la primitivation suit des formules de reference (a l'envers de celles du module 4).</p>
+    <div class="callout formule">
+      Primitive de x&#8319; (n &ne; -1) : x&#8319;&#8314;&sup1; / (n+1)<br>
+      Primitive d'une constante k : kx<br>
+      Primitive de 1/&radic;x : 2&radic;x
+    </div>
+    <p><strong>Verification :</strong> la derivee de 2&radic;x est 2 &times; 1/(2&radic;x) = 1/&radic;x. C'est bien la fonction de depart.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> une fonction a une infinite de primitives, qui different toutes d'une constante (la derivee d'une constante est 0). On ecrit generalement F(x) + C pour rappeler cela, mais pour calculer une integrale definie, cette constante disparait toujours (voir slide suivante).
+    </div>
+  `
+},
+{
+  title: "4. Le theoreme fondamental",
+  html: `
+    <p>Le <strong>theoreme fondamental</strong> relie l'integrale definie a une primitive quelconque F de f :</p>
+    <div class="callout formule">
+      integrale de a a b de f(x) dx = F(b) - F(a)
+    </div>
+    <p><strong>Exemple :</strong> calculons l'integrale de 0 a 2 de x&sup2; dx, l'aire evoquee au debut de ce module. Une primitive de x&sup2; est F(x) = x&sup3;/3.</p>
+    <div class="callout formule">
+      F(2) - F(0) = 8/3 - 0 = 8/3 &asymp; 2,667
+    </div>
+    <p>Cette valeur (2,667) se situe bien entre les deux encadrements trouves plus tot (1,75 et 3,75), ce qui confirme le resultat.</p>
+  `
+},
+{
+  title: "5. Aire d'une surface plane",
+  html: `
+    <p>L'integrale definie donne directement l'aire entre le graphique d'une fonction positive et l'axe des x.</p>
+    <div class="callout formule">
+      <strong>Exemple :</strong> aire entre f(x) = x&sup2; et l'axe des x, entre x=1 et x=3.<br>
+      Aire = integrale de 1 a 3 de x&sup2; dx = [x&sup3;/3] de 1 a 3 = 27/3 - 1/3 = 9 - 0,333 &asymp; 8,667
+    </div>
+    <p>La demarche est toujours la meme : trouver une primitive F, puis calculer F(borne superieure) - F(borne inferieure).</p>
+  `
+},
+{
+  title: "6. Volume d'un solide de revolution",
+  html: `
+    <p>En faisant tourner le graphique d'une fonction autour de l'axe des abscisses, on obtient un <strong class="term" data-def="Un solide de revolution, c'est un volume obtenu en faisant tourner le graphique d'une fonction autour de l'axe des abscisses.">solide de revolution</strong>. Son volume se calcule par une formule qui utilise l'integrale du carre de la fonction.</p>
+    <div class="callout formule">
+      Volume = &pi; &times; integrale de a a b de [f(x)]&sup2; dx
+    </div>
+    <p><strong>Exemple :</strong> on fait tourner f(x) = x autour de l'axe des x, entre x=0 et x=2. On obtient un cone de rayon 2 et de hauteur 2.</p>
+    <div class="callout formule">
+      Volume = &pi; &times; integrale de 0 a 2 de x&sup2; dx = &pi; &times; 8/3 = 8&pi;/3 &asymp; 8,378
+    </div>
+    <p>On peut verifier ce resultat avec la formule classique du volume d'un cone : (1/3) &times; &pi; &times; r&sup2; &times; h = (1/3) &times; &pi; &times; 4 &times; 2 = 8&pi;/3. Les deux methodes donnent exactement la meme valeur.</p>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Integrale definie (idee de base)", back:"Aire exacte entre le graphique d'une fonction et l'axe des x, obtenue comme limite d'un encadrement par des rectangles."},
+  {front:"Primitive d'une fonction f", back:"Une fonction F dont la derivee est exactement f."},
+  {front:"Primitive de x puissance n (n different de -1)", back:"x puissance (n+1) divise par (n+1)."},
+  {front:"Primitive de 1 sur racine de x", back:"2 fois racine de x."},
+  {front:"Theoreme fondamental", back:"Integrale de a a b de f(x) dx = F(b) - F(a), pour F une primitive quelconque de f."},
+  {front:"Aire sous une courbe entre a et b", back:"Integrale de a a b de f(x) dx (si f est positive sur cet intervalle)."},
+  {front:"Volume d'un solide de revolution (axe des x)", back:"Pi fois l'integrale de a a b de [f(x)] au carre dx."},
+  {front:"Pourquoi la constante C disparait dans une integrale definie", back:"Parce qu'on calcule F(b) - F(a) : la constante C s'ajoute aux deux termes et se simplifie."}
+];
+
+const game = {
+  type: 'order',
+  challenges: [
+    { prompt: "Remets dans l'ordre les etapes pour calculer une integrale definie avec le theoreme fondamental.",
+      steps: [
+        "Determiner une primitive F de la fonction f.",
+        "Calculer F(b), la primitive evaluee a la borne superieure.",
+        "Calculer F(a), la primitive evaluee a la borne inferieure.",
+        "Soustraire : F(b) - F(a)."
+      ]
+    },
+    { prompt: "Remets dans l'ordre les etapes pour calculer le volume d'un solide de revolution.",
+      steps: [
+        "Elever la fonction f(x) au carre.",
+        "Integrer [f(x)] au carre entre les bornes a et b.",
+        "Multiplier le resultat par pi."
+      ]
+    }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"Une primitive d'une fonction f est une fonction F telle que :",
+    options:["F(x) = f(x) pour tout x","la derivee de F est f","F est toujours positive","F(0) = 0"],
+    correct:1,
+    explain:"C'est la definition d'une primitive."
+  },
+  { type:'tf', points:1,
+    prompt:"Une fonction admet une infinite de primitives, qui different toutes d'une constante.",
+    correct:true,
+    explain:"Deux primitives d'une meme fonction ne different que par une constante."
+  },
+  { type:'numeric', points:1,
+    prompt:"Trouve une primitive de f(x) = x cube ; donne le coefficient devant x a la puissance 4.",
+    accepted:[0.25], tolerance:0.01,
+    explain:"Primitive de x^n est x^(n+1)/(n+1) : pour n=3, on obtient x^4/4, coefficient 1/4 = 0,25."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule l'integrale de 0 a 3 de x dx.",
+    accepted:[4.5], tolerance:0.01,
+    explain:"Primitive de x est x carre sur 2. F(3)-F(0) = 9/2 - 0 = 4,5."
+  },
+  { type:'data', points:2,
+    prompt:"Soit f(x) = x carre, sur l'intervalle [0 ; 3].",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Donne une primitive F(x) de f (le coefficient devant x cube).", accepted:[0.3333], tolerance:0.01},
+      {prompt:"Calcule l'integrale de 0 a 3 de f(x) dx.", accepted:[9], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:2,
+    prompt:"Pour chaque calcul, indique s'il s'agit d'une derivation ou d'une primitivation.",
+    classifyOptions:["Derivation","Primitivation"],
+    items:[
+      {text:"Passer de x carre a 2x", correct:"Derivation"},
+      {text:"Passer de 2x a x carre", correct:"Primitivation"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, pourquoi l'encadrement par des rectangles se resserre de plus en plus vers une valeur unique quand on augmente leur nombre.",
+    keywordGroups:[["rectangles"],["fins","etroits","nombre"],["ecart","difference"],["exacte","integrale"]],
+    modelAnswer:"Quand on augmente le nombre de rectangles, chacun devient de plus en plus fin (sa largeur diminue). L'ecart entre la hauteur du rectangle et la valeur reelle de la fonction sur ce petit intervalle devient donc de plus en plus faible. L'ecart total entre la somme des aires des rectangles (par valeurs a gauche) et la somme (par valeurs a droite) se reduit ainsi progressivement, jusqu'a converger vers une seule valeur : l'aire exacte, c'est-a-dire l'integrale definie."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Le theoreme fondamental du calcul integral affirme que l'integrale de a a b de f(x) dx est egale a :",
+    options:["f(b) - f(a)","F(b) - F(a), ou F est une primitive de f","F(a) - F(b)","f(b) fois f(a)"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"La primitive de la fonction constante k est :",
+    options:["0","k","kx","k au carre"],
+    correct:2
+  },
+  { type:'mcq', points:1,
+    prompt:"Le volume d'un solide de revolution autour de l'axe des x se calcule avec :",
+    options:["pi fois l'integrale de f(x) dx","pi fois l'integrale de [f(x)] au carre dx","l'integrale de f(x) dx, sans pi","2 pi fois l'integrale de f(x) dx"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Deux primitives differentes d'une meme fonction different toujours d'une constante.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Un encadrement par rectangles a gauche donne toujours exactement la meme valeur qu'un encadrement a droite.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule l'integrale de 1 a 2 de x cube dx.",
+    accepted:[3.75], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule l'aire entre f(x) = x carre et l'axe des x, entre x=0 et x=3.",
+    accepted:[9], tolerance:0.01
+  },
+  { type:'data', points:3,
+    prompt:"On fait tourner f(x) = x autour de l'axe des x, entre x=0 et x=3 (un cone de rayon 3 et de hauteur 3).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Calcule l'integrale de 0 a 3 de [f(x)] au carre dx.", accepted:[9], tolerance:0.01},
+      {prompt:"Calcule le volume du cone obtenu (utilise pi environ 3,1416).", accepted:[28.274], tolerance:0.05}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque primitive proposee, indique si elle correspond bien a la fonction donnee.",
+    classifyOptions:["Correcte","Incorrecte"],
+    items:[
+      {text:"f(x) = x carre, primitive proposee F(x) = x cube / 3", correct:"Correcte"},
+      {text:"f(x) = x, primitive proposee F(x) = x carre", correct:"Incorrecte"},
+      {text:"f(x) = 1/racine de x, primitive proposee F(x) = 2 fois racine de x", correct:"Correcte"}
+    ],
+    explain:"Pour verifier, on derive la primitive proposee : elle doit redonner exactement f. La derivee de x carre est 2x, pas x : la deuxieme proposition est donc incorrecte."
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque fonction a l'une de ses primitives.",
+    items:[
+      {left:"f(x) = x carre", options:["x cube / 3","2x","x/2"], correct:"x cube / 3"},
+      {left:"f(x) = 4 (constante)", options:["4x","x/4","0"], correct:"4x"},
+      {left:"f(x) = 1/racine de x", options:["2 racine de x","racine de x / 2","x racine de x"], correct:"2 racine de x"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, la demarche complete pour calculer le volume d'un solide de revolution obtenu en faisant tourner le graphique d'une fonction autour de l'axe des x.",
+    keywordGroups:[["carre","au carre"],["integrale","integrer"],["pi"],["bornes"]],
+    modelAnswer:"Pour calculer le volume d'un solide de revolution, on eleve d'abord la fonction f au carre, car chaque tranche du solide est un disque dont l'aire depend du carre du rayon. On integre ensuite cette fonction au carre entre les deux bornes qui delimitent le solide le long de l'axe des x. On multiplie enfin ce resultat par pi, car l'aire d'un disque de rayon r vaut pi fois r au carre. Cette methode fonctionne pour n'importe quelle fonction, pas seulement pour les formes geometriques simples comme le cone ou le cylindre, ce qui en fait un outil beaucoup plus general."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm8-integrale',
+  eyebrow: "Mathematiques generales (4p) &middot; 6e annee &middot; Module 8/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Integrale",
+  subtitle: "Troisieme module du programme de 6e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module introduit l'integrale definie a partir de l'encadrement d'une aire par des rectangles, les primitives, le theoreme fondamental, et deux applications : l'aire d'une surface plane et le volume d'un solide de revolution.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "l'integrale",
+  passThreshold: 60,
+  gameLabel: "Jeu : remettre les etapes dans l'ordre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-9.html',
+  nextTitle: 'Fonctions exponentielles et logarithmes',
+  footerHtml: 'Module 8/10 (6e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
