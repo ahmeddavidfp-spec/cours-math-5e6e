@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 5e - Module 5 : Fonctions trigonometriques</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Tu connais deja les nombres trigonometriques d'un angle aigu (triangles rectangles) et d'un angle entre 0&deg; et 180&deg;. Ce dernier module de 5e etend ces notions a n'importe quel reel, via les <strong>fonctions trigonometriques</strong>, tres utiles pour modeliser des phenomenes periodiques (marees, sons, mouvements circulaires).</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>convertir des angles entre degres et radians, et calculer longueur d'arc et aire de secteur ;</li>
+        <li>representer et lire les fonctions sinus, cosinus et tangente ;</li>
+        <li>identifier amplitude, periode et dephasage d'une fonction du type a sin(bx+c) ;</li>
+        <li>resoudre des equations trigonometriques simples.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Le radian : une autre unite pour les angles",
+  html: `
+    <p>Jusqu'ici, tu mesurais les angles en degres. Le <strong class="term" data-def="Le radian est une unite de mesure des angles : un tour complet mesure deux fois pi radians, ce qui correspond a 360 degres.">radian</strong> est une autre unite, plus naturelle en mathematiques, car elle relie directement un angle a la longueur d'arc qu'il decoupe sur un cercle.</p>
+    <div class="callout formule">
+      Un tour complet = 360&deg; = 2&pi; radians, donc 180&deg; = &pi; radians.
+    </div>
+    <table class="data">
+      <tr><th>Degres</th><td>30&deg;</td><td>45&deg;</td><td>60&deg;</td><td>90&deg;</td><td>180&deg;</td><td>270&deg;</td></tr>
+      <tr><th>Radians</th><td>&pi;/6</td><td>&pi;/4</td><td>&pi;/3</td><td>&pi;/2</td><td>&pi;</td><td>3&pi;/2</td></tr>
+    </table>
+    <p>Pour convertir : radians = degres &times; (&pi;/180), et degres = radians &times; (180/&pi;). Pour les angles qui ne sont pas des fractions usuelles de &pi;, on utilise la touche de conversion de la calculatrice.</p>
+  `
+},
+{
+  title: "3. Longueur d'arc et aire de secteur",
+  html: `
+    <p>Avec un angle exprime en radians, deux formules tres simples permettent de calculer une longueur d'arc et une aire de secteur circulaire.</p>
+    <div class="callout formule">
+      Longueur d'arc : L = r &times; &theta; (&theta; en radians)<br>
+      Aire du secteur : A = (1/2) &times; r&sup2; &times; &theta;
+    </div>
+    <p><strong>Exemple :</strong> un secteur de rayon r = 5 cm et d'angle &theta; = &pi;/3 (soit 60&deg;).</p>
+    <div class="callout formule">
+      L = 5 &times; &pi;/3 &asymp; 5,24 cm<br>
+      A = (1/2) &times; 25 &times; &pi;/3 &asymp; 13,09 cm&sup2;
+    </div>
+  `
+},
+{
+  title: "4. Les fonctions trigonometriques de reference",
+  html: `
+    <p>Les fonctions x &rarr; sin(x), x &rarr; cos(x) et x &rarr; tan(x) associent a tout reel x (une mesure d'angle en radians) un nombre trigonometrique. Ce sont des fonctions <strong class="term" data-def="Une fonction periodique se repete identique a intervalles reguliers : la fonction sinus, par exemple, reprend exactement les memes valeurs tous les deux pi.">periodiques</strong>.</p>
+    <table class="data">
+      <tr><th>Fonction</th><th>Periode</th><th>Valeurs extremes</th></tr>
+      <tr><td>x &rarr; sin(x)</td><td>2&pi;</td><td>entre -1 et 1</td></tr>
+      <tr><td>x &rarr; cos(x)</td><td>2&pi;</td><td>entre -1 et 1</td></tr>
+      <tr><td>x &rarr; tan(x)</td><td>&pi;</td><td>non bornee (non definie en &pi;/2 + k&pi;)</td></tr>
+    </table>
+    <div class="callout">
+      Le graphique de x &rarr; sin(x) est une sinusoide : il monte de 0 a 1 (en &pi;/2), redescend a 0 (en &pi;), continue jusqu'a -1 (en 3&pi;/2), puis revient a 0 (en 2&pi;), et recommence a l'identique.
+    </div>
+  `
+},
+{
+  title: "5. La fonction transformee x &rarr; a sin(bx + c)",
+  html: `
+    <p>En modifiant trois parametres, on transforme la sinusoide de base pour modeliser des situations concretes (mouvement harmonique, son, marees).</p>
+    <div class="callout formule">
+      x &rarr; a sin(bx + c) : <strong class="term" data-def="L'amplitude d'une fonction trigonometrique, c'est la valeur maximale qu'elle atteint par rapport a sa position moyenne : elle correspond au parametre a devant le sinus.">amplitude</strong> = |a| ; <strong class="term" data-def="La periode d'une fonction trigonometrique, c'est la plus petite distance sur l'axe des x apres laquelle la fonction reprend exactement les memes valeurs. Elle se calcule en divisant deux pi par le parametre b.">periode</strong> T = 2&pi;/|b| ; <strong class="term" data-def="Le dephasage d'une fonction trigonometrique, c'est le decalage horizontal de son graphique par rapport a la fonction sinus de base.">dephasage</strong> = -c/b
+    </div>
+    <p><strong>Exemple :</strong> f(x) = 3 sin(2x - &pi;/2).</p>
+    <ul class="clean">
+      <li>Amplitude : a = 3 (la fonction oscille entre -3 et 3).</li>
+      <li>Periode : T = 2&pi;/2 = &pi; (elle se repete tous les &pi;).</li>
+      <li>Dephasage : -c/b = -(-&pi;/2)/2 = &pi;/4 (le graphique de sin est decale de &pi;/4 vers la droite).</li>
+    </ul>
+    <p>On peut d'ailleurs reecrire f(x) = 3 sin(2(x - &pi;/4)), ce qui rend le dephasage plus visible directement dans l'ecriture.</p>
+  `
+},
+{
+  title: "6. Resoudre une equation trigonometrique simple",
+  html: `
+    <p>Pour resoudre sin(x) = a (avec -1 &le; a &le; 1), on utilise le cercle trigonometrique : il existe en general deux familles de solutions entre 0 et 2&pi;.</p>
+    <div class="callout formule">
+      Exemple : resoudre sin(x) = 0,5 sur [0&deg; ; 360&deg;[.<br>
+      Solutions : x = 30&deg; ou x = 180&deg; - 30&deg; = 150&deg;.
+    </div>
+    <p>Cela s'explique par la symetrie du cercle trigonometrique : deux angles supplementaires (dont la somme fait 180&deg;) ont le meme sinus. Pour cos(x) = a, ce sont deux angles opposes (x et -x) qui ont le meme cosinus.</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> une equation trigonometrique a en general une infinite de solutions (en ajoutant 360&deg; ou 2&pi; a chaque solution trouvee). Sauf indication contraire, on donne les solutions sur un seul tour, soit [0&deg; ; 360&deg;[ ou [0 ; 2&pi;[.
+    </div>
+    <p><strong>Tu as termine la theorie de ce module, et la theorie de toute la 5e annee.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Conversion degres vers radians", back:"Multiplier par pi/180. Exemple : 180 degres = pi radians."},
+  {front:"Longueur d'un arc de cercle", back:"L = r fois theta (theta en radians)."},
+  {front:"Aire d'un secteur circulaire", back:"A = un demi fois r au carre fois theta (theta en radians)."},
+  {front:"Periode de sinus et cosinus", back:"2 pi (elles reprennent les memes valeurs tous les 2 pi)."},
+  {front:"Periode de tangente", back:"Pi."},
+  {front:"Amplitude de a sin(bx+c)", back:"Valeur absolue de a : la fonction oscille entre -a et a."},
+  {front:"Periode de a sin(bx+c)", back:"2 pi divise par la valeur absolue de b."},
+  {front:"Dephasage de a sin(bx+c)", back:"Moins c divise par b : decalage horizontal par rapport a la fonction sinus de base."},
+  {front:"Solutions de sin(x) = a", back:"Deux familles d'angles par tour : un angle et son supplementaire (180 degres moins cet angle)."},
+  {front:"Solutions de cos(x) = a", back:"Deux familles d'angles par tour : un angle et son oppose."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Convertis 90 degres en radians.", accepted:[1.5708], tolerance:0.01 },
+    { prompt:"Convertis 60 degres en radians (donne la valeur decimale).", accepted:[1.0472], tolerance:0.01 },
+    { prompt:"Convertis pi radians en degres.", accepted:[180] },
+    { prompt:"Convertis pi/2 radians en degres.", accepted:[90] },
+    { prompt:"Rayon 4 cm, angle pi/2 radians. Calcule la longueur d'arc (valeur decimale).", accepted:[6.2832], tolerance:0.01 },
+    { prompt:"f(x) = 5 sin(3x). Quelle est l'amplitude ?", accepted:[5] },
+    { prompt:"f(x) = sin(4x). Quelle est la periode (valeur decimale, pi environ 3,1416) ?", accepted:[1.5708], tolerance:0.01 },
+    { prompt:"sin(x) = 0,5 sur [0 ; 360[. Donne la plus petite solution en degres.", accepted:[30] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"Convertis 45 degres en radians (valeur decimale, pi environ 3,1416).",
+    accepted:[0.7854], tolerance:0.01,
+    explain:"45 fois pi/180 = pi/4 environ 0,7854."
+  },
+  { type:'numeric', points:1,
+    prompt:"Rayon 5 cm, angle pi/3 radians. Calcule la longueur d'arc (valeur decimale).",
+    accepted:[5.236], tolerance:0.01,
+    explain:"L = r fois theta = 5 fois pi/3 environ 5,24 cm."
+  },
+  { type:'mcq', points:1,
+    prompt:"L'amplitude de la fonction f(x) = 4 sin(2x - 1) est :",
+    options:["1","2","4","-1"],
+    correct:2,
+    explain:"L'amplitude est la valeur absolue du coefficient devant le sinus, ici 4."
+  },
+  { type:'tf', points:1,
+    prompt:"La fonction cosinus a la meme periode que la fonction sinus (2 pi).",
+    correct:true,
+    explain:"Sinus et cosinus ont toutes les deux une periode de 2 pi."
+  },
+  { type:'data', points:2,
+    prompt:"Soit f(x) = 2 sin(4x + 1).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est l'amplitude de f ?", accepted:[2], tolerance:0.01},
+      {prompt:"Quelle est la periode de f (valeur decimale, pi environ 3,1416) ?", accepted:[1.5708], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:2,
+    prompt:"Pour chaque equation, indique combien de solutions elle admet sur [0 degres ; 360 degres[.",
+    classifyOptions:["Aucune solution","Deux solutions"],
+    items:[
+      {text:"sin(x) = 0,5", correct:"Deux solutions"},
+      {text:"sin(x) = 2", correct:"Aucune solution"}
+    ],
+    explain:"Le sinus est toujours compris entre -1 et 1 : sin(x)=2 est impossible."
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, pourquoi le radian est une unite utile pour mesurer les angles, en la reliant a la longueur d'un arc de cercle.",
+    keywordGroups:[["arc"],["rayon"],["longueur"],["theta","radian"]],
+    modelAnswer:"Le radian relie directement la mesure d'un angle a la geometrie du cercle : un angle de theta radians, mesure au centre d'un cercle de rayon r, decoupe un arc de longueur exactement r fois theta. Cette relation simple, L = r fois theta, ne fonctionne qu'avec le radian, pas avec le degre, ce qui rend le radian plus naturel pour les calculs mathematiques et pour l'etude des fonctions trigonometriques."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"180 degres correspondent a :",
+    options:["pi/2 radians","pi radians","2 pi radians","pi/4 radians"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"La periode de la fonction x vers sin(x) est :",
+    options:["pi","2 pi","pi/2","1"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Pour la fonction f(x) = a sin(bx + c), la periode se calcule par :",
+    options:["2 pi fois b","2 pi divise par la valeur absolue de b","a divise par b","c divise par b"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"L'equation sin(x) = 1,5 admet des solutions reelles.",
+    correct:false
+  },
+  { type:'tf', points:1,
+    prompt:"Deux angles supplementaires (dont la somme vaut 180 degres) ont le meme sinus.",
+    correct:true
+  },
+  { type:'numeric', points:1,
+    prompt:"Convertis 270 degres en radians (valeur decimale, pi environ 3,1416).",
+    accepted:[4.7124], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Rayon 6 cm, angle pi/4 radians. Calcule l'aire du secteur (valeur decimale).",
+    accepted:[14.137], tolerance:0.05
+  },
+  { type:'numeric', points:1,
+    prompt:"sin(x) = 0,5 sur [0 degres ; 360 degres[. Donne la plus grande des deux solutions (en degres).",
+    accepted:[150]
+  },
+  { type:'data', points:3,
+    prompt:"Soit f(x) = 3 sin(2x - pi/2), vue dans le cours.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est l'amplitude de f ?", accepted:[3], tolerance:0.01},
+      {prompt:"Quelle est la periode de f (valeur decimale, pi environ 3,1416) ?", accepted:[3.1416], tolerance:0.01},
+      {prompt:"Quel est le dephasage de f (valeur decimale, pi environ 3,1416) ?", accepted:[0.7854], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque fonction, indique si son amplitude vaut 1 ou une autre valeur.",
+    classifyOptions:["Amplitude 1","Amplitude differente de 1"],
+    items:[
+      {text:"x vers sin(x)", correct:"Amplitude 1"},
+      {text:"x vers 5 sin(x)", correct:"Amplitude differente de 1"},
+      {text:"x vers cos(x)", correct:"Amplitude 1"},
+      {text:"x vers 0,5 sin(2x)", correct:"Amplitude differente de 1"}
+    ]
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque fonction a sa periode.",
+    items:[
+      {left:"x vers sin(4x)", options:["pi/2","pi","2 pi"], correct:"pi/2"},
+      {left:"x vers cos(2x)", options:["pi/2","pi","2 pi"], correct:"pi"},
+      {left:"x vers sin(x)", options:["pi/2","pi","2 pi"], correct:"2 pi"}
+    ],
+    explain:"Periode = 2 pi divise par la valeur absolue de b : pour b=4, T=pi/2 ; pour b=2, T=pi ; pour b=1, T=2 pi."
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, comment resoudre l'equation sin(x) = a (avec -1 &le; a &le; 1) sur un tour complet, en t'appuyant sur le cercle trigonometrique.",
+    keywordGroups:[["cercle trigonometrique"],["deux solutions","deux angles"],["supplementaire","180"],["calculatrice"]],
+    modelAnswer:"On commence par chercher, a l'aide de la calculatrice ou du cercle trigonometrique, un premier angle dont le sinus vaut a. Comme le sinus de deux angles supplementaires (dont la somme fait 180 degres, soit pi radians) est identique, une deuxieme solution s'obtient en soustrayant ce premier angle a 180 degres. Sur un tour complet (0 a 360 degres, ou 0 a 2 pi radians), on obtient ainsi generalement deux solutions, sauf cas particuliers ou l'angle est sur l'axe de symetrie. Si l'on cherche toutes les solutions possibles, il suffit d'ajouter des multiples de 360 degres (ou 2 pi) a chacune de ces deux solutions."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm5-trigonometrie',
+  eyebrow: "Mathematiques generales (4p) &middot; 5e annee &middot; Module 5/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Fonctions trigonometriques",
+  subtitle: "Cinquieme et dernier module du programme de 5e annee. 60% requis pour debloquer la 6e annee.",
+  introHtml: `
+    <p>Ce module etend les nombres trigonometriques aux fonctions : radian, longueur d'arc, fonctions sinus/cosinus/tangente, transformees x vers a sin(bx+c) (amplitude, periode, dephasage), et resolution d'equations trigonometriques simples.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les fonctions trigonometriques",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-6.html',
+  nextTitle: 'Probabilite',
+  footerHtml: 'Module 5/10 (5e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
