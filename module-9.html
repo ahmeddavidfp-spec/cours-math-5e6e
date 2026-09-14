@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 6e - Module 9 : Exponentielles et logarithmes</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Au module 2, tu as etudie les suites geometriques et les interets composes : une croissance ou l'on multiplie toujours par le meme nombre. Ce module etudie l'equivalent continu de cette croissance : les <strong>fonctions exponentielles</strong>, et leur fonction reciproque, les <strong>fonctions logarithmes</strong>.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>reconnaitre et utiliser une fonction exponentielle et une fonction logarithme ;</li>
+        <li>appliquer les proprietes des logarithmes (produit, quotient, puissance) ;</li>
+        <li>resoudre des equations exponentielles et logarithmiques simples ;</li>
+        <li>calculer la derivee d'une fonction exponentielle ou logarithme.</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. La fonction exponentielle",
+  html: `
+    <p>Une <strong class="term" data-def="Une fonction exponentielle de base a s'ecrit x vers a puissance x : elle est croissante si a est superieur a 1, et decroissante si a est compris entre 0 et 1.">fonction exponentielle</strong> de base a (avec a &gt; 0 et a &ne; 1) s'ecrit x &rarr; a&#7509;. Son taux de croissance est constant sur des intervalles de longueur constante, exactement comme une suite geometrique.</p>
+    <div class="callout formule">
+      Si a &gt; 1 : la fonction est croissante (ex : 2&#7509;).<br>
+      Si 0 &lt; a &lt; 1 : la fonction est decroissante (ex : 0,5&#7509;).
+    </div>
+    <p><strong>Exemple :</strong> f(x) = 2&#7509;. f(3) = 8, f(0) = 1, f(-1) = 0,5.</p>
+    <p>La base la plus utilisee en mathematiques est le <strong class="term" data-def="Le nombre e, environ 2,71828, est la base de l'exponentielle naturelle : c'est la seule base pour laquelle la fonction exponentielle est egale a sa propre derivee.">nombre e</strong> (environ 2,71828), qui donne la fonction exponentielle de reference x &rarr; e&#7509;.</p>
+  `
+},
+{
+  title: "3. La fonction logarithme",
+  html: `
+    <p>La <strong class="term" data-def="Une fonction logarithme de base a est la fonction reciproque de l'exponentielle de base a : elle repond a la question, par quelle puissance faut-il elever a pour obtenir x.">fonction logarithme</strong> de base a, notee log base a, est la reciproque de l'exponentielle de base a : log base a de x repond a la question "par quelle puissance faut-il elever a pour obtenir x ?".</p>
+    <div class="callout formule">
+      log base 10 de 100 = 2, car 10&sup2; = 100<br>
+      log base 10 de 1000 = 3, car 10&sup3; = 1000<br>
+      log base 10 de 1 = 0, car tout nombre puissance 0 vaut 1
+    </div>
+    <p>Le logarithme de base e s'appelle le <strong class="term" data-def="Le logarithme naturel, note ln, est le logarithme de base e : il repond a la question, par quelle puissance faut-il elever e pour obtenir x.">logarithme naturel</strong>, note ln. Par exemple, ln(e) = 1, car e&sup1; = e.</p>
+    <div class="callout">
+      La <strong class="term" data-def="La relation de reciprocite entre exponentielle et logarithme signifie que l'une annule l'autre : le logarithme d'une exponentielle redonne l'exposant de depart, et inversement.">relation de reciprocite</strong> : le graphique de log base a est le symetrique du graphique de a puissance x, par rapport a la droite y=x.
+    </div>
+  `
+},
+{
+  title: "4. Proprietes des logarithmes",
+  html: `
+    <p>Les logarithmes transforment des multiplications en additions, ce qui les rend tres utiles pour resoudre certains problemes.</p>
+    <div class="callout formule">
+      log(a &times; b) = log(a) + log(b)<br>
+      log(a / b) = log(a) - log(b)<br>
+      log(a puissance n) = n &times; log(a)<br>
+      Changement de base : log base b de x = ln(x) / ln(b)
+    </div>
+    <p><strong>Exemple :</strong> log(8) = log(2&sup3;) = 3 &times; log(2) &asymp; 3 &times; 0,301 = 0,903, ce qui correspond bien a la valeur calculee directement.</p>
+  `
+},
+{
+  title: "5. Resoudre des equations exponentielles et logarithmiques",
+  html: `
+    <p>Pour resoudre une equation ou l'inconnue est en exposant, on utilise le logarithme des deux membres. Pour resoudre une equation avec un logarithme, on utilise l'exponentielle des deux membres.</p>
+    <div class="callout formule">
+      Resoudre 3&#7509; = 81 : on remarque 81 = 3&#8308;, donc x = 4.<br>
+      Resoudre ln(x) = 2 : on applique l'exponentielle des deux membres, x = e&sup2; &asymp; 7,389.
+    </div>
+    <p><strong>Application concrete (rappel du module 2) :</strong> apres combien d'annees un capital place a 5% d'interets composes double-t-il ? On resout (1,05)&#8319; = 2.</p>
+    <div class="callout formule">
+      n = ln(2) / ln(1,05) &asymp; 14,21 ans
+    </div>
+    <p>C'est exactement le type de probleme (interets composes, croissance de population, radioactivite) ou les logarithmes deviennent indispensables : ils permettent de "faire descendre" l'inconnue de l'exposant.</p>
+  `
+},
+{
+  title: "6. Derivees des fonctions exponentielle et logarithme",
+  html: `
+    <div class="callout formule">
+      (e&#7509;)' = e&#7509; (l'exponentielle de base e est sa propre derivee)<br>
+      (ln(x))' = 1/x
+    </div>
+    <p><strong>Exemple :</strong> f(x) = e&#7509;. f'(2) = e&sup2; &asymp; 7,389 (la valeur de la fonction et de sa derivee sont toujours egales, pour n'importe quel x).</p>
+    <p><strong>Exemple :</strong> g(x) = ln(x). g'(5) = 1/5 = 0,2.</p>
+    <div class="callout">
+      C'est cette propriete unique (etre sa propre derivee) qui rend le nombre e si particulier et si present dans les modeles de croissance ou de decroissance continue (radioactivite, population, refroidissement).
+    </div>
+    <p><strong>Tu as termine la theorie de ce module.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Fonction exponentielle de base a", back:"x vers a puissance x. Croissante si a>1, decroissante si 0<a<1."},
+  {front:"Fonction logarithme de base a", back:"Reciproque de l'exponentielle de base a : repond a 'par quelle puissance elever a pour obtenir x'."},
+  {front:"Logarithme naturel (ln)", back:"Logarithme de base e (environ 2,71828)."},
+  {front:"log(a fois b)", back:"log(a) + log(b)."},
+  {front:"log(a divise par b)", back:"log(a) - log(b)."},
+  {front:"log(a puissance n)", back:"n fois log(a)."},
+  {front:"Changement de base", back:"log base b de x = ln(x) / ln(b)."},
+  {front:"Derivee de e puissance x", back:"e puissance x (elle-meme)."},
+  {front:"Derivee de ln(x)", back:"1/x."},
+  {front:"Pourquoi utiliser un logarithme pour resoudre a^x = b", back:"Le logarithme permet de faire descendre x de l'exposant pour l'isoler."}
+];
+
+const game = {
+  type: 'chrono',
+  duration: 90,
+  items: [
+    { prompt:"Calcule 2 a la puissance 4.", accepted:[16] },
+    { prompt:"Calcule log base 10 de 1000.", accepted:[3] },
+    { prompt:"Resous 2 a la puissance x = 32. Donne x.", accepted:[5] },
+    { prompt:"Resous 5 a la puissance x = 125. Donne x.", accepted:[3] },
+    { prompt:"Calcule ln(1) (logarithme naturel de 1).", accepted:[0] },
+    { prompt:"f(x) = e a la puissance x. Calcule f'(0).", accepted:[1] },
+    { prompt:"g(x) = ln(x). Calcule g'(2) (valeur decimale).", accepted:[0.5], tolerance:0.01 },
+    { prompt:"log(2) + log(5) = log(?). Donne le nombre.", accepted:[10] }
+  ]
+};
+
+const exerciseBank = [
+  { type:'mcq', points:1,
+    prompt:"La fonction x vers 0,5 puissance x est :",
+    options:["croissante","decroissante","constante","non definie"],
+    correct:1,
+    explain:"La base 0,5 est comprise entre 0 et 1, donc la fonction est decroissante."
+  },
+  { type:'tf', points:1,
+    prompt:"La fonction logarithme est la fonction reciproque de la fonction exponentielle de meme base.",
+    correct:true,
+    explain:"C'est la definition de la relation de reciprocite."
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule log base 10 de 100.",
+    accepted:[2], tolerance:0.01,
+    explain:"10 au carre = 100."
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous 2 puissance x = 8. Donne x.",
+    accepted:[3], tolerance:0.01,
+    explain:"2 au cube = 8."
+  },
+  { type:'data', points:2,
+    prompt:"On sait que log(2) est environ 0,301 et log(3) est environ 0,477.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"En utilisant les proprietes des logarithmes, calcule log(6) (log(2 fois 3)).", accepted:[0.778], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:2,
+    prompt:"Pour chaque fonction, indique si elle est croissante ou decroissante.",
+    classifyOptions:["Croissante","Decroissante"],
+    items:[
+      {text:"x vers 3 puissance x", correct:"Croissante"},
+      {text:"x vers (1/4) puissance x", correct:"Decroissante"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, pourquoi on utilise un logarithme pour resoudre une equation ou l'inconnue est en exposant, avec un exemple.",
+    keywordGroups:[["exposant"],["isoler"],["exemple"],["reciproque"]],
+    modelAnswer:"Dans une equation comme a puissance x = b, l'inconnue x se trouve en exposant, ce qui empeche de l'isoler par les operations habituelles. Le logarithme est justement la fonction reciproque de l'exponentielle : appliquer le logarithme aux deux membres de l'equation fait redescendre x de l'exposant, grace a la propriete log(a puissance x) = x fois log(a). Par exemple, pour resoudre 1,05 puissance n = 2 (un capital qui double), on calcule n = ln(2) divise par ln(1,05), ce qui donne environ 14,2 annees."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Une fonction exponentielle x vers a puissance x est croissante quand :",
+    options:["a est negatif","0 < a < 1","a > 1","a = 0"],
+    correct:2
+  },
+  { type:'mcq', points:1,
+    prompt:"log(a fois b) est egal a :",
+    options:["log(a) fois log(b)","log(a) + log(b)","log(a) - log(b)","log(a+b)"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"La derivee de la fonction x vers e puissance x est :",
+    options:["x fois e puissance (x-1)","e puissance x","1/x","0"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"log(a puissance n) = n fois log(a).",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"La derivee de ln(x) est ln(x) lui-meme.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"Resous 3 puissance x = 81. Donne x.",
+    accepted:[4], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Calcule ln(x) = 1. Donne x (valeur decimale, e environ 2,71828).",
+    accepted:[2.71828], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"f(x) = ln(x). Calcule f'(4) (valeur decimale).",
+    accepted:[0.25], tolerance:0.01
+  },
+  { type:'data', points:2,
+    prompt:"Un capital est place a un taux de croissance de 7% par an (interets composes).",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Ecris l'equation (en x) qui donne le nombre d'annees pour doubler ce capital : 1,07 puissance x = combien ?", accepted:[2], tolerance:0.01},
+      {prompt:"Resous cette equation : apres combien d'annees le capital double-t-il environ (valeur decimale, arrondie a une decimale) ?", accepted:[10.2], tolerance:0.2}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque expression, indique si elle est correcte ou incorrecte.",
+    classifyOptions:["Correcte","Incorrecte"],
+    items:[
+      {text:"log(a/b) = log(a) - log(b)", correct:"Correcte"},
+      {text:"log(a+b) = log(a) + log(b)", correct:"Incorrecte"},
+      {text:"log(a puissance n) = n fois log(a)", correct:"Correcte"}
+    ],
+    explain:"Le logarithme d'une somme n'est pas la somme des logarithmes : c'est un piege frequent."
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque equation a sa solution.",
+    items:[
+      {left:"2 puissance x = 16", options:["3","4","5"], correct:"4"},
+      {left:"log base 10 de x = 3", options:["30","300","1000"], correct:"1000"},
+      {left:"5 puissance x = 125", options:["2","3","4"], correct:"3"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, ce qui rend le nombre e particulier parmi toutes les bases possibles pour une fonction exponentielle.",
+    keywordGroups:[["propre derivee","derivee"],["seule base","unique"],["croissance"],["modele","radioactivite","population"]],
+    modelAnswer:"Le nombre e (environ 2,71828) est la seule base pour laquelle la fonction exponentielle est egale a sa propre derivee : la fonction x vers e puissance x a pour derivee elle-meme, exactement. Cette propriete unique simplifie enormement les calculs de derivees et d'integrales dans les modeles de croissance ou de decroissance continue. C'est pourquoi le nombre e apparait naturellement dans de tres nombreux phenomenes reels : la croissance d'une population, la decroissance radioactive, la charge ou la decharge d'un condensateur, ou encore le refroidissement d'un objet. Pour toutes les autres bases, la derivee de l'exponentielle fait apparaitre un facteur multiplicatif supplementaire, ce qui complique les calculs."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm9-exponentielles-logarithmes',
+  eyebrow: "Mathematiques generales (4p) &middot; 6e annee &middot; Module 9/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Fonctions exponentielles et logarithmes",
+  subtitle: "Quatrieme module du programme de 6e annee. 60% requis pour debloquer le module suivant.",
+  introHtml: `
+    <p>Ce module etudie les fonctions exponentielles et logarithmes : definitions, relation de reciprocite, proprietes des logarithmes, resolution d'equations, et derivees.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "les fonctions exponentielles et logarithmes",
+  passThreshold: 60,
+  gameLabel: "Jeu : calcul chronometre",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  nextHref: 'module-10.html',
+  nextTitle: 'Geometrie analytique de l espace',
+  footerHtml: 'Module 9/10 (6e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
