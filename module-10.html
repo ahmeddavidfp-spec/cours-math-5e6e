@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths 6e - Module 10 : Geometrie analytique de l espace</title>
+<link rel="stylesheet" href="shared/engine.css">
+</head>
+<body>
+<div id="app-root"></div>
+<script src="shared/engine.js"></script>
+<script>
+const theorySlides = [
+{
+  title: "1. Objectifs de ce module",
+  html: `
+    <p>Ce dernier module du parcours etend a l'espace (3 dimensions) ce que tu connais deja de la geometrie analytique plane : reperer des points par des coordonnees, traduire des droites et des plans par des equations, et resoudre des problemes geometriques par le calcul.</p>
+    <div class="callout">
+      <strong>A la fin de ce module, tu seras capable de :</strong>
+      <ul class="clean">
+        <li>calculer avec des vecteurs de l'espace (addition, multiplication par un reel, distance) ;</li>
+        <li>verifier l'alignement de points, la coplanarite de points, la perpendicularite de vecteurs ;</li>
+        <li>ecrire les equations d'une droite et d'un plan dans l'espace ;</li>
+        <li>determiner la position relative de droites et de plans (parallelisme, intersection).</li>
+      </ul>
+    </div>
+  `
+},
+{
+  title: "2. Reperer un point et un vecteur dans l'espace",
+  html: `
+    <p>Dans un <strong class="term" data-def="Un repere orthonorme de l'espace, c'est un systeme de trois axes perpendiculaires entre eux (x, y et z), gradues avec la meme unite, qui permet de reperer tout point de l'espace par trois coordonnees.">repere orthonorme de l'espace</strong>, tout point est repere par trois coordonnees (x, y, z), et tout <strong class="term" data-def="Un vecteur de l'espace, c'est un objet mathematique defini par trois composantes, qui represente un deplacement dans l'espace : de la meme longueur et de la meme direction, peu importe ou il est place.">vecteur</strong> par trois composantes.</p>
+    <div class="callout formule">
+      Vecteur AB entre A(xA,yA,zA) et B(xB,yB,zB) : AB = (xB-xA, yB-yA, zB-zA)<br>
+      Addition : (a,b,c) + (d,e,f) = (a+d, b+e, c+f)<br>
+      Multiplication par un reel k : k &times; (a,b,c) = (ka, kb, kc)
+    </div>
+    <p><strong>Exemple :</strong> A(1,2,3) et B(4,6,3). Vecteur AB = (4-1, 6-2, 3-3) = (3, 4, 0).</p>
+  `
+},
+{
+  title: "3. Distance, alignement et coplanarite",
+  html: `
+    <p>La distance entre deux points se deduit du theoreme de Pythagore, applique deux fois (une fois dans un plan horizontal, une fois a la verticale) :</p>
+    <div class="callout formule">
+      Distance AB = &radic;[(xB-xA)&sup2; + (yB-yA)&sup2; + (zB-zA)&sup2;]
+    </div>
+    <p><strong>Exemple :</strong> avec AB = (3, 4, 0) trouve plus haut : distance = &radic;(9+16+0) = &radic;25 = 5.</p>
+    <div class="callout formule">
+      Trois points A, B, C sont <strong class="term" data-def="Trois points sont alignes quand le vecteur qui relie les deux premiers est un multiple du vecteur qui relie le premier au troisieme : ils sont alors situes sur une meme droite.">alignes</strong> si le vecteur AC est un multiple du vecteur AB (memes rapports sur les trois composantes).
+    </div>
+    <p><strong>Exemple :</strong> A(0,0,0), B(1,2,3), C(2,4,6). AB = (1,2,3) et AC = (2,4,6) = 2 &times; AB : les trois points sont alignes.</p>
+    <p>De la meme facon, quatre points sont <strong class="term" data-def="Quatre points sont coplanaires quand ils appartiennent tous a un meme plan : le vecteur qui relie les deux premiers au quatrieme peut alors s'exprimer comme une combinaison des vecteurs vers le deuxieme et le troisieme point.">coplanaires</strong> si le vecteur vers le 4e point peut s'ecrire comme une combinaison des deux autres vecteurs.</p>
+  `
+},
+{
+  title: "4. Condition de perpendicularite de deux vecteurs",
+  html: `
+    <p>Deux vecteurs (a,b,c) et (d,e,f) de l'espace sont <strong class="term" data-def="Deux vecteurs sont perpendiculaires quand la somme des produits de leurs composantes une a une vaut zero : cette condition se deduit du theoreme de Pythagore applique au triangle qu'ils forment.">perpendiculaires</strong> si et seulement si :</p>
+    <div class="callout formule">
+      a &times; d + b &times; e + c &times; f = 0
+    </div>
+    <p>Cette condition se deduit de la relation de Pythagore, appliquee au triangle forme par les deux vecteurs et le vecteur qui les relie.</p>
+    <p><strong>Exemple :</strong> u = (1, 2, 3) et w = (2, -1, 0). On calcule : 1&times;2 + 2&times;(-1) + 3&times;0 = 2 - 2 + 0 = 0. Les vecteurs u et w sont donc perpendiculaires.</p>
+  `
+},
+{
+  title: "5. Equations d'une droite et d'un plan",
+  html: `
+    <p>Une droite de l'espace est determinee par un point A et un vecteur directeur d. Un plan est determine par un point A et deux vecteurs directeurs non alignes (ou, plus simple, par un <strong class="term" data-def="Un vecteur normal a un plan, c'est un vecteur perpendiculaire a tous les vecteurs de ce plan : il determine directement l'orientation du plan et sert a ecrire son equation cartesienne.">vecteur normal</strong>).</p>
+    <div class="callout formule">
+      <strong>Droite</strong> par A(1,0,2) de direction d=(2,1,-1) :<br>
+      Equations parametriques : x = 1+2t, y = t, z = 2-t
+    </div>
+    <div class="callout formule">
+      <strong>Plan</strong> par A(1,1,1) de vecteur normal n=(1,2,-1) :<br>
+      Equation cartesienne : 1(x-1) + 2(y-1) - 1(z-1) = 0, soit x + 2y - z = 2
+    </div>
+    <p><strong>Verification :</strong> le point A(1,1,1) verifie bien 1+2-1=2. Le point C(0 ; 1,5 ; 1) verifie aussi 0+3-1=2 : C appartient donc au meme plan.</p>
+  `
+},
+{
+  title: "6. Parallelisme et intersection",
+  html: `
+    <p>Pour comparer deux droites ou deux plans, on compare leurs vecteurs directeurs (pour des droites) ou leurs vecteurs normaux (pour des plans).</p>
+    <div class="callout formule">
+      Deux droites sont paralleles si leurs vecteurs directeurs sont proportionnels.<br>
+      Deux plans sont paralleles si leurs vecteurs normaux sont proportionnels.
+    </div>
+    <p><strong>Exemple :</strong> le plan de normal (1,2,-1) et le plan de normal (2,4,-2) sont paralleles, car (2,4,-2) = 2 &times; (1,2,-1).</p>
+    <div class="callout piege">
+      <strong>Piege frequent :</strong> deux plans non paralleles se coupent toujours selon une droite (jamais en un seul point). Deux droites non paralleles, elles, peuvent soit se couper en un point, soit ne jamais se rencontrer sans etre paralleles (on dit qu'elles sont non coplanaires).
+    </div>
+    <p><strong>Tu as termine la theorie de ce module, et la theorie de toute la 6e annee.</strong> Passe maintenant a l'entrainement.</p>
+  `
+}
+];
+
+const flashcardBank = [
+  {front:"Vecteur AB entre deux points", back:"Coordonnees de B moins coordonnees de A, composante par composante."},
+  {front:"Distance entre deux points de l'espace", back:"Racine carree de la somme des carres des differences de coordonnees (Pythagore en 3D)."},
+  {front:"Condition d'alignement de 3 points", back:"Le vecteur AC est un multiple du vecteur AB (memes rapports sur les trois composantes)."},
+  {front:"Condition de perpendicularite de 2 vecteurs", back:"La somme des produits de leurs composantes une a une vaut zero."},
+  {front:"Vecteur normal a un plan", back:"Un vecteur perpendiculaire a tous les vecteurs du plan ; il determine l'equation cartesienne du plan."},
+  {front:"Equation cartesienne d'un plan par A, de normal (a,b,c)", back:"a(x-xA) + b(y-yA) + c(z-zA) = 0."},
+  {front:"Equations parametriques d'une droite par A, de direction (a,b,c)", back:"x = xA + at, y = yA + bt, z = zA + ct."},
+  {front:"Deux plans paralleles", back:"Leurs vecteurs normaux sont proportionnels."},
+  {front:"Deux droites paralleles", back:"Leurs vecteurs directeurs sont proportionnels."},
+  {front:"Intersection de deux plans non paralleles", back:"Toujours une droite (jamais un seul point)."}
+];
+
+const game = {
+  type: 'match',
+  instructions: "Associe chaque condition vectorielle a ce qu'elle permet de verifier.",
+  prompt: "Associe chaque calcul a ce qu'il permet de conclure.",
+  items: [
+    {left:"AC est un multiple de AB", options:["Alignement de A, B, C","Perpendicularite","Parallelisme de deux plans"], correct:"Alignement de A, B, C"},
+    {left:"La somme des produits des composantes vaut 0", options:["Alignement de A, B, C","Perpendicularite de deux vecteurs","Parallelisme de deux plans"], correct:"Perpendicularite de deux vecteurs"},
+    {left:"Les deux vecteurs normaux sont proportionnels", options:["Alignement de A, B, C","Perpendicularite","Parallelisme de deux plans"], correct:"Parallelisme de deux plans"}
+  ]
+};
+
+const exerciseBank = [
+  { type:'numeric', points:1,
+    prompt:"A(0,0,0) et B(3,4,0). Calcule la distance AB.",
+    accepted:[5], tolerance:0.01,
+    explain:"Distance = racine de (3 carre + 4 carre + 0 carre) = racine de 25 = 5."
+  },
+  { type:'numeric', points:1,
+    prompt:"u=(1,0,1) et w=(0,1,-1). Calcule 1x0 + 0x1 + 1x(-1) (test de perpendicularite).",
+    accepted:[-1], tolerance:0.01,
+    explain:"1x0 + 0x1 + 1x(-1) = 0+0-1 = -1 (different de 0, donc pas perpendiculaires)."
+  },
+  { type:'tf', points:1,
+    prompt:"A(0,0,0), B(1,1,0), C(2,2,0) sont alignes.",
+    correct:true,
+    explain:"AB=(1,1,0) et AC=(2,2,0)=2 fois AB : les points sont alignes."
+  },
+  { type:'mcq', points:1,
+    prompt:"Deux plans sont paralleles quand :",
+    options:["leurs vecteurs normaux sont perpendiculaires","leurs vecteurs normaux sont proportionnels","ils contiennent le meme point","leurs equations ont le meme terme constant"],
+    correct:1,
+    explain:"Des vecteurs normaux proportionnels indiquent la meme orientation de plan."
+  },
+  { type:'data', points:2,
+    prompt:"Droite par A(1,0,2), vecteur directeur (2,1,-1). Equations parametriques : x=1+2t, y=t, z=2-t.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Quelle est la coordonnee x du point de la droite pour t=2 ?", accepted:[5], tolerance:0.01},
+      {prompt:"Quelle est la coordonnee z du point de la droite pour t=2 ?", accepted:[0], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:2,
+    prompt:"Pour chaque paire de vecteurs normaux, indique si les plans correspondants sont paralleles.",
+    classifyOptions:["Paralleles","Non paralleles"],
+    items:[
+      {text:"(1,0,0) et (3,0,0)", correct:"Paralleles"},
+      {text:"(1,0,0) et (0,1,0)", correct:"Non paralleles"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Explique, en 3 a 4 phrases, comment verifier si trois points de l'espace sont alignes, avec un exemple chiffre.",
+    keywordGroups:[["vecteur"],["multiple","proportionnel"],["exemple"],["alignes"]],
+    modelAnswer:"Pour verifier que trois points A, B et C sont alignes, on calcule les vecteurs AB et AC a partir de leurs coordonnees. Les trois points sont alignes si et seulement si le vecteur AC est un multiple du vecteur AB, c'est-a-dire s'il existe un nombre reel k tel que AC = k fois AB, avec le meme rapport sur les trois composantes. Par exemple, avec A(0,0,0), B(1,2,3) et C(2,4,6), on trouve AB=(1,2,3) et AC=(2,4,6), qui est exactement le double de AB : les trois points sont donc alignes."
+  }
+];
+
+const examBank = [
+  { type:'mcq', points:1,
+    prompt:"Le vecteur AB entre A(xA,yA,zA) et B(xB,yB,zB) a pour composantes :",
+    options:["(xA+xB, yA+yB, zA+zB)","(xB-xA, yB-yA, zB-zA)","(xA fois xB, ...)","(xA/xB, ...)"],
+    correct:1
+  },
+  { type:'mcq', points:1,
+    prompt:"Deux vecteurs (a,b,c) et (d,e,f) sont perpendiculaires quand :",
+    options:["a=d, b=e, c=f","a+d=0, b+e=0, c+f=0","a fois d + b fois e + c fois f = 0","aucune de ces reponses"],
+    correct:2
+  },
+  { type:'mcq', points:1,
+    prompt:"Un vecteur normal a un plan est :",
+    options:["situe dans le plan","perpendiculaire au plan","parallele a un axe","toujours de longueur 1"],
+    correct:1
+  },
+  { type:'tf', points:1,
+    prompt:"Deux plans non paralleles se coupent toujours selon une droite.",
+    correct:true
+  },
+  { type:'tf', points:1,
+    prompt:"Quatre points sont toujours coplanaires, quelles que soient leurs coordonnees.",
+    correct:false
+  },
+  { type:'numeric', points:1,
+    prompt:"A(1,1,1) et B(4,5,1). Calcule la distance AB.",
+    accepted:[5], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"u=(3,0,4). Calcule la longueur du vecteur u (distance depuis l'origine).",
+    accepted:[5], tolerance:0.01
+  },
+  { type:'numeric', points:1,
+    prompt:"Verifie si u=(2,3,1) et w=(1,-1,1) sont perpendiculaires : calcule 2x1 + 3x(-1) + 1x1.",
+    accepted:[0], tolerance:0.01
+  },
+  { type:'data', points:3,
+    prompt:"Plan par A(2,0,0), vecteur normal (1,1,1). Equation cartesienne : 1(x-2) + 1(y-0) + 1(z-0) = 0, soit x+y+z=2.",
+    tableHtml:``,
+    subquestions:[
+      {prompt:"Le point B(1,1,0) appartient-il a ce plan ? Calcule x+y+z pour B.", accepted:[2], tolerance:0.01},
+      {prompt:"Le point C(1,1,1) appartient-il a ce plan ? Calcule x+y+z pour C.", accepted:[3], tolerance:0.01}
+    ]
+  },
+  { type:'classify', points:3,
+    prompt:"Pour chaque situation, indique la conclusion correcte.",
+    classifyOptions:["Alignes / paralleles","Non alignes / non paralleles"],
+    items:[
+      {text:"AB=(2,4,6) et AC=(1,2,3)", correct:"Alignes / paralleles"},
+      {text:"AB=(1,0,0) et AC=(0,0,1)", correct:"Non alignes / non paralleles"},
+      {text:"Deux droites de directions (1,1,1) et (2,2,2)", correct:"Alignes / paralleles"}
+    ]
+  },
+  { type:'match', points:3,
+    prompt:"Associe chaque type d'equation a l'objet qu'elle decrit.",
+    items:[
+      {left:"x = xA + at, y = yA + bt, z = zA + ct", options:["Une droite","Un plan","Un point"], correct:"Une droite"},
+      {left:"a(x-xA) + b(y-yA) + c(z-zA) = 0", options:["Une droite","Un plan","Un point"], correct:"Un plan"},
+      {left:"(xA, yA, zA)", options:["Une droite","Un plan","Un point"], correct:"Un point"}
+    ]
+  },
+  { type:'open', points:3,
+    prompt:"Decris, en 4 a 5 phrases, le role du vecteur normal dans l'ecriture de l'equation cartesienne d'un plan, avec un exemple.",
+    keywordGroups:[["perpendiculaire"],["normal"],["cartesienne"],["exemple"]],
+    modelAnswer:"Le vecteur normal a un plan est un vecteur perpendiculaire a tous les vecteurs contenus dans ce plan. Si on connait un point A du plan et un vecteur normal (a,b,c), on peut ecrire l'equation cartesienne du plan directement : a(x-xA) + b(y-yA) + c(z-zA) = 0, qui traduit le fait que tout vecteur allant de A vers un point (x,y,z) du plan est perpendiculaire au vecteur normal. Par exemple, pour le plan passant par A(1,1,1) avec normal (1,2,-1), on obtient l'equation x+2y-z=2 : n'importe quel point qui verifie cette equation appartient au plan, et n'importe quel point qui ne la verifie pas est en dehors."
+  }
+];
+
+MathEngine.initModule({
+  id: 'm10-geometrie-espace',
+  eyebrow: "Mathematiques generales (4p) &middot; 6e annee &middot; Module 10/10 &middot; Reseau libre confessionnel (FESeC)",
+  title: "Geometrie analytique de l'espace",
+  subtitle: "Dixieme et dernier module du programme. 60% requis pour terminer le parcours.",
+  introHtml: `
+    <p>Ce dernier module etend la geometrie analytique a l'espace : vecteurs, distance, alignement, coplanarite, perpendicularite, equations de droites et de plans, parallelisme et intersection.</p>
+    <div class="callout warn">
+      <strong>Precision honnete :</strong> il n'existe pas de banque officielle d'examens de mathematiques specifique a ce parcours. Les questions sont construites a partir des types de taches decrits dans le programme officiel FESeC.
+    </div>
+  `,
+  examTitle: "la geometrie analytique de l'espace",
+  passThreshold: 60,
+  gameLabel: "Jeu : associer conditions et conclusions",
+  theorySlides, flashcardBank, game, exerciseBank, examBank,
+  hubHref: 'index.html',
+  footerHtml: 'Module 10/10 (6e) &middot; programme officiel FESeC "Mathematiques 2-4-6 periodes, 3e degre" (D/2014/7362/3/16) &middot; ressource privee pour etude a domicile.'
+});
+</script>
+</body>
+</html>
